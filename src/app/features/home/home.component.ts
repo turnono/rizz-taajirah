@@ -858,9 +858,9 @@ export class HomeComponent implements OnInit, AfterViewInit {
   countdown = '';
   currentGifIndex = 0;
   gifs = [
-    'assets/gifs/Futuristic_Cyber_Glitch.gif',
-    'assets/gifs/Transmission_Mystery.gif',
-    'assets/gifs/Abandoned_Prison.gif',
+    'https://firebasestorage.googleapis.com/v0/b/taajirah.appspot.com/o/Abandoned_Prison.gif?alt=media&token=bfcdb575-a380-4e93-a014-9883de4a20cc',
+    'https://firebasestorage.googleapis.com/v0/b/taajirah.appspot.com/o/Futuristic_Cyber_Glitch.gif?alt=media&token=0639726d-ec9a-484f-8641-20fc50c3f831',
+    'https://firebasestorage.googleapis.com/v0/b/taajirah.appspot.com/o/Transmission_Mystery.gif?alt=media&token=6246625c-7560-456b-a249-66cbe0bff9b6',
   ];
 
   bootSequence = [

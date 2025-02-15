@@ -16,7 +16,7 @@ import {
       <header class="header">
         <div class="logo-container">
           <img
-            src="assets/images/logo/taajirah_logo_no_bg.png"
+            src="https://firebasestorage.googleapis.com/v0/b/taajirah.appspot.com/o/taajirah_logo_no_bg.png?alt=media&token=85acb1a6-7db2-451f-8ef0-90c436c88cb2"
             alt="Taajirah Logo"
             class="logo"
           />
