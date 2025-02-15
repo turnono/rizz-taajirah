@@ -4,15 +4,25 @@ import { environment } from '../../../environments/environment';
 import { Observable, from } from 'rxjs';
 import { FirebaseBaseService } from './firebase-base.service';
 import { Order } from '../models/interfaces';
-import { Firestore } from '@angular/fire/firestore';
+import { Firestore, addDoc, collection } from '@angular/fire/firestore';
+import { Timestamp } from '@angular/fire/firestore';
 
 declare const PaystackPop: any;
+
+interface PreOrder {
+  email: string;
+  amount: number;
+  reference: string;
+  status: 'pending' | 'completed' | 'failed';
+  createdAt: Timestamp;
+}
 
 @Injectable({
   providedIn: 'root',
 })
 export class PaymentService extends FirebaseBaseService {
   private readonly ORDERS_COLLECTION = 'orders';
+  private readonly PAYSTACK_KEY = environment.paystackPublicKey;
 
   constructor(
     @Inject(Firestore) firestore: Firestore,
@@ -96,5 +106,61 @@ export class PaymentService extends FirebaseBaseService {
       '==',
       userId
     );
+  }
+
+  async initializePreOrder(email: string, amount: number): Promise<void> {
+    try {
+      // Initialize Paystack payment
+      const handler = PaystackPop.setup({
+        key: this.PAYSTACK_KEY,
+        email,
+        amount: amount * 100, // Convert to kobo
+        currency: 'NGN',
+        ref: `CALC-${Math.floor(Math.random() * 1000000000)}`,
+        callback: (response: any) =>
+          this.handlePaymentCallback(response, email, amount),
+        onClose: () => {
+          console.log('Payment window closed');
+        },
+      });
+
+      handler.openIframe();
+    } catch (error) {
+      console.error('Payment initialization failed:', error);
+      throw error;
+    }
+  }
+
+  private async handlePaymentCallback(
+    response: any,
+    email: string,
+    amount: number
+  ) {
+    try {
+      // Save pre-order to Firestore
+      const preOrder: PreOrder = {
+        email,
+        amount,
+        reference: response.reference,
+        status: response.status === 'success' ? 'completed' : 'failed',
+        createdAt: Timestamp.now(),
+      };
+
+      await addDoc(collection(this.firestore, 'pre-orders'), preOrder);
+
+      // Send confirmation email (you'll need to implement this)
+      if (response.status === 'success') {
+        this.sendConfirmationEmail(email);
+      }
+    } catch (error) {
+      console.error('Error handling payment callback:', error);
+      throw error;
+    }
+  }
+
+  private async sendConfirmationEmail(email: string) {
+    // Implement email sending logic here
+    // You can use Firebase Cloud Functions or a backend service
+    console.log('Sending confirmation email to:', email);
   }
 }

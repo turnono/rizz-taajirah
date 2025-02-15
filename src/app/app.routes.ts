@@ -3,8 +3,17 @@ import { Routes } from '@angular/router';
 export const routes: Routes = [
   {
     path: '',
+    pathMatch: 'full',
+    loadComponent: () =>
+      import('./features/landing/landing.component').then(
+        (m) => m.LandingComponent
+      ),
+  },
+  {
+    path: 'calculated-mistake',
     loadComponent: () =>
       import('./features/home/home.component').then((m) => m.HomeComponent),
+    data: { animation: 'HomePage' },
   },
   {
     path: '**',

@@ -17,6 +17,6 @@ import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
     `,
   ],
   standalone: true,
-  imports: [RouterOutlet, IonApp, IonRouterOutlet],
+  imports: [IonApp, IonRouterOutlet],
 })
 export class AppComponent {}
