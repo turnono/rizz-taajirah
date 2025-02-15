@@ -1,483 +1,434 @@
-import { Component } from '@angular/core';
-import {
-  IonContent,
-  IonHeader,
-  IonTitle,
-  IonToolbar,
-  IonButton,
-  IonIcon,
-  IonMenuButton,
-  IonButtons,
-  IonImg,
-} from '@ionic/angular/standalone';
-import { RouterLink } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { IonContent, IonButton, IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import {
-  arrowForward,
-  book,
-  school,
-  bagHandle,
-  codeSlash,
-  globe,
-  construct,
-} from 'ionicons/icons';
+import { arrowForward } from 'ionicons/icons';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-home',
   template: `
-    <ion-header>
-      <ion-toolbar color="dark">
-        <ion-buttons slot="start">
-          <ion-menu-button></ion-menu-button>
-        </ion-buttons>
-        <ion-title>Taajirah</ion-title>
-      </ion-toolbar>
-    </ion-header>
+    <ion-content class="ion-content">
+      <!-- Glitch Overlay -->
+      <div class="glitch-overlay"></div>
 
-    <ion-content class="ion-padding" color="dark">
-      <!-- Hero Section -->
-      <section class="hero">
-        <h1>Welcome to Taajirah</h1>
-        <p class="subtitle">
-          Your technology and e-commerce destination for digital products,
-          learning resources, and professional services
-        </p>
-        <ion-button
-          color="light"
-          fill="outline"
-          size="large"
-          routerLink="/store"
-        >
-          EXPLORE NOW
-          <ion-icon name="arrow-forward" slot="end"></ion-icon>
-        </ion-button>
-      </section>
-
-      <div class="content-grid">
-        <!-- Featured Digital Products Section -->
-        <section class="featured-section">
-          <h2>Digital Products</h2>
-          <div class="featured-book">
-            <div class="book-image">
-              <ion-img
-                src="assets/images/book-placeholder.jpg"
-                alt="Digital Products"
-              ></ion-img>
-            </div>
-            <div class="book-details">
-              <h3>Premium Digital Resources</h3>
-              <p>
-                Access our collection of high-quality digital products,
-                templates, and resources to accelerate your projects.
-              </p>
-              <ion-button color="light" fill="outline" routerLink="/books">
-                VIEW PRODUCTS
-                <ion-icon name="book" slot="end"></ion-icon>
-              </ion-button>
-            </div>
-          </div>
-        </section>
-
-        <!-- Latest Courses Section -->
-        <section class="featured-section">
-          <h2>Learning Resources</h2>
-          <div class="courses-grid">
-            <div class="course-card">
-              <ion-img
-                src="assets/images/courses/taajirah_learn_small.png"
-                alt="Web Development"
-              ></ion-img>
-              <h3>Web Development</h3>
-              <p>Master modern web technologies</p>
-            </div>
-            <div class="course-card">
-              <ion-img
-                src="assets/images/courses/taajirah_learn_small.png"
-                alt="Digital Skills"
-              ></ion-img>
-              <h3>Digital Skills</h3>
-              <p>Essential skills for the digital age</p>
-            </div>
-          </div>
-          <ion-button
-            color="light"
-            fill="outline"
-            class="view-all"
-            routerLink="/courses"
-          >
-            VIEW ALL COURSES
-            <ion-icon name="school" slot="end"></ion-icon>
-          </ion-button>
-        </section>
-
-        <!-- Featured Products Section -->
-        <section class="featured-section">
-          <h2>Featured Products</h2>
-          <div class="products-grid">
-            <div class="product-card">
-              <ion-img
-                src="assets/images/perfume-1a.jpg"
-                alt="Premium Product"
-              ></ion-img>
-              <h3>Premium Product</h3>
-              <p class="price">₦15,000</p>
-            </div>
-            <div class="product-card">
-              <ion-img
-                src="assets/images/tshirt-1a.jpg"
-                alt="Featured Item"
-              ></ion-img>
-              <h3>Featured Item</h3>
-              <p class="price">₦7,500</p>
-            </div>
-          </div>
-        </section>
-
-        <!-- Services Section -->
-        <section class="featured-section">
-          <h2>Tech Services</h2>
-          <div class="services-grid">
-            <div class="service-card">
-              <ion-icon name="globe"></ion-icon>
-              <h3>Web Development</h3>
-              <p>Custom web solutions</p>
-            </div>
-            <div class="service-card">
-              <ion-icon name="construct"></ion-icon>
-              <h3>Tech Consulting</h3>
-              <p>Expert technical guidance</p>
-            </div>
-          </div>
-        </section>
+      <!-- Hidden Messages -->
+      <div class="hidden-messages">
+        <span>A prison with no bars</span>
+        <span>The mistake was calculated</span>
+        <span>A message not meant to be received</span>
+        <span>1000 headman</span>
       </div>
+
+      <!-- Main Content -->
+      <main>
+        <!-- Hero Section -->
+        <section class="hero">
+          <h1 class="glitch" data-text="Calculated/Mistake">
+            Calculated/Mistake
+          </h1>
+          <p class="tagline">
+            The signal has been sent. Waiting for a receiver.
+          </p>
+          <div class="signal-animation"></div>
+        </section>
+
+        <!-- The Message Section -->
+        <section class="message" [class.visible]="isMessageVisible">
+          <div class="transmission">
+            <p
+              class="fragment"
+              *ngFor="let fragment of messageFragments; let i = index"
+              [style.animation-delay]="i * 0.5 + 's'"
+            >
+              {{ fragment }}
+            </p>
+          </div>
+          <p class="flicker-text">Have you understood?</p>
+        </section>
+
+        <!-- Pre-order Section -->
+        <section class="pre-order" [class.visible]="isPreorderVisible">
+          <div class="countdown" *ngIf="countdown">
+            <p>The first message will be received in</p>
+            <div class="timer">{{ countdown }}</div>
+          </div>
+          <ion-button class="receive-btn" (click)="receiveMessage()">
+            Receive the Message
+            <ion-icon name="arrow-forward" slot="end"></ion-icon>
+          </ion-button>
+          <p class="price">₦15,000</p>
+        </section>
+      </main>
     </ion-content>
   `,
   styles: [
     `
       :host {
-        --dark-bg: #1a1a1a;
-        --card-bg: #242424;
-        --text-primary: #ffffff;
-        --text-secondary: rgba(255, 255, 255, 0.7);
-        --accent-color: #3880ff;
-        --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-        --card-hover-transform: translateY(-4px);
+        --neon-color: #0ff;
+        --background-dark: #000;
+        --text-color: #fff;
+        --glitch-color: rgba(15, 255, 255, 0.1);
       }
 
       ion-content {
-        --background: var(--dark-bg);
-        --padding-top: 0;
-        --padding-bottom: 4rem;
+        --background: var(--background-dark);
+        --color: var(--text-color);
+      }
+
+      .glitch-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: repeating-linear-gradient(
+          0deg,
+          rgba(0, 0, 0, 0.15) 0px,
+          rgba(0, 0, 0, 0.15) 1px,
+          transparent 1px,
+          transparent 2px
+        );
+        pointer-events: none;
+        z-index: 1;
+      }
+
+      main {
+        min-height: 100vh;
+        padding: 2rem;
+        position: relative;
+        z-index: 2;
       }
 
       .hero {
-        height: 80vh;
+        height: 100vh;
         display: flex;
         flex-direction: column;
         justify-content: center;
-        align-items: flex-start;
-        padding: 4rem;
-        background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
-          url('/assets/images/hero/hero-bg.jpg') center/cover;
-        border-radius: 0;
-        margin: -1rem -1rem 4rem -1rem;
+        align-items: center;
+        text-align: center;
+      }
+
+      .glitch {
+        font-size: 4rem;
+        font-weight: 800;
+        text-transform: uppercase;
         position: relative;
-        overflow: hidden;
+        text-shadow: 0.05em 0 0 var(--glitch-color),
+          -0.05em -0.025em 0 rgba(255, 0, 0, 0.75),
+          0.025em 0.05em 0 rgba(0, 255, 0, 0.75);
+        animation: glitch 1s infinite;
+
+        &::before,
+        &::after {
+          content: attr(data-text);
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+        }
+
+        &::before {
+          left: 2px;
+          text-shadow: -2px 0 #ff00c1;
+          clip: rect(44px, 450px, 56px, 0);
+          animation: glitch-anim 5s infinite linear alternate-reverse;
+        }
 
         &::after {
-          content: '';
-          position: absolute;
-          bottom: 0;
-          left: 0;
-          right: 0;
-          height: 30%;
-          background: linear-gradient(transparent, var(--dark-bg));
-        }
-
-        h1 {
-          font-size: 4rem;
-          font-weight: 800;
-          margin-bottom: 1rem;
-          line-height: 1.1;
-          position: relative;
-          z-index: 1;
-        }
-
-        .subtitle {
-          font-size: 1.5rem;
-          color: var(--text-secondary);
-          margin-bottom: 2rem;
-          max-width: 600px;
-          position: relative;
-          z-index: 1;
-        }
-
-        ion-button {
-          position: relative;
-          z-index: 1;
-          --padding-start: 2rem;
-          --padding-end: 2rem;
-          height: 3.5rem;
-          font-weight: 600;
-          letter-spacing: 1px;
+          left: -2px;
+          text-shadow: -2px 0 #00fff9, 2px 2px #ff00c1;
+          clip: rect(44px, 450px, 56px, 0);
+          animation: glitch-anim2 1s infinite linear alternate-reverse;
         }
       }
 
-      .content-grid {
-        display: grid;
-        gap: 4rem;
-        max-width: 1400px;
-        margin: 0 auto;
-        padding: 0 1rem;
-      }
-
-      .featured-section {
-        h2 {
-          font-size: 2.5rem;
-          font-weight: 700;
-          margin-bottom: 2rem;
-          position: relative;
-          display: inline-block;
-
-          &::after {
-            content: '';
-            position: absolute;
-            bottom: -0.5rem;
-            left: 0;
-            width: 60px;
-            height: 4px;
-            background: var(--accent-color);
-            border-radius: 2px;
-          }
-        }
-      }
-
-      .featured-book {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 3rem;
-        background: var(--card-bg);
-        border-radius: 16px;
-        overflow: hidden;
-        box-shadow: var(--card-shadow);
-        transition: all 0.3s ease;
-
-        &:hover {
-          transform: var(--card-hover-transform);
-        }
-
-        .book-image {
-          height: 500px;
-          position: relative;
-          overflow: hidden;
-
-          ion-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.3s ease;
-          }
-        }
-
-        .book-details {
-          padding: 3rem;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          gap: 1.5rem;
-
-          h3 {
-            font-size: 2.2rem;
-            font-weight: 700;
-            line-height: 1.2;
-            margin: 0;
-          }
-
-          p {
-            color: var(--text-secondary);
-            line-height: 1.8;
-            font-size: 1.1rem;
-          }
-
-          ion-button {
-            align-self: flex-start;
-            --padding-start: 2rem;
-            --padding-end: 2rem;
-            height: 3rem;
-            font-weight: 600;
-          }
-        }
-      }
-
-      .courses-grid,
-      .products-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 2rem;
-        margin-bottom: 2rem;
-      }
-
-      .course-card,
-      .product-card {
-        background: var(--card-bg);
-        border-radius: 16px;
-        overflow: hidden;
-        box-shadow: var(--card-shadow);
-        transition: all 0.3s ease;
-
-        &:hover {
-          transform: var(--card-hover-transform);
-        }
-
-        ion-img {
-          width: 100%;
-          height: 300px;
-          object-fit: cover;
-          transition: transform 0.3s ease;
-        }
-
-        h3 {
-          font-size: 1.5rem;
-          font-weight: 600;
-          margin: 1.5rem 1.5rem 0.5rem;
-        }
-
-        p {
-          color: var(--text-secondary);
-          margin: 0 1.5rem 1.5rem;
-          font-size: 1rem;
-          line-height: 1.6;
-        }
-
-        .price {
-          color: var(--accent-color);
-          font-weight: 700;
-          font-size: 1.2rem;
-        }
-      }
-
-      .services-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 2rem;
-      }
-
-      .service-card {
-        background: var(--card-bg);
-        border-radius: 16px;
-        padding: 2.5rem;
-        text-align: center;
-        box-shadow: var(--card-shadow);
-        transition: all 0.3s ease;
-
-        &:hover {
-          transform: var(--card-hover-transform);
-        }
-
-        ion-icon {
-          font-size: 3rem;
-          color: var(--accent-color);
-          margin-bottom: 1.5rem;
-        }
-
-        h3 {
-          font-size: 1.5rem;
-          font-weight: 600;
-          margin-bottom: 1rem;
-        }
-
-        p {
-          color: var(--text-secondary);
-          line-height: 1.6;
-          font-size: 1rem;
-        }
-      }
-
-      .view-all {
-        width: 100%;
+      .tagline {
+        font-size: 1.2rem;
+        color: var(--text-color);
+        opacity: 0.7;
         margin-top: 2rem;
-        --padding-top: 1rem;
-        --padding-bottom: 1rem;
-        font-weight: 600;
-        letter-spacing: 0.5px;
+        font-family: monospace;
+        border-right: 2px solid var(--neon-color);
+        white-space: nowrap;
+        overflow: hidden;
+        animation: typing 3.5s steps(40, end),
+          blink-caret 0.75s step-end infinite;
       }
 
-      @media (max-width: 992px) {
-        .hero {
-          height: 60vh;
-          padding: 2rem;
+      .signal-animation {
+        width: 100px;
+        height: 100px;
+        margin-top: 3rem;
+        background: radial-gradient(
+            circle,
+            transparent 35%,
+            var(--neon-color) 36%,
+            var(--neon-color) 38%,
+            transparent 39%,
+            transparent
+          ),
+          radial-gradient(
+              circle,
+              transparent 35%,
+              var(--neon-color) 36%,
+              var(--neon-color) 38%,
+              transparent 39%,
+              transparent
+            )
+            50px 50px;
+        background-size: 100px 100px;
+        animation: signal 4s infinite linear;
+        opacity: 0.2;
+      }
 
-          h1 {
-            font-size: 3rem;
-          }
+      .message {
+        padding: 4rem 2rem;
+        opacity: 0;
+        transform: translateY(20px);
+        transition: all 0.5s ease-out;
 
-          .subtitle {
-            font-size: 1.2rem;
-          }
+        &.visible {
+          opacity: 1;
+          transform: translateY(0);
         }
+      }
 
-        .featured-book {
-          grid-template-columns: 1fr;
+      .fragment {
+        font-family: monospace;
+        color: var(--text-color);
+        opacity: 0;
+        transform: translateX(-20px);
+        animation: fadeInSlide 0.5s ease-out forwards;
+        margin: 1rem 0;
+        font-size: 1.1rem;
+      }
 
-          .book-image {
-            height: 300px;
+      .flicker-text {
+        color: var(--neon-color);
+        font-size: 1.5rem;
+        text-align: center;
+        margin-top: 3rem;
+        animation: flicker 2s infinite;
+      }
+
+      .pre-order {
+        padding: 4rem 2rem;
+        text-align: center;
+        opacity: 0;
+        transform: translateY(20px);
+        transition: all 0.5s ease-out;
+
+        &.visible {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .receive-btn {
+        --background: transparent;
+        --background-hover: var(--neon-color);
+        --color: var(--neon-color);
+        --border-color: var(--neon-color);
+        --border-style: solid;
+        --border-width: 1px;
+        --padding-start: 2rem;
+        --padding-end: 2rem;
+        --box-shadow: 0 0 10px var(--neon-color);
+        font-family: monospace;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin: 2rem 0;
+
+        &:hover {
+          --color: var(--background-dark);
+        }
+      }
+
+      .price {
+        font-size: 1.2rem;
+        color: var(--neon-color);
+        font-family: monospace;
+      }
+
+      .hidden-messages {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        padding: 2rem;
+        pointer-events: none;
+        z-index: 1;
+
+        span {
+          color: var(--text-color);
+          opacity: 0.05;
+          font-size: 0.8rem;
+          font-family: monospace;
+          transform: rotate(var(--rotation));
+          transition: all 0.3s ease;
+
+          &:hover {
+            opacity: 0.8;
+            transform: scale(1.1) rotate(var(--rotation));
           }
 
-          .book-details {
-            padding: 2rem;
-
-            h3 {
-              font-size: 1.8rem;
+          @for $i from 1 through 4 {
+            &:nth-child(#{$i}) {
+              --rotation: #{random(10) - 5}deg;
+              align-self: #{if($i % 2 == 0, 'flex-start', 'flex-end')};
             }
           }
         }
+      }
 
-        .content-grid {
-          gap: 3rem;
+      @keyframes glitch {
+        2%,
+        64% {
+          transform: translate(2px, 0) skew(0deg);
+        }
+        4%,
+        60% {
+          transform: translate(-2px, 0) skew(0deg);
+        }
+        62% {
+          transform: translate(0, 0) skew(5deg);
+        }
+      }
+
+      @keyframes signal {
+        from {
+          transform: scale(0);
+          opacity: 0.2;
+        }
+        to {
+          transform: scale(3);
+          opacity: 0;
+        }
+      }
+
+      @keyframes typing {
+        from {
+          width: 0;
+        }
+        to {
+          width: 100%;
+        }
+      }
+
+      @keyframes blink-caret {
+        from,
+        to {
+          border-color: transparent;
+        }
+        50% {
+          border-color: var(--neon-color);
+        }
+      }
+
+      @keyframes fadeInSlide {
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      @keyframes flicker {
+        0%,
+        19.999%,
+        22%,
+        62.999%,
+        64%,
+        64.999%,
+        70%,
+        100% {
+          opacity: 0.99;
+          text-shadow: -1px -1px 0 var(--neon-color),
+            1px -1px 0 var(--neon-color), -1px 1px 0 var(--neon-color),
+            1px 1px 0 var(--neon-color), 0 -2px 8px, 0 0 2px, 0 0 5px #ff7e00,
+            0 0 15px #ff4444, 0 0 2px #ff7e00, 0 2px 3px #000;
+        }
+        20%,
+        21.999%,
+        63%,
+        63.999%,
+        65%,
+        69.999% {
+          opacity: 0.4;
+          text-shadow: none;
         }
       }
 
       @media (max-width: 768px) {
-        .courses-grid,
-        .products-grid,
-        .services-grid {
-          grid-template-columns: 1fr;
+        .glitch {
+          font-size: 2.5rem;
         }
 
-        .featured-section h2 {
-          font-size: 2rem;
-        }
-
-        .service-card {
-          padding: 2rem;
+        .tagline {
+          font-size: 1rem;
         }
       }
     `,
   ],
   standalone: true,
-  imports: [
-    IonContent,
-    IonHeader,
-    IonTitle,
-    IonToolbar,
-    IonButton,
-    IonIcon,
-    IonMenuButton,
-    IonButtons,
-    IonImg,
-    RouterLink,
-  ],
+  imports: [IonContent, IonButton, IonIcon, CommonModule],
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit {
+  isMessageVisible = false;
+  isPreorderVisible = false;
+  countdown = '';
+  messageFragments = [
+    'A prison with no bars.',
+    'The mistake was calculated.',
+    'A message not meant to be received.',
+    '1000 headman.',
+  ];
+
   constructor() {
     addIcons({
       arrowForward,
-      book,
-      school,
-      bagHandle,
-      codeSlash,
-      globe,
-      construct,
     });
+  }
+
+  ngOnInit() {
+    this.initializeCountdown();
+    this.handleScroll();
+  }
+
+  private initializeCountdown() {
+    const releaseDate = new Date('2024-05-01'); // Set your book release date
+    this.updateCountdown(releaseDate);
+    setInterval(() => this.updateCountdown(releaseDate), 1000);
+  }
+
+  private updateCountdown(releaseDate: Date) {
+    const now = new Date();
+    const diff = releaseDate.getTime() - now.getTime();
+
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+    this.countdown = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+  }
+
+  private handleScroll() {
+    window.addEventListener('scroll', () => {
+      const scrollPosition = window.scrollY;
+      const windowHeight = window.innerHeight;
+
+      this.isMessageVisible = scrollPosition > windowHeight * 0.3;
+      this.isPreorderVisible = scrollPosition > windowHeight * 0.6;
+    });
+  }
+
+  receiveMessage() {
+    // Implement your pre-order logic here
+    console.log('Message received - initiating pre-order sequence');
   }
 }
