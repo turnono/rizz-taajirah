@@ -155,18 +155,13 @@ import {
   styles: [
     `
       :host {
-        --dark-bg: #0a1929;
-        --card-bg: #1a2942;
+        --dark-bg: #1a1a1a;
+        --card-bg: #242424;
         --text-primary: #ffffff;
         --text-secondary: rgba(255, 255, 255, 0.7);
-        --accent-color: #40a9ff;
-        --card-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-        --card-hover-transform: translateY(-8px);
-        --gradient-overlay: linear-gradient(
-          45deg,
-          rgba(64, 169, 255, 0.2),
-          rgba(10, 25, 41, 0.95)
-        );
+        --accent-color: #3880ff;
+        --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        --card-hover-transform: translateY(-4px);
       }
 
       ion-content {
@@ -176,45 +171,36 @@ import {
       }
 
       .hero {
-        height: 90vh;
+        height: 80vh;
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: flex-start;
         padding: 4rem;
-        background: var(--gradient-overlay),
+        background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
           url('/assets/images/hero/hero-bg.jpg') center/cover;
         border-radius: 0;
         margin: -1rem -1rem 4rem -1rem;
         position: relative;
         overflow: hidden;
-        animation: fadeIn 1s ease-out;
 
-        &::before {
+        &::after {
           content: '';
           position: absolute;
-          top: 0;
+          bottom: 0;
           left: 0;
           right: 0;
-          bottom: 0;
-          background: linear-gradient(
-            to bottom,
-            transparent 0%,
-            rgba(10, 25, 41, 0.95) 100%
-          );
+          height: 30%;
+          background: linear-gradient(transparent, var(--dark-bg));
         }
 
         h1 {
-          font-size: 5rem;
+          font-size: 4rem;
           font-weight: 800;
           margin-bottom: 1rem;
           line-height: 1.1;
           position: relative;
           z-index: 1;
-          background: linear-gradient(45deg, #ffffff, #40a9ff);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          animation: slideUp 0.8s ease-out;
         }
 
         .subtitle {
@@ -224,33 +210,16 @@ import {
           max-width: 600px;
           position: relative;
           z-index: 1;
-          animation: slideUp 0.8s ease-out 0.2s backwards;
-          line-height: 1.6;
         }
 
         ion-button {
           position: relative;
           z-index: 1;
-          --padding-start: 2.5rem;
-          --padding-end: 2.5rem;
+          --padding-start: 2rem;
+          --padding-end: 2rem;
           height: 3.5rem;
           font-weight: 600;
           letter-spacing: 1px;
-          animation: slideUp 0.8s ease-out 0.4s backwards;
-          transition: all 0.3s ease;
-          --background: rgba(64, 169, 255, 0.1);
-          --background-hover: rgba(64, 169, 255, 0.2);
-          --color: #40a9ff;
-          --border-color: #40a9ff;
-
-          &:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 16px rgba(64, 169, 255, 0.2);
-          }
-
-          ion-icon {
-            margin-left: 0.5rem;
-          }
         }
       }
 
@@ -260,7 +229,6 @@ import {
         max-width: 1400px;
         margin: 0 auto;
         padding: 0 1rem;
-        animation: fadeIn 1s ease-out 0.6s backwards;
       }
 
       .featured-section {
@@ -270,9 +238,6 @@ import {
           margin-bottom: 2rem;
           position: relative;
           display: inline-block;
-          background: linear-gradient(45deg, #ffffff, #40a9ff);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
 
           &::after {
             content: '';
@@ -281,10 +246,8 @@ import {
             left: 0;
             width: 60px;
             height: 4px;
-            background: #40a9ff;
+            background: var(--accent-color);
             border-radius: 2px;
-            animation: expandWidth 0.8s ease-out;
-            opacity: 0.8;
           }
         }
       }
@@ -294,39 +257,13 @@ import {
         grid-template-columns: 1fr 1fr;
         gap: 3rem;
         background: var(--card-bg);
-        border-radius: 24px;
+        border-radius: 16px;
         overflow: hidden;
         box-shadow: var(--card-shadow);
-        transition: all 0.5s ease;
-        position: relative;
-
-        &::before {
-          content: '';
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          background: linear-gradient(
-            45deg,
-            rgba(64, 169, 255, 0.1),
-            transparent
-          );
-          opacity: 0;
-          transition: opacity 0.5s ease;
-        }
+        transition: all 0.3s ease;
 
         &:hover {
           transform: var(--card-hover-transform);
-          box-shadow: 0 16px 32px rgba(64, 169, 255, 0.15);
-
-          &::before {
-            opacity: 1;
-          }
-
-          .book-image ion-img {
-            transform: scale(1.1) rotate(-2deg);
-          }
         }
 
         .book-image {
@@ -338,7 +275,7 @@ import {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.8s ease;
+            transition: transform 0.3s ease;
           }
         }
 
@@ -354,9 +291,6 @@ import {
             font-weight: 700;
             line-height: 1.2;
             margin: 0;
-            background: linear-gradient(45deg, #ffffff, #40a9ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
           }
 
           p {
@@ -371,16 +305,6 @@ import {
             --padding-end: 2rem;
             height: 3rem;
             font-weight: 600;
-            transition: all 0.3s ease;
-            --background: rgba(64, 169, 255, 0.1);
-            --background-hover: rgba(64, 169, 255, 0.2);
-            --color: #40a9ff;
-            --border-color: #40a9ff;
-
-            &:hover {
-              transform: translateY(-2px);
-              box-shadow: 0 8px 16px rgba(64, 169, 255, 0.2);
-            }
           }
         }
       }
@@ -399,59 +323,23 @@ import {
         border-radius: 16px;
         overflow: hidden;
         box-shadow: var(--card-shadow);
-        transition: all 0.5s ease;
-        position: relative;
-
-        &::before {
-          content: '';
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          background: linear-gradient(
-            45deg,
-            rgba(64, 169, 255, 0.1),
-            transparent
-          );
-          opacity: 0;
-          transition: opacity 0.5s ease;
-        }
+        transition: all 0.3s ease;
 
         &:hover {
           transform: var(--card-hover-transform);
-          box-shadow: 0 16px 32px rgba(64, 169, 255, 0.15);
-
-          &::before {
-            opacity: 1;
-          }
-
-          ion-img {
-            transform: scale(1.1);
-          }
-
-          h3 {
-            background-position: -100%;
-          }
         }
 
         ion-img {
           width: 100%;
           height: 300px;
           object-fit: cover;
-          transition: transform 0.8s ease;
+          transition: transform 0.3s ease;
         }
 
         h3 {
           font-size: 1.5rem;
           font-weight: 600;
           margin: 1.5rem 1.5rem 0.5rem;
-          background: linear-gradient(to right, #ffffff 50%, #40a9ff 50%);
-          background-size: 200% 100%;
-          background-position: 0%;
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          transition: background-position 0.5s ease;
         }
 
         p {
@@ -462,7 +350,7 @@ import {
         }
 
         .price {
-          color: #40a9ff;
+          color: var(--accent-color);
           font-weight: 700;
           font-size: 1.2rem;
         }
@@ -476,66 +364,26 @@ import {
 
       .service-card {
         background: var(--card-bg);
-        border-radius: 20px;
+        border-radius: 16px;
         padding: 2.5rem;
         text-align: center;
         box-shadow: var(--card-shadow);
-        transition: all 0.5s ease;
-        position: relative;
-        overflow: hidden;
-
-        &::before {
-          content: '';
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          background: linear-gradient(
-            45deg,
-            rgba(64, 169, 255, 0.1),
-            transparent
-          );
-          opacity: 0;
-          transition: opacity 0.5s ease;
-        }
+        transition: all 0.3s ease;
 
         &:hover {
           transform: var(--card-hover-transform);
-          box-shadow: 0 16px 32px rgba(64, 169, 255, 0.15);
-
-          &::before {
-            opacity: 1;
-          }
-
-          ion-icon {
-            transform: scale(1.1) rotate(10deg);
-            color: #40a9ff;
-          }
-
-          h3 {
-            background-position: -100%;
-          }
         }
 
         ion-icon {
-          font-size: 3.5rem;
-          color: #40a9ff;
+          font-size: 3rem;
+          color: var(--accent-color);
           margin-bottom: 1.5rem;
-          transition: all 0.5s ease;
-          opacity: 0.9;
         }
 
         h3 {
           font-size: 1.5rem;
           font-weight: 600;
           margin-bottom: 1rem;
-          background: linear-gradient(to right, #ffffff 50%, #40a9ff 50%);
-          background-size: 200% 100%;
-          background-position: 0%;
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          transition: background-position 0.5s ease;
         }
 
         p {
@@ -552,45 +400,6 @@ import {
         --padding-bottom: 1rem;
         font-weight: 600;
         letter-spacing: 0.5px;
-        transition: all 0.3s ease;
-        --background: rgba(64, 169, 255, 0.1);
-        --background-hover: rgba(64, 169, 255, 0.2);
-        --color: #40a9ff;
-        --border-color: #40a9ff;
-
-        &:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 8px 16px rgba(64, 169, 255, 0.2);
-        }
-      }
-
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-        }
-        to {
-          opacity: 1;
-        }
-      }
-
-      @keyframes slideUp {
-        from {
-          opacity: 0;
-          transform: translateY(20px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-
-      @keyframes expandWidth {
-        from {
-          width: 0;
-        }
-        to {
-          width: 60px;
-        }
       }
 
       @media (max-width: 992px) {
