@@ -40,3 +40,6 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+# Firebase
+taajirah-firebase-adminsdk-kc3vd-59e0de2c62.json
