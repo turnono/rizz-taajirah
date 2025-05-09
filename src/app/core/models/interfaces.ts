@@ -19,7 +19,7 @@ export interface Course {
   description: string;
   price: number;
   instructor: string;
-  category: 'quranic-arabic' | 'computer-skills';
+  category: 'quraanic-arabic' | 'computer-skills';
   level: 'beginner' | 'intermediate' | 'advanced';
   skoolUrl: string;
   thumbnail: string;

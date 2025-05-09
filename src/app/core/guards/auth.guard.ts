@@ -1,22 +1,30 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, Router, UrlTree } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Auth, authState } from '@angular/fire/auth';
+import { EmailCollectionService } from '../services/email-collection.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthGuard implements CanActivate {
-  constructor(private auth: Auth, private router: Router) {}
+  constructor(
+    private emailService: EmailCollectionService,
+    private router: Router
+  ) {}
 
   canActivate(): Observable<boolean | UrlTree> {
-    return authState(this.auth).pipe(
-      map((user) => {
-        if (user) {
+    // Check if user is logged in using EmailCollectionService
+    const isLoggedIn = this.emailService.isLoggedIn();
+
+    return of(isLoggedIn).pipe(
+      map((isAuthenticated) => {
+        if (isAuthenticated) {
+          // User is logged in, allow access
           return true;
         }
-        return this.router.createUrlTree(['/auth/login']);
+        // Not logged in, redirect to landing page to create anonymous user
+        return this.router.createUrlTree(['/']);
       })
     );
   }

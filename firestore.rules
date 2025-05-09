@@ -1,0 +1,18 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Allow users to read and write their own documents
+    match /users/{userId} {
+      // Allow anyone to create a new user document (for anonymous users)
+      allow create: if true;
+
+      // Allow read and update for the user's own document
+      allow read, update: if true;
+    }
+
+    // Default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
