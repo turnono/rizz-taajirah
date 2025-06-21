@@ -10,12 +10,6 @@ export const routes: Routes = [
       ),
   },
   {
-    path: 'calculated-mistake',
-    loadComponent: () =>
-      import('./features/home/home.component').then((m) => m.HomeComponent),
-    data: { animation: 'HomePage' },
-  },
-  {
     path: '**',
     redirectTo: '',
   },

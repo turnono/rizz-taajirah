@@ -40,7 +40,36 @@ import { EmailCollectionService } from '../../core/services/email-collection.ser
     </ion-header>
 
     <ion-content #content [fullscreen]="true">
+      <!-- Boot sequence overlay -->
+      <div class="initial-overlay" [class.fade-out]="bootComplete">
+        <div class="boot-sequence">
+          <div
+            class="line"
+            *ngFor="let line of bootSequence; let i = index"
+            [style.animation-delay]="i * 0.8 + 's'"
+            [class.visible]="bootLines[i]"
+          >
+            {{ line }}
+          </div>
+          <div class="instruction" *ngIf="showScrollInstruction">
+            > ACCESS GRANTED - LOADING INTERFACE_
+          </div>
+        </div>
+      </div>
+
       <div class="content-container">
+        <div class="intro-section">
+          <h2 class="section-title">TAAJIRAH SYSTEMS</h2>
+          <p class="section-subtitle">
+            > EDUCATION • AI INNOVATION • DIGITAL EXPERIENCES
+          </p>
+
+          <!-- Countdown timer -->
+          <div class="countdown-container" *ngIf="showCountdown">
+            <div class="countdown-label">SYSTEM UPTIME:</div>
+            <div class="countdown">{{ systemUptime }}</div>
+          </div>
+        </div>
         <div class="card-container">
           <ion-card class="course-card">
             <div class="accent-line"></div>
@@ -65,9 +94,15 @@ import { EmailCollectionService } from '../../core/services/email-collection.ser
             </ion-card-header>
             <ion-card-content>
               <p class="micro-blurb">
-                PDFs by Abdullah Abrahams — study anytime in our AI Notebook
-                (LLM-powered).
+                Interactive PDFs by Abdullah Abrahams — Enhanced learning with
+                AI-powered study companion.
               </p>
+
+              <div class="features-list">
+                <div class="feature">🤖 AI Study Assistant</div>
+                <div class="feature">📖 Interactive PDFs</div>
+                <div class="feature">🎓 Self-Paced Learning</div>
+              </div>
 
               <!-- Email Form for first-time users -->
               <form
@@ -131,27 +166,30 @@ import { EmailCollectionService } from '../../core/services/email-collection.ser
             </ion-card-content>
           </ion-card>
 
-          <!-- Calculated Mistake card is hidden for now -->
-          <!--
-          <ion-card
-            class="project-card cyberpunk"
-            (click)="navigateToProject()"
-          >
+          <!-- Additional Products -->
+          <ion-card class="project-card modern" (click)="navigateTo82ndrop()">
+            <div class="accent-line modern-accent"></div>
             <ion-card-header>
-              <ion-card-title>CALCULATED MISTAKE</ion-card-title>
+              <ion-card-title>82ndrop</ion-card-title>
+              <div class="sub-line modern-sub">
+                AI Video Creation • Veo3 Powered
+              </div>
             </ion-card-header>
             <ion-card-content>
               <p class="description">
-                A cryptic journey into the depths of calculation and
-                consequence.
+                Create viral 8-second AI videos using advanced Veo3 technology.
+                Generate short-form content with instant impact.
               </p>
-              <div class="price-container">
-                <div class="price">COST: ZAR 100</div>
-                <div class="cta">Click to Enter_</div>
+              <div class="tech-specs">
+                <div class="spec">⚡ 8-Second Format</div>
+                <div class="spec">🤖 Veo3 AI Engine</div>
+                <div class="spec">📱 Layered Visuals</div>
+              </div>
+              <div class="price-container modern-price">
+                <div class="cta modern-cta">Create AI Videos →</div>
               </div>
             </ion-card-content>
           </ion-card>
-          -->
         </div>
       </div>
     </ion-content>
@@ -161,17 +199,19 @@ import { EmailCollectionService } from '../../core/services/email-collection.ser
       :host {
         display: block;
         height: 100vh;
-        --primary-color: #3a824a;
-        --primary-light: #edfaf2;
-        --primary-dark: #2a6038;
-        --accent-color: #e9c54c;
-        --text-dark: #333;
-        --text-medium: #555;
-        --text-light: #777;
+        --primary-color: #00ff00;
+        --primary-light: rgba(0, 255, 0, 0.1);
+        --primary-dark: #00cc00;
+        --accent-color: #00ffff;
+        --text-dark: #ffffff;
+        --text-medium: #cccccc;
+        --text-light: #999999;
+        --cyberpunk-glow: rgba(0, 255, 0, 0.3);
       }
 
       ion-content {
-        --background: var(--primary-light);
+        --background: transparent;
+        --color: var(--text-dark);
       }
 
       ion-header {
@@ -183,9 +223,12 @@ import { EmailCollectionService } from '../../core/services/email-collection.ser
       }
 
       ion-toolbar {
-        --background: white;
+        --background: rgba(0, 0, 0, 0.9);
+        --color: var(--text-dark);
         --border-style: none;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 2px 4px rgba(0, 255, 0, 0.2);
+        border-bottom: 1px solid rgba(0, 255, 0, 0.3);
+        --min-height: 60px;
       }
 
       .logo-container {
@@ -210,36 +253,115 @@ import { EmailCollectionService } from '../../core/services/email-collection.ser
 
       .content-container {
         width: 100%;
-        min-height: 100%;
+        min-height: 100vh;
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: center;
-        padding: 2rem;
+        justify-content: flex-start;
+        padding: calc(60px + 2rem) 2rem 2rem 2rem;
         box-sizing: border-box;
+        padding-top: calc(env(safe-area-inset-top, 0px) + 60px + 2rem);
+      }
+
+      /* Center content when there's enough vertical space */
+      @media screen and (min-height: 800px) {
+        .content-container {
+          justify-content: center;
+          padding-top: calc(env(safe-area-inset-top, 0px) + 60px + 1rem);
+        }
+      }
+
+      .intro-section {
+        text-align: center;
+        margin-bottom: 1.5rem;
+        max-width: 500px;
+      }
+
+      .section-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--primary-color);
+        margin-bottom: 1rem;
+        line-height: 1.2;
+        text-shadow: 0 0 20px var(--cyberpunk-glow);
+        font-family: 'Arial', monospace;
+        letter-spacing: 2px;
+      }
+
+      .section-subtitle {
+        font-size: 1.1rem;
+        color: var(--text-medium);
+        margin: 0;
+        line-height: 1.6;
+        text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
       }
 
       .card-container {
-        max-width: 600px;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+        max-width: 900px;
         width: 100%;
-        margin-top: 2rem;
+        margin-top: 1.5rem;
+      }
+
+      @media screen and (min-width: 768px) {
+        .card-container {
+          grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+          gap: 2rem;
+        }
+
+        .section-title {
+          font-size: 3rem;
+        }
+      }
+
+      @media screen and (max-width: 767px) {
+        .section-title {
+          font-size: 2rem;
+        }
+
+        .content-container {
+          padding: calc(env(safe-area-inset-top, 0px) + 60px + 1rem) 1rem 1rem
+            1rem;
+          min-height: calc(100vh - env(safe-area-inset-bottom, 0px));
+        }
+
+        .intro-section {
+          margin-bottom: 1.5rem;
+          margin-top: 1rem;
+        }
+
+        .logo-container {
+          padding: 0.5rem;
+        }
+
+        .brand {
+          font-size: 1.3rem;
+        }
+
+        .logo {
+          height: 35px;
+        }
       }
 
       /* Course card styles */
       .course-card {
-        box-shadow: 0 8px 24px rgba(58, 130, 74, 0.15);
-        border-radius: 12px;
+        box-shadow: 0 4px 16px var(--cyberpunk-glow);
+        border-radius: 8px;
         overflow: hidden;
         transition: transform 0.3s ease, box-shadow 0.3s ease;
         margin: 0;
         position: relative;
-        background: white;
-        border: 1px solid rgba(58, 130, 74, 0.1);
+        background: rgba(0, 0, 0, 0.8);
+        border: 1px solid var(--primary-color);
+        backdrop-filter: blur(10px);
       }
 
       .course-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 12px 30px rgba(58, 130, 74, 0.25);
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0, 255, 0, 0.4);
+        border-color: var(--accent-color);
       }
 
       .accent-line {
@@ -255,7 +377,7 @@ import { EmailCollectionService } from '../../core/services/email-collection.ser
       .image-container {
         position: relative;
         width: 100%;
-        height: 200px;
+        height: 120px;
         background: var(--primary-dark);
         overflow: hidden;
       }
@@ -291,7 +413,7 @@ import { EmailCollectionService } from '../../core/services/email-collection.ser
 
       .card-overlay-text h2 {
         color: white;
-        font-size: 2rem;
+        font-size: 1.4rem;
         font-weight: 700;
         margin: 0;
         text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
@@ -312,23 +434,49 @@ import { EmailCollectionService } from '../../core/services/email-collection.ser
       }
 
       ion-card-title {
-        font-size: 1.5rem;
+        font-size: 1.2rem;
         font-weight: 600;
         color: var(--text-dark);
-        margin-bottom: 0.5rem;
+        margin-bottom: 0.3rem;
       }
 
       .sub-line {
         color: var(--text-medium);
-        font-size: 0.9rem;
-        margin-bottom: 1rem;
+        font-size: 0.8rem;
+        margin-bottom: 0.8rem;
       }
 
       .micro-blurb {
-        font-size: 0.95rem;
+        font-size: 0.85rem;
         color: var(--text-medium);
-        margin-bottom: 1.5rem;
-        line-height: 1.5;
+        margin-bottom: 0.8rem;
+        line-height: 1.4;
+      }
+
+      .features-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+        margin-bottom: 1rem;
+      }
+
+      .feature {
+        background: rgba(0, 255, 0, 0.1);
+        color: var(--primary-color);
+        padding: 0.3rem 0.6rem;
+        border-radius: 8px;
+        font-size: 0.7rem;
+        font-weight: 500;
+        border: 1px solid rgba(0, 255, 0, 0.3);
+        font-family: 'Courier New', monospace;
+        text-shadow: 0 0 5px var(--cyberpunk-glow);
+        transition: all 0.3s ease;
+      }
+
+      .feature:hover {
+        background: rgba(0, 255, 0, 0.2);
+        border-color: var(--primary-color);
+        transform: scale(1.05);
       }
 
       .cta-button {
@@ -339,56 +487,310 @@ import { EmailCollectionService } from '../../core/services/email-collection.ser
         --background-activated: var(--primary-dark);
         --background-focused: var(--primary-dark);
         --background-hover: var(--primary-dark);
+        --color: #000000;
         height: 48px;
         position: relative;
+        box-shadow: 0 0 20px var(--cyberpunk-glow);
+        transition: all 0.3s ease;
       }
 
-      /* Cyberpunk styles (hidden for now) */
-      /*
-      .cyberpunk {
-        background: #000;
-        color: #0f0;
-        border: 2px solid #0f0;
-        box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+      .cta-button:hover {
+        box-shadow: 0 0 30px rgba(0, 255, 0, 0.6);
+        transform: translateY(-2px);
       }
 
-      .cyberpunk ion-card-title {
-        color: #0f0;
-        text-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
-        font-family: monospace;
+      /* Project card styles */
+      .project-card {
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        margin-bottom: 1.5rem;
+      }
+
+      .project-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+      }
+
+      /* Modern theme adapted for cyberpunk */
+      .modern {
+        background: rgba(0, 20, 40, 0.9);
+        border: 2px solid var(--accent-color);
+        color: var(--text-dark);
+        backdrop-filter: blur(10px);
+      }
+
+      .modern:hover {
+        border-color: var(--primary-color);
+        box-shadow: 0 6px 20px rgba(0, 255, 255, 0.3);
+        transform: translateY(-3px);
+      }
+
+      .modern ion-card-title {
+        color: var(--accent-color);
+        font-weight: 700;
+        font-size: 1.2rem;
+        text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+      }
+
+      .modern-sub {
+        color: var(--text-medium) !important;
+        font-weight: 500;
+        font-size: 0.9rem !important;
+      }
+
+      .modern .description {
+        color: var(--text-medium);
+        margin-bottom: 1.5rem;
+      }
+
+      .tech-specs {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.4rem;
         margin-bottom: 1rem;
       }
 
-      .cyberpunk .description {
-        color: #0f0;
-        font-family: monospace;
-        margin-bottom: 2rem;
+      .spec {
+        background: rgba(0, 255, 255, 0.1);
+        color: var(--accent-color);
+        padding: 0.3rem 0.6rem;
+        border-radius: 8px;
+        font-size: 0.7rem;
+        font-weight: 500;
+        border: 1px solid rgba(0, 255, 255, 0.3);
+        font-family: 'Courier New', monospace;
+        text-shadow: 0 0 5px rgba(0, 255, 255, 0.3);
+        transition: all 0.3s ease;
       }
 
-      .cyberpunk .price-container {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        border-top: 1px solid rgba(0, 255, 0, 0.3);
+      .spec:hover {
+        background: rgba(0, 255, 255, 0.2);
+        border-color: var(--accent-color);
+        transform: scale(1.05);
+      }
+
+      .modern-price {
+        border-top: 1px solid rgba(0, 255, 255, 0.3);
         padding-top: 1rem;
+        text-align: center;
       }
 
-      .cyberpunk .price {
-        font-family: monospace;
-        color: #0f0;
+      .modern-cta {
+        color: var(--accent-color);
+        font-weight: 600;
+        font-size: 1.1rem;
+        text-shadow: 0 0 5px rgba(0, 255, 255, 0.3);
       }
 
-      .cyberpunk .cta {
-        font-family: monospace;
-        color: #0f0;
-        animation: blink 1.5s infinite;
+      .modern-accent {
+        background: linear-gradient(
+          90deg,
+          var(--accent-color),
+          transparent
+        ) !important;
       }
 
       @keyframes blink {
-        0%, 100% { opacity: 1; }
-        50% { opacity: 0; }
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.5;
+        }
       }
-      */
+
+      .modern-cta {
+        animation: pulse 2s infinite;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          text-shadow: 0 0 5px rgba(0, 255, 255, 0.3);
+        }
+        50% {
+          text-shadow: 0 0 15px rgba(0, 255, 255, 0.6);
+        }
+      }
+
+      /* Boot sequence styles */
+      .initial-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: var(--cyberpunk-bg);
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: opacity 1s ease;
+
+        &.fade-out {
+          opacity: 0;
+          pointer-events: none;
+        }
+      }
+
+      .boot-sequence {
+        font-family: 'Courier New', monospace;
+        color: var(--primary-color);
+        text-align: left;
+        max-width: 90%;
+        padding: 0 1rem;
+
+        .line {
+          opacity: 0;
+          transform: translateX(-20px);
+          animation: typeIn 0.5s ease forwards;
+          margin-bottom: 0.8rem;
+          font-size: 1.1rem;
+          word-break: break-word;
+
+          &.visible {
+            opacity: 1;
+            transform: translateX(0);
+          }
+
+          &::before {
+            content: '>';
+            margin-right: 0.5rem;
+            color: var(--accent-color);
+          }
+        }
+
+        .instruction {
+          margin-top: 2rem;
+          color: var(--accent-color);
+          animation: blink 1s infinite;
+          font-weight: bold;
+          text-align: center;
+        }
+      }
+
+      /* Mobile optimizations */
+      @media screen and (max-width: 768px) {
+        .boot-sequence {
+          max-width: 95%;
+          padding: 0 0.5rem;
+
+          .line {
+            font-size: 0.9rem;
+            margin-bottom: 0.6rem;
+          }
+
+          .instruction {
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+          }
+        }
+
+        .countdown-container {
+          margin-top: 1rem;
+          padding: 0.8rem;
+        }
+
+        .countdown {
+          font-size: 1.2rem;
+          letter-spacing: 1px;
+        }
+
+        .countdown-label {
+          font-size: 0.8rem;
+        }
+      }
+
+      @media screen and (max-width: 480px) {
+        .content-container {
+          padding: calc(env(safe-area-inset-top, 0px) + 60px + 0.5rem) 0.5rem
+            0.5rem 0.5rem;
+        }
+
+        .section-title {
+          font-size: 1.8rem;
+        }
+
+        .section-subtitle {
+          font-size: 1rem;
+        }
+
+        .intro-section {
+          margin-bottom: 1rem;
+          margin-top: 0.5rem;
+        }
+
+        .boot-sequence {
+          .line {
+            font-size: 0.8rem;
+            margin-bottom: 0.5rem;
+          }
+
+          .instruction {
+            font-size: 0.8rem;
+          }
+        }
+
+        .countdown {
+          font-size: 1rem;
+        }
+
+        .logo-container {
+          padding: 0.3rem;
+        }
+
+        .brand {
+          font-size: 1.2rem;
+        }
+
+        .logo {
+          height: 30px;
+        }
+      }
+
+      @keyframes typeIn {
+        from {
+          opacity: 0;
+          transform: translateX(-20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      /* Countdown/Uptime styles */
+      .countdown-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 1.5rem;
+        padding: 1rem;
+        background: rgba(0, 0, 0, 0.6);
+        border: 1px solid var(--primary-color);
+        border-radius: 8px;
+        backdrop-filter: blur(10px);
+      }
+
+      .countdown-label {
+        font-family: 'Courier New', monospace;
+        color: var(--text-medium);
+        font-size: 0.9rem;
+        margin-bottom: 0.5rem;
+        letter-spacing: 1px;
+      }
+
+      .countdown {
+        font-family: 'Courier New', monospace;
+        color: var(--primary-color);
+        font-size: 1.5rem;
+        font-weight: bold;
+        text-shadow: 0 0 10px var(--cyberpunk-glow);
+        letter-spacing: 2px;
+      }
 
       /* Email form styles */
       .email-field {
@@ -447,6 +849,18 @@ export class LandingComponent implements OnInit, AfterViewInit {
   hasEmail = false;
   userId = '';
 
+  // Boot sequence properties
+  bootComplete = false;
+  showScrollInstruction = false;
+  showCountdown = false;
+  systemUptime = '';
+  bootLines: boolean[] = [];
+  bootSequence = [
+    'INITIALIZING SYSTEMS...',
+    'LOADING INTERFACE...',
+    'ACCESS GRANTED',
+  ];
+
   constructor(
     private router: Router,
     private emailService: EmailCollectionService,
@@ -458,6 +872,10 @@ export class LandingComponent implements OnInit, AfterViewInit {
   }
 
   async ngOnInit() {
+    // Initialize boot sequence
+    this.bootLines = new Array(this.bootSequence.length).fill(false);
+    this.initializeBootSequence();
+
     try {
       // Create anonymous user if needed
       this.userId = await this.emailService.createAnonymousUserIfNeeded();
@@ -514,5 +932,48 @@ export class LandingComponent implements OnInit, AfterViewInit {
 
     // Redirect to the notebook
     window.location.href = notebookUrl;
+  }
+
+  navigateTo82ndrop() {
+    window.open('https://82ndrop.web.app/', '_blank', 'noopener,noreferrer');
+  }
+
+  private initializeBootSequence() {
+    // Show boot lines one by one
+    this.bootSequence.forEach((_, index) => {
+      setTimeout(() => {
+        this.bootLines[index] = true;
+
+        // Show instruction after last line
+        if (index === this.bootSequence.length - 1) {
+          setTimeout(() => {
+            this.showScrollInstruction = true;
+            setTimeout(() => {
+              this.bootComplete = true;
+              this.showCountdown = true;
+              this.initializeUptime();
+            }, 2000);
+          }, 1000);
+        }
+      }, index * 400);
+    });
+  }
+
+  private initializeUptime() {
+    const startTime = Date.now();
+
+    const updateUptime = () => {
+      const elapsed = Date.now() - startTime;
+      const hours = Math.floor(elapsed / 3600000);
+      const minutes = Math.floor((elapsed % 3600000) / 60000);
+      const seconds = Math.floor((elapsed % 60000) / 1000);
+
+      this.systemUptime = `${hours.toString().padStart(2, '0')}:${minutes
+        .toString()
+        .padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    };
+
+    updateUptime();
+    setInterval(updateUptime, 1000);
   }
 }
