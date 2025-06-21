@@ -22,6 +22,8 @@ import {
   IonSpinner,
 } from '@ionic/angular/standalone';
 import { EmailCollectionService } from '../../core/services/email-collection.service';
+import { AnalyticsService } from '../../core/services/analytics.service';
+import { SeoService } from '../../core/services/seo.service';
 
 @Component({
   selector: 'app-landing',
@@ -33,8 +35,12 @@ import { EmailCollectionService } from '../../core/services/email-collection.ser
             src="https://firebasestorage.googleapis.com/v0/b/taajirah.appspot.com/o/taajirah_logo_no_bg.png?alt=media&token=85acb1a6-7db2-451f-8ef0-90c436c88cb2"
             alt="Taajirah Logo"
             class="logo"
+            loading="eager"
           />
           <h1 class="brand">TAAJIRAH</h1>
+          <div *ngIf="isOffline" class="offline-indicator">
+            <ion-badge color="warning">Offline</ion-badge>
+          </div>
         </div>
       </ion-toolbar>
     </ion-header>
@@ -78,6 +84,7 @@ import { EmailCollectionService } from '../../core/services/email-collection.ser
               <img
                 src="assets/images/courses/quraanic_course.png"
                 alt="Quraanic Arabic Course"
+                loading="lazy"
               />
               <div class="card-overlay-text">
                 <h2>Quraanic Arabic</h2>
@@ -94,8 +101,9 @@ import { EmailCollectionService } from '../../core/services/email-collection.ser
             </ion-card-header>
             <ion-card-content>
               <p class="micro-blurb">
-                Interactive PDFs by Abdullah Abrahams — Enhanced learning with
-                AI-powered study companion.
+                Master Quranic Arabic grammar and morphology with interactive
+                PDFs by Abdullah Abrahams. Get personalized help from your AI
+                study companion.
               </p>
 
               <div class="features-list">
@@ -112,11 +120,19 @@ import { EmailCollectionService } from '../../core/services/email-collection.ser
               >
                 <div class="email-field">
                   <ion-input
+                    #emailInput
                     fill="outline"
                     label="Your email"
                     type="email"
                     formControlName="email"
-                    placeholder="Enter your email to start"
+                    placeholder="Enter your email for instant access"
+                    (ionInput)="onEmailInput()"
+                    [class.valid-email]="isValidEmail"
+                    [class.invalid-email]="
+                      emailForm.get('email')?.touched &&
+                      emailForm.get('email')?.invalid
+                    "
+                    tabindex="1"
                   ></ion-input>
 
                   @if (emailForm.get('email')?.touched &&
@@ -127,6 +143,13 @@ import { EmailCollectionService } from '../../core/services/email-collection.ser
                   } @if (errorMessage) {
                   <ion-text color="danger" class="error-message">
                     {{ errorMessage }}
+                    <ion-button
+                      fill="clear"
+                      size="small"
+                      (click)="clearError()"
+                    >
+                      Try Again
+                    </ion-button>
                   </ion-text>
                   }
                 </div>
@@ -137,6 +160,8 @@ import { EmailCollectionService } from '../../core/services/email-collection.ser
                   class="cta-button"
                   type="submit"
                   [disabled]="emailForm.invalid || isSubmitting"
+                  (keydown.enter)="submitEmail()"
+                  tabindex="2"
                 >
                   <ion-spinner
                     *ngIf="isSubmitting"
@@ -154,20 +179,44 @@ import { EmailCollectionService } from '../../core/services/email-collection.ser
                 fill="solid"
                 class="cta-button"
                 (click)="navigateToNotebook()"
+                (keydown.enter)="navigateToNotebook()"
+                tabindex="1"
               >
                 Continue Learning ➔
               </ion-button>
 
-              <!-- Loading state -->
+              <!-- Enhanced Loading state -->
               <div *ngIf="isInitializing" class="loading-container">
-                <ion-spinner name="dots"></ion-spinner>
-                <p>Loading...</p>
+                <div class="loading-skeleton">
+                  <div class="skeleton-avatar"></div>
+                  <div class="skeleton-lines">
+                    <div class="skeleton-line long"></div>
+                    <div class="skeleton-line medium"></div>
+                    <div class="skeleton-line short"></div>
+                  </div>
+                </div>
+                <div class="loading-text">
+                  <ion-spinner name="dots" class="ai-spinner"></ion-spinner>
+                  <p class="loading-message">{{ loadingMessage }}</p>
+                  <div class="loading-progress">
+                    <div
+                      class="progress-bar"
+                      [style.width.%]="loadingProgress"
+                    ></div>
+                  </div>
+                </div>
               </div>
             </ion-card-content>
           </ion-card>
 
           <!-- Additional Products -->
-          <ion-card class="project-card modern" (click)="navigateTo82ndrop()">
+          <ion-card
+            class="project-card modern"
+            (click)="navigateTo82ndrop()"
+            (keydown.enter)="navigateTo82ndrop()"
+            (keydown.space)="navigateTo82ndrop()"
+            tabindex="3"
+          >
             <div class="accent-line modern-accent"></div>
             <ion-card-header>
               <ion-card-title>82ndrop</ion-card-title>
@@ -343,6 +392,60 @@ import { EmailCollectionService } from '../../core/services/email-collection.ser
         .logo {
           height: 35px;
         }
+
+        /* Better touch targets */
+        .cta-button {
+          min-height: 48px;
+          font-size: 1rem;
+          margin: 1.5rem 0;
+          padding: 0 1rem;
+        }
+
+        .feature {
+          padding: 0.5rem 0.8rem;
+          font-size: 0.8rem;
+          min-height: 32px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .features-list {
+          gap: 0.8rem;
+          margin: 1.5rem 0;
+        }
+
+        /* Card touch improvements */
+        .project-card {
+          margin-bottom: 2rem;
+          padding: 0.5rem;
+        }
+
+        .project-card ion-card-content {
+          padding: 1.5rem;
+        }
+
+        /* Email input improvements */
+        .email-field {
+          margin-bottom: 1.5rem;
+        }
+
+        ion-input {
+          --padding-start: 1rem;
+          --padding-end: 1rem;
+          min-height: 48px;
+        }
+
+        /* Better spacing for touch */
+        .card-container {
+          gap: 2rem;
+        }
+
+        /* Touch-friendly error buttons */
+        .error-message ion-button {
+          min-height: 32px;
+          margin-top: 0.5rem;
+        }
       }
 
       /* Course card styles */
@@ -494,9 +597,64 @@ import { EmailCollectionService } from '../../core/services/email-collection.ser
         transition: all 0.3s ease;
       }
 
-      .cta-button:hover {
+      .cta-button:hover:not([disabled]) {
         box-shadow: 0 0 30px rgba(0, 255, 0, 0.6);
         transform: translateY(-2px);
+      }
+
+      .cta-button[disabled] {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+
+      .cta-button:active:not([disabled]) {
+        transform: translateY(0);
+        box-shadow: 0 0 15px rgba(0, 255, 0, 0.4);
+      }
+
+      .cta-button:focus {
+        outline: 2px solid var(--accent-color);
+        outline-offset: 2px;
+      }
+
+      /* Touch feedback for cards */
+      .project-card:active {
+        transform: scale(0.98);
+        transition: transform 0.1s ease;
+      }
+
+      .feature:active {
+        transform: scale(0.95);
+        transition: transform 0.1s ease;
+      }
+
+      /* Focus management styles */
+      .project-card:focus {
+        outline: 2px solid var(--accent-color);
+        outline-offset: 2px;
+        box-shadow: 0 0 0 4px rgba(0, 255, 255, 0.2);
+      }
+
+      ion-input:focus-within {
+        --border-width: 2px;
+        --border-color: var(--accent-color);
+      }
+
+      /* Skip link for accessibility */
+      .skip-link {
+        position: absolute;
+        top: -40px;
+        left: 6px;
+        background: var(--primary-color);
+        color: #000;
+        padding: 8px;
+        text-decoration: none;
+        border-radius: 4px;
+        z-index: 1000;
+      }
+
+      .skip-link:focus {
+        top: 6px;
       }
 
       /* Project card styles */
@@ -803,17 +961,145 @@ import { EmailCollectionService } from '../../core/services/email-collection.ser
         display: block;
       }
 
+      /* Email validation styles */
+      ion-input.valid-email {
+        --border-color: var(--primary-color);
+        --color: var(--text-dark);
+      }
+
+      ion-input.invalid-email {
+        --border-color: #ff4444;
+        --color: var(--text-dark);
+      }
+
+      ion-input.valid-email::part(native) {
+        box-shadow: 0 0 5px rgba(0, 255, 0, 0.3);
+      }
+
+      ion-input.invalid-email::part(native) {
+        box-shadow: 0 0 5px rgba(255, 68, 68, 0.3);
+      }
+
+      /* Touch-friendly input behavior */
+      ion-input {
+        --padding-top: 12px;
+        --padding-bottom: 12px;
+        cursor: pointer;
+      }
+
+      ion-input:focus-within {
+        --border-width: 2px;
+        --border-color: var(--accent-color);
+      }
+
       .loading-container {
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        padding: 1rem;
+        padding: 2rem;
+        gap: 1.5rem;
       }
 
-      .loading-container p {
-        margin-top: 0.5rem;
+      .loading-skeleton {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        width: 100%;
+        max-width: 300px;
+        opacity: 0.3;
+      }
+
+      .skeleton-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: linear-gradient(
+          90deg,
+          rgba(0, 255, 0, 0.1) 25%,
+          rgba(0, 255, 0, 0.3) 50%,
+          rgba(0, 255, 0, 0.1) 75%
+        );
+        background-size: 200% 100%;
+        animation: skeleton-loading 1.5s infinite;
+      }
+
+      .skeleton-lines {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      .skeleton-line {
+        height: 12px;
+        border-radius: 6px;
+        background: linear-gradient(
+          90deg,
+          rgba(0, 255, 0, 0.1) 25%,
+          rgba(0, 255, 0, 0.3) 50%,
+          rgba(0, 255, 0, 0.1) 75%
+        );
+        background-size: 200% 100%;
+        animation: skeleton-loading 1.5s infinite;
+      }
+
+      .skeleton-line.long {
+        width: 100%;
+      }
+      .skeleton-line.medium {
+        width: 75%;
+      }
+      .skeleton-line.short {
+        width: 50%;
+      }
+
+      @keyframes skeleton-loading {
+        0% {
+          background-position: 200% 0;
+        }
+        100% {
+          background-position: -200% 0;
+        }
+      }
+
+      .loading-text {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .ai-spinner {
+        --color: var(--primary-color);
+        transform: scale(1.2);
+      }
+
+      .loading-message {
         color: var(--text-medium);
+        margin: 0;
+        font-size: 0.95rem;
+        font-weight: 500;
+      }
+
+      .loading-progress {
+        width: 200px;
+        height: 4px;
+        background: rgba(0, 255, 0, 0.2);
+        border-radius: 2px;
+        overflow: hidden;
+      }
+
+      .progress-bar {
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          var(--primary-color),
+          var(--accent-color)
+        );
+        border-radius: 2px;
+        transition: width 0.8s ease;
+        box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
       }
 
       .button-spinner {
@@ -841,6 +1127,7 @@ import { EmailCollectionService } from '../../core/services/email-collection.ser
 })
 export class LandingComponent implements OnInit, AfterViewInit {
   @ViewChild('content') content!: IonContent;
+  @ViewChild('emailInput') emailInput!: any;
 
   emailForm: FormGroup;
   isInitializing = true;
@@ -848,6 +1135,14 @@ export class LandingComponent implements OnInit, AfterViewInit {
   errorMessage = '';
   hasEmail = false;
   userId = '';
+  isValidEmail = false;
+
+  // Loading state properties
+  loadingMessage = 'Initializing AI systems...';
+  loadingProgress = 0;
+
+  // Connection status
+  isOffline = false;
 
   // Boot sequence properties
   bootComplete = false;
@@ -864,7 +1159,9 @@ export class LandingComponent implements OnInit, AfterViewInit {
   constructor(
     private router: Router,
     private emailService: EmailCollectionService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private analytics: AnalyticsService,
+    private seo: SeoService
   ) {
     this.emailForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -872,22 +1169,97 @@ export class LandingComponent implements OnInit, AfterViewInit {
   }
 
   async ngOnInit() {
+    // SEO optimization for landing page
+    this.seo.updateMetaTags({
+      title:
+        'TAAJIRAH - AI-Powered Quranic Arabic Learning & Video Creation Platform',
+      description:
+        'Master Quranic Arabic with AI-powered interactive learning and create viral AI videos with 82ndrop. Free beginner course with AI study assistant. Advanced Veo3 video generation technology.',
+      keywords:
+        'Quranic Arabic, Arabic learning, AI education, video creation, Veo3, AI videos, Islamic education, language learning, 82ndrop, TAAJIRAH',
+      url: window.location.href,
+      type: 'website',
+      author: 'Abdullah Abrahams',
+    });
+
+    this.seo.updateAIOptimizedTags({
+      topic: 'AI-Powered Education Platform',
+      intent: 'learning_and_creation',
+      expertise_level: 'all_levels',
+      content_type: 'educational_platform',
+      ai_features: [
+        'AI Study Assistant',
+        'Veo3 Video Generation',
+        'Interactive Learning',
+      ],
+      learning_outcomes: [
+        'Quranic Arabic Grammar',
+        'Arabic Morphology',
+        'AI Video Creation',
+      ],
+    });
+
+    // Track page view and AI search optimization
+    this.analytics.trackPageView('TAAJIRAH Landing', window.location.href);
+    this.analytics.trackSearchBehavior(
+      'education_platform_visit',
+      'landing_page_view'
+    );
+
     // Initialize boot sequence
     this.bootLines = new Array(this.bootSequence.length).fill(false);
     this.initializeBootSequence();
 
     try {
+      // Start loading sequence
+      this.startLoadingSequence();
+
       // Create anonymous user if needed
       this.userId = await this.emailService.createAnonymousUserIfNeeded();
 
       // Subscribe to user changes
       this.emailService.currentUser$.subscribe((user) => {
         this.hasEmail = !!user?.email;
+
+        // Track user type for analytics
+        if (user?.email) {
+          this.analytics.setUserProperties({
+            user_type: 'returning_user',
+            learning_level: 'engaged',
+            ai_usage: 'course_access',
+            platform_preference: this.getDeviceType(),
+          });
+          this.analytics.trackEvent(
+            'user_return',
+            'user_journey',
+            'existing_user'
+          );
+        } else {
+          this.analytics.setUserProperties({
+            user_type: 'new_visitor',
+            learning_level: 'beginner',
+            ai_usage: 'none',
+            platform_preference: this.getDeviceType(),
+          });
+          this.analytics.trackEvent('user_visit', 'user_journey', 'new_user');
+        }
       });
 
       this.isInitializing = false;
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error initializing user:', error);
+
+      // Track initialization error
+      this.analytics.trackError(error, 'user_initialization', {
+        component: 'landing',
+        stage: 'ngOnInit',
+      });
+
+      this.analytics.trackEvent(
+        'error',
+        'system',
+        'user_initialization_failed'
+      );
       this.errorMessage =
         'Unable to initialize session. Please try refreshing the page.';
       this.isInitializing = false;
@@ -900,24 +1272,110 @@ export class LandingComponent implements OnInit, AfterViewInit {
       if (this.content) {
         this.content.scrollToTop(500);
       }
+
+      // Auto-focus email input for new users (after boot sequence)
+      if (!this.hasEmail && !this.isInitializing) {
+        setTimeout(() => {
+          this.focusEmailInput();
+        }, 3000); // After boot sequence completes
+      }
+
+      // Track performance metrics after view initialization
+      this.trackPerformanceMetrics();
     }, 100);
+  }
+
+  // Track performance metrics for optimization
+  private trackPerformanceMetrics() {
+    // Track device information
+    this.analytics.trackDevicePerformance();
+
+    // Track network performance
+    this.analytics.trackNetworkPerformance();
+
+    // Track connection status
+    this.analytics.trackConnectionStatus();
+    this.setupOfflineHandling();
+
+    // Track Core Web Vitals
+    this.analytics.trackWebVitals();
+
+    // Track resource loading performance
+    setTimeout(() => {
+      this.analytics.trackResourcePerformance();
+    }, 2000);
+
+    // Track component initialization time
+    const componentLoadTime = performance.now();
+    this.analytics.trackPerformance(
+      'component_load_time',
+      Math.round(componentLoadTime),
+      'ms'
+    );
   }
 
   async submitEmail() {
     if (this.emailForm.valid && !this.isSubmitting) {
+      const startTime = performance.now();
       this.isSubmitting = true;
       this.errorMessage = '';
 
       try {
         const { email } = this.emailForm.value;
 
+        // Track email submission attempt
+        this.analytics.trackEvent(
+          'email_submit_attempt',
+          'conversion',
+          'quranic_course'
+        );
+
         // Update the user with email
         await this.emailService.updateUserWithEmail(this.userId, email);
+
+        // Track successful conversion
+        this.analytics.trackConversion('email_signup', {
+          course_name: 'Quranic Arabic Course',
+          user_id: this.userId,
+          email_domain: email.split('@')[1],
+        });
+
+        // Track course enrollment
+        this.analytics.trackCourseEvent(
+          'course_enrollment',
+          'Quranic Arabic Course',
+          0
+        );
+
+        // Track AI interaction
+        this.analytics.trackAIInteraction('course_signup', 'email_conversion', {
+          ai_feature: 'study_assistant',
+          course_type: 'quranic_arabic',
+        });
+
+        // Track interaction performance
+        this.analytics.trackInteractionPerformance(
+          'email_submission',
+          startTime
+        );
 
         // Navigate to notebook
         this.navigateToNotebook();
       } catch (error: any) {
         console.error('Error submitting email:', error);
+
+        // Track detailed error information
+        this.analytics.trackError(error, 'email_submission', {
+          form_name: 'email_signup',
+          user_id: this.userId,
+          email_domain: this.emailForm.value.email?.split('@')[1],
+        });
+
+        this.analytics.trackEvent(
+          'error',
+          'conversion',
+          'email_submission_failed'
+        );
         this.errorMessage =
           error.message || 'Error processing your email. Please try again.';
       } finally {
@@ -927,15 +1385,83 @@ export class LandingComponent implements OnInit, AfterViewInit {
   }
 
   navigateToNotebook() {
+    // Track course start
+    this.analytics.trackCourseEvent('course_start', 'Quranic Arabic Course', 0);
+    this.analytics.trackMilestone('course_access_granted', {
+      user_id: this.userId,
+      course_name: 'Quranic Arabic Course',
+    });
+
     // Get notebook URL from service
     const notebookUrl = this.emailService.getNotebookUrl();
+
+    // Track external navigation
+    this.analytics.trackExternalClick(notebookUrl, 'Start Course Button');
 
     // Redirect to the notebook
     window.location.href = notebookUrl;
   }
 
   navigateTo82ndrop() {
+    const startTime = performance.now();
+
+    // Track 82ndrop interaction
+    this.analytics.trackVideoEvent('platform_visit', {
+      source: 'taajirah_landing',
+      user_type: this.hasEmail ? 'registered' : 'anonymous',
+    });
+
+    // Track interaction performance
+    this.analytics.trackInteractionPerformance('82ndrop_navigation', startTime);
+
+    // Track AI platform interaction
+    this.analytics.trackAIInteraction('video_creation', 'platform_navigation', {
+      ai_feature: 'veo3_videos',
+      destination: '82ndrop',
+    });
+
+    // Track external click
+    this.analytics.trackExternalClick(
+      'https://82ndrop.web.app/',
+      '82ndrop Card'
+    );
+
     window.open('https://82ndrop.web.app/', '_blank', 'noopener,noreferrer');
+  }
+
+  clearError() {
+    this.errorMessage = '';
+    this.analytics.trackEvent('error_cleared', 'user_action', 'retry_attempt');
+  }
+
+  onEmailInput() {
+    const email = this.emailForm.get('email')?.value;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    this.isValidEmail = emailRegex.test(email);
+
+    // Track form validation errors
+    if (email && email.length > 0 && !this.isValidEmail) {
+      this.analytics.trackFormError('email_signup', 'email', 'invalid_format');
+    }
+
+    if (this.isValidEmail) {
+      this.analytics.trackEvent(
+        'valid_email_entered',
+        'form_interaction',
+        'email_validation'
+      );
+    }
+  }
+
+  focusEmailInput() {
+    if (this.emailInput && this.emailInput.setFocus) {
+      this.emailInput.setFocus();
+      this.analytics.trackEvent(
+        'email_input_focused',
+        'user_interaction',
+        'auto_focus'
+      );
+    }
   }
 
   private initializeBootSequence() {
@@ -975,5 +1501,57 @@ export class LandingComponent implements OnInit, AfterViewInit {
 
     updateUptime();
     setInterval(updateUptime, 1000);
+  }
+
+  // Helper method to detect device type
+  private getDeviceType(): string {
+    const userAgent = navigator.userAgent;
+    const isMobile =
+      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        userAgent
+      );
+    const isTablet = /iPad|Android(?!.*Mobile)/i.test(userAgent);
+
+    return isMobile ? 'mobile' : isTablet ? 'tablet' : 'desktop';
+  }
+
+  // Enhanced loading sequence with progress
+  private startLoadingSequence() {
+    const messages = [
+      'Connecting to AI systems...',
+      'Loading neural networks...',
+      'Preparing study environment...',
+      'Almost ready...',
+    ];
+
+    let messageIndex = 0;
+    let progress = 0;
+
+    const updateLoading = () => {
+      if (messageIndex < messages.length) {
+        this.loadingMessage = messages[messageIndex];
+        this.loadingProgress = (messageIndex + 1) * 25;
+        messageIndex++;
+
+        setTimeout(updateLoading, 800);
+      }
+    };
+
+    updateLoading();
+  }
+
+  // Handle offline/online status
+  private setupOfflineHandling() {
+    this.isOffline = !navigator.onLine;
+
+    window.addEventListener('online', () => {
+      this.isOffline = false;
+      this.loadingMessage = 'Connection restored!';
+    });
+
+    window.addEventListener('offline', () => {
+      this.isOffline = true;
+      this.loadingMessage = 'You are offline. Some features may be limited.';
+    });
   }
 }

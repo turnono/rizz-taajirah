@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ErrorHandler, Injectable } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
 import { CommonModule } from '@angular/common';
+import { AnalyticsService } from './core/services/analytics.service';
 
 @Component({
   selector: 'app-root',
@@ -507,7 +508,11 @@ export class AppComponent implements OnInit {
     'rgba(255, 200, 100, 0.3)', // subtle peach
   ];
 
+  constructor(private analytics: AnalyticsService) {}
+
   ngOnInit() {
+    // Set up global error handling
+    this.setupErrorHandling();
     this.startGifSequence();
     this.generateRandomFormulas();
     this.randomizeFormulas();
@@ -561,5 +566,54 @@ export class AppComponent implements OnInit {
 
     // Start spawning symbols
     spawnSymbol();
+  }
+
+  private setupErrorHandling() {
+    // Global error handler for unhandled JavaScript errors
+    window.addEventListener('error', (event) => {
+      this.analytics.trackError(
+        new Error(event.message),
+        'global_javascript_error',
+        {
+          filename: event.filename,
+          line_number: event.lineno,
+          column_number: event.colno,
+        }
+      );
+    });
+
+    // Global handler for unhandled promise rejections
+    window.addEventListener('unhandledrejection', (event) => {
+      this.analytics.trackError(
+        new Error(event.reason?.message || 'Unhandled promise rejection'),
+        'unhandled_promise_rejection',
+        {
+          reason: event.reason?.toString(),
+        }
+      );
+    });
+
+    // Track network errors
+    const originalFetch = window.fetch;
+    window.fetch = async (...args) => {
+      try {
+        const response = await originalFetch(...args);
+        if (!response.ok) {
+          this.analytics.trackNetworkError(
+            args[0]?.toString() || 'unknown_url',
+            response.status,
+            response.statusText
+          );
+        }
+        return response;
+      } catch (error: any) {
+        this.analytics.trackNetworkError(
+          args[0]?.toString() || 'unknown_url',
+          0,
+          error.message
+        );
+        throw error;
+      }
+    };
   }
 }

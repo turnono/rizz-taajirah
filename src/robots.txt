@@ -1,0 +1,36 @@
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://taajirah.web.app/sitemap.xml
+
+# Optimize for Google AI crawling
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 1
+
+# Allow AI search bots
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+# Block unnecessary paths
+Disallow: /api/
+Disallow: /*.json$
+Disallow: /firebase-messaging-sw.js
+
+# Cache directives for better performance
+# Allow caching of static assets
+Allow: /assets/
+Allow: /*.css$
+Allow: /*.js$
+Allow: /*.png$
+Allow: /*.jpg$
+Allow: /*.gif$
+Allow: /*.svg$
+Allow: /*.ico$
