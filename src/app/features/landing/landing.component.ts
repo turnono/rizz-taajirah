@@ -239,6 +239,37 @@ import { SeoService } from '../../core/services/seo.service';
               </div>
             </ion-card-content>
           </ion-card>
+
+          <!-- Claude Subagents Marketplace -->
+          <ion-card
+            class="project-card marketplace"
+            (click)="navigateToSubagents()"
+            (keydown.enter)="navigateToSubagents()"
+            (keydown.space)="navigateToSubagents()"
+            tabindex="4"
+          >
+            <div class="accent-line marketplace-accent"></div>
+            <ion-card-header>
+              <ion-card-title>Claude Subagents</ion-card-title>
+              <div class="sub-line marketplace-sub">
+                AI Agents Marketplace • Open Source
+              </div>
+            </ion-card-header>
+            <ion-card-content>
+              <p class="description">
+                Discover and share specialized Claude AI agents. The GitHub for
+                Claude agents with 51+ agents available.
+              </p>
+              <div class="tech-specs">
+                <div class="spec">🤖 51+ AI Agents</div>
+                <div class="spec">🔗 GitHub Integration</div>
+                <div class="spec">📦 One-Click Download</div>
+              </div>
+              <div class="price-container marketplace-price">
+                <div class="cta marketplace-cta">Explore Agents →</div>
+              </div>
+            </ion-card-content>
+          </ion-card>
         </div>
       </div>
     </ion-content>
@@ -347,16 +378,16 @@ import { SeoService } from '../../core/services/seo.service';
 
       .card-container {
         display: grid;
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
         gap: 1.5rem;
-        max-width: 900px;
+        max-width: 1200px;
         width: 100%;
         margin-top: 1.5rem;
       }
 
       @media screen and (min-width: 768px) {
         .card-container {
-          grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+          grid-template-columns: repeat(3, 1fr);
           gap: 2rem;
         }
 
@@ -438,7 +469,8 @@ import { SeoService } from '../../core/services/seo.service';
 
         /* Better spacing for touch */
         .card-container {
-          gap: 2rem;
+          gap: 1.5rem;
+          grid-template-columns: 1fr;
         }
 
         /* Touch-friendly error buttons */
@@ -748,6 +780,82 @@ import { SeoService } from '../../core/services/seo.service';
           var(--accent-color),
           transparent
         ) !important;
+      }
+
+      /* Marketplace theme for Claude Subagents */
+      .marketplace {
+        background: rgba(40, 20, 0, 0.9);
+        border: 2px solid #ff6b35;
+        color: var(--text-dark);
+        backdrop-filter: blur(10px);
+      }
+
+      .marketplace:hover {
+        border-color: #ff8c42;
+        box-shadow: 0 6px 20px rgba(255, 107, 53, 0.3);
+        transform: translateY(-3px);
+      }
+
+      .marketplace ion-card-title {
+        color: #ff6b35;
+        font-weight: 700;
+        font-size: 1.2rem;
+        text-shadow: 0 0 10px rgba(255, 107, 53, 0.5);
+      }
+
+      .marketplace-sub {
+        color: var(--text-medium) !important;
+        font-weight: 500;
+        font-size: 0.9rem !important;
+      }
+
+      .marketplace .description {
+        color: var(--text-medium);
+        margin-bottom: 1.5rem;
+      }
+
+      .marketplace .spec {
+        background: rgba(255, 107, 53, 0.1);
+        color: #ff6b35;
+        border: 1px solid rgba(255, 107, 53, 0.3);
+        text-shadow: 0 0 5px rgba(255, 107, 53, 0.3);
+      }
+
+      .marketplace .spec:hover {
+        background: rgba(255, 107, 53, 0.2);
+        border-color: #ff6b35;
+        transform: scale(1.05);
+      }
+
+      .marketplace-price {
+        border-top: 1px solid rgba(255, 107, 53, 0.3);
+        padding-top: 1rem;
+        text-align: center;
+      }
+
+      .marketplace-cta {
+        color: #ff6b35;
+        font-weight: 600;
+        font-size: 1.1rem;
+        text-shadow: 0 0 5px rgba(255, 107, 53, 0.3);
+      }
+
+      .marketplace-accent {
+        background: linear-gradient(90deg, #ff6b35, transparent) !important;
+      }
+
+      .marketplace-cta {
+        animation: marketplace-pulse 2s infinite;
+      }
+
+      @keyframes marketplace-pulse {
+        0%,
+        100% {
+          text-shadow: 0 0 5px rgba(255, 107, 53, 0.3);
+        }
+        50% {
+          text-shadow: 0 0 15px rgba(255, 107, 53, 0.6);
+        }
       }
 
       @keyframes blink {
@@ -1427,6 +1535,41 @@ export class LandingComponent implements OnInit, AfterViewInit {
     );
 
     window.open('https://82ndrop.web.app/', '_blank', 'noopener,noreferrer');
+  }
+
+  navigateToSubagents() {
+    const startTime = performance.now();
+
+    // Track Subagents interaction
+    this.analytics.trackEvent(
+      'platform_visit',
+      'navigation',
+      'claude_subagents'
+    );
+
+    // Track interaction performance
+    this.analytics.trackInteractionPerformance(
+      'subagents_navigation',
+      startTime
+    );
+
+    // Track AI platform interaction
+    this.analytics.trackAIInteraction(
+      'agents_marketplace',
+      'platform_navigation',
+      {
+        ai_feature: 'claude_agents',
+        destination: 'subagents_marketplace',
+      }
+    );
+
+    // Track external click
+    this.analytics.trackExternalClick(
+      'https://subagents.web.app/',
+      'Claude Subagents Card'
+    );
+
+    window.open('https://subagents.web.app/', '_blank', 'noopener,noreferrer');
   }
 
   clearError() {
