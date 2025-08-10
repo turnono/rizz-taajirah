@@ -24,7 +24,7 @@ export const appConfig: ApplicationConfig = {
     provideAnimationsAsync(),
     provideFirebaseApp(() =>
       initializeApp({
-        apiKey: 'AIzaSyDGaH72jq3Ev-Jue-5qm72OzpRCWzQMh9U',
+        apiKey: 'AIzaSyBOEwSrq5bNlPqEpysEy8dedSYV9HrI4ek',
         authDomain: 'taajirah.firebaseapp.com',
         databaseURL:
           'https://taajirah-default-rtdb.europe-west1.firebasedatabase.app',

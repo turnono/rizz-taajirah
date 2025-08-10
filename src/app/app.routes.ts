@@ -10,6 +10,11 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'mcp',
+    loadComponent: () =>
+      import('./features/mcp/mcp.component').then((m) => m.McpComponent),
+  },
+  {
     path: '**',
     redirectTo: '',
   },

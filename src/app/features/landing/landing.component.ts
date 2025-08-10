@@ -1,4 +1,10 @@
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  AfterViewInit,
+  ElementRef,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import {
@@ -17,9 +23,6 @@ import {
   IonBadge,
   IonHeader,
   IonToolbar,
-  IonInput,
-  IonText,
-  IonSpinner,
 } from '@ionic/angular/standalone';
 import { EmailCollectionService } from '../../core/services/email-collection.service';
 import { AnalyticsService } from '../../core/services/analytics.service';
@@ -35,243 +38,182 @@ import { SeoService } from '../../core/services/seo.service';
             src="https://firebasestorage.googleapis.com/v0/b/taajirah.appspot.com/o/taajirah_logo_no_bg.png?alt=media&token=85acb1a6-7db2-451f-8ef0-90c436c88cb2"
             alt="Taajirah Logo"
             class="logo"
-            loading="eager"
+            loading="lazy"
+            decoding="async"
           />
           <h1 class="brand">TAAJIRAH</h1>
           <div *ngIf="isOffline" class="offline-indicator">
             <ion-badge color="warning">Offline</ion-badge>
           </div>
         </div>
+        <div class="nav-actions">
+          <ion-button fill="clear" size="small" (click)="router.navigate([''])"
+            >Home</ion-button
+          >
+          <ion-button
+            fill="clear"
+            size="small"
+            (click)="router.navigate(['mcp'])"
+            >MCP</ion-button
+          >
+          <ion-button fill="clear" size="small" (click)="navigateTo82ndrop()"
+            >82ndrop</ion-button
+          >
+          <ion-button fill="clear" size="small" (click)="navigateToSubagents()"
+            >Subagents</ion-button
+          >
+        </div>
       </ion-toolbar>
     </ion-header>
 
     <ion-content #content [fullscreen]="true">
-      <!-- Boot sequence overlay -->
-      <div class="initial-overlay" [class.fade-out]="bootComplete">
-        <div class="boot-sequence">
-          <div
-            class="line"
-            *ngFor="let line of bootSequence; let i = index"
-            [style.animation-delay]="i * 0.8 + 's'"
-            [class.visible]="bootLines[i]"
-          >
-            {{ line }}
-          </div>
-          <div class="instruction" *ngIf="showScrollInstruction">
-            > ACCESS GRANTED - LOADING INTERFACE_
-          </div>
-        </div>
-      </div>
-
-      <div class="content-container">
-        <div class="intro-section">
-          <h2 class="section-title">TAAJIRAH SYSTEMS</h2>
-          <p class="section-subtitle">
-            > EDUCATION • AI INNOVATION • DIGITAL EXPERIENCES
+      <!-- Hero Section -->
+      <section class="hero">
+        <div class="hero-content">
+          <h1 class="hero-title">Learn. Create. Innovate.</h1>
+          <p class="hero-sub">
+            Quranic Arabic Learning • AI Video Creation • Developer Tools
           </p>
-
-          <!-- Countdown timer -->
-          <div class="countdown-container" *ngIf="showCountdown">
-            <div class="countdown-label">SYSTEM UPTIME:</div>
-            <div class="countdown">{{ systemUptime }}</div>
+          <div class="cta-row">
+            <ion-button class="cta-primary" (click)="scrollToCourse()"
+              >Start Learning</ion-button
+            >
+            <ion-button fill="outline" (click)="scrollToCourse()"
+              >Start Arabic Course</ion-button
+            >
           </div>
         </div>
-        <div class="card-container">
-          <ion-card class="course-card">
-            <div class="accent-line"></div>
-            <div class="image-container">
-              <div class="image-overlay"></div>
-              <img
-                src="assets/images/courses/quraanic_course.png"
-                alt="Quraanic Arabic Course"
-                loading="lazy"
-              />
-              <div class="card-overlay-text">
-                <h2>Quraanic Arabic</h2>
-              </div>
-              <ion-badge class="free-badge">FREE</ion-badge>
+      </section>
+
+      <!-- Product Cards -->
+      <div class="products-section">
+        <!-- Quranic Arabic Course - PRIMARY -->
+        <ion-card
+          class="product-card course-card"
+          #courseSection
+          (click)="navigateToCourse()"
+          (keydown.enter)="navigateToCourse()"
+          (keydown.space)="navigateToCourse()"
+          tabindex="1"
+        >
+          <div class="accent-line course-accent"></div>
+          <div class="image-container">
+            <img
+              src="assets/images/courses/quraanic_course.png"
+              alt="Quraanic Arabic Course"
+              loading="lazy"
+              decoding="async"
+              width="640"
+              height="240"
+            />
+            <ion-badge class="free-badge">FREE</ion-badge>
+            <div class="course-icon">📚</div>
+          </div>
+          <ion-card-header>
+            <ion-card-title>Quraanic Arabic</ion-card-title>
+            <div class="sub-line">AI-Powered Learning</div>
+          </ion-card-header>
+          <ion-card-content>
+            <p class="card-description">
+              Master Quranic Arabic with AI assistance. Interactive learning
+              with instant feedback.
+            </p>
+            <div class="cta-container">
+              <div class="cta">Start Learning</div>
             </div>
-            <ion-card-header>
-              <ion-card-title
-                >Free Beginner Quraanic Arabic Course</ion-card-title
-              >
-              <div class="sub-line">
-                Nahw (Grammar) • Sarf (Morphology) • Readings
-              </div>
-            </ion-card-header>
-            <ion-card-content>
-              <p class="micro-blurb">
-                Master Quranic Arabic grammar and morphology with interactive
-                PDFs by Abdullah Abrahams. Get personalized help from your AI
-                study companion.
-              </p>
+          </ion-card-content>
+        </ion-card>
 
-              <div class="features-list">
-                <div class="feature">🤖 AI Study Assistant</div>
-                <div class="feature">📖 Interactive PDFs</div>
-                <div class="feature">🎓 Self-Paced Learning</div>
-              </div>
+        <!-- 82ndrop -->
+        <ion-card
+          class="product-card video-card"
+          (click)="navigateTo82ndrop()"
+          (keydown.enter)="navigateTo82ndrop()"
+          (keydown.space)="navigateTo82ndrop()"
+          tabindex="3"
+        >
+          <div class="accent-line video-accent"></div>
+          <div class="icon-container">
+            <div class="product-icon">🎬</div>
+          </div>
+          <ion-card-header>
+            <ion-card-title>82ndrop</ion-card-title>
+            <div class="sub-line">AI Video Creation</div>
+          </ion-card-header>
+          <ion-card-content>
+            <p class="card-description">
+              Create viral 8-second AI videos with advanced Veo3 technology.
+            </p>
+            <div class="cta-container">
+              <div class="cta">Create Videos</div>
+            </div>
+          </ion-card-content>
+        </ion-card>
 
-              <!-- Email Form for first-time users -->
-              <form
-                *ngIf="!hasEmail && !isInitializing"
-                [formGroup]="emailForm"
-                (ngSubmit)="submitEmail()"
-              >
-                <div class="email-field">
-                  <ion-input
-                    #emailInput
-                    fill="outline"
-                    label="Your email"
-                    type="email"
-                    formControlName="email"
-                    placeholder="Enter your email for instant access"
-                    (ionInput)="onEmailInput()"
-                    [class.valid-email]="isValidEmail"
-                    [class.invalid-email]="
-                      emailForm.get('email')?.touched &&
-                      emailForm.get('email')?.invalid
-                    "
-                    tabindex="1"
-                  ></ion-input>
+        <!-- 7pace Timetracker MCP -->
+        <ion-card
+          class="product-card mcp-card"
+          (click)="navigateToSmotaryMCP()"
+          (keydown.enter)="navigateToSmotaryMCP()"
+          (keydown.space)="navigateToSmotaryMCP()"
+          tabindex="4"
+        >
+          <div class="accent-line mcp-accent"></div>
+          <div class="icon-container">
+            <div class="product-icon">⏰</div>
+          </div>
+          <ion-card-header>
+            <ion-card-title>7pace MCP</ion-card-title>
+            <div class="sub-line">Developer Tool</div>
+          </ion-card-header>
+          <ion-card-content>
+            <p class="card-description">
+              Time tracking for Azure DevOps via Model Context Protocol.
+            </p>
+            <div class="cta-container">
+              <div class="cta">Explore</div>
+            </div>
+          </ion-card-content>
+        </ion-card>
 
-                  @if (emailForm.get('email')?.touched &&
-                  emailForm.get('email')?.invalid) {
-                  <ion-text color="danger" class="error-message">
-                    Please enter a valid email address
-                  </ion-text>
-                  } @if (errorMessage) {
-                  <ion-text color="danger" class="error-message">
-                    {{ errorMessage }}
-                    <ion-button
-                      fill="clear"
-                      size="small"
-                      (click)="clearError()"
-                    >
-                      Try Again
-                    </ion-button>
-                  </ion-text>
-                  }
-                </div>
-
-                <ion-button
-                  expand="block"
-                  fill="solid"
-                  class="cta-button"
-                  type="submit"
-                  [disabled]="emailForm.invalid || isSubmitting"
-                  (keydown.enter)="submitEmail()"
-                  tabindex="2"
-                >
-                  <ion-spinner
-                    *ngIf="isSubmitting"
-                    name="dots"
-                    class="button-spinner"
-                  ></ion-spinner>
-                  <span *ngIf="!isSubmitting">Start the Course ➔</span>
-                </ion-button>
-              </form>
-
-              <!-- Direct button for returning users -->
-              <ion-button
-                *ngIf="hasEmail && !isInitializing"
-                expand="block"
-                fill="solid"
-                class="cta-button"
-                (click)="navigateToNotebook()"
-                (keydown.enter)="navigateToNotebook()"
-                tabindex="1"
-              >
-                Continue Learning ➔
-              </ion-button>
-
-              <!-- Enhanced Loading state -->
-              <div *ngIf="isInitializing" class="loading-container">
-                <div class="loading-skeleton">
-                  <div class="skeleton-avatar"></div>
-                  <div class="skeleton-lines">
-                    <div class="skeleton-line long"></div>
-                    <div class="skeleton-line medium"></div>
-                    <div class="skeleton-line short"></div>
-                  </div>
-                </div>
-                <div class="loading-text">
-                  <ion-spinner name="dots" class="ai-spinner"></ion-spinner>
-                  <p class="loading-message">{{ loadingMessage }}</p>
-                  <div class="loading-progress">
-                    <div
-                      class="progress-bar"
-                      [style.width.%]="loadingProgress"
-                    ></div>
-                  </div>
-                </div>
-              </div>
-            </ion-card-content>
-          </ion-card>
-
-          <!-- Additional Products -->
-          <ion-card
-            class="project-card modern"
-            (click)="navigateTo82ndrop()"
-            (keydown.enter)="navigateTo82ndrop()"
-            (keydown.space)="navigateTo82ndrop()"
-            tabindex="3"
-          >
-            <div class="accent-line modern-accent"></div>
-            <ion-card-header>
-              <ion-card-title>82ndrop</ion-card-title>
-              <div class="sub-line modern-sub">
-                AI Video Creation • Veo3 Powered
-              </div>
-            </ion-card-header>
-            <ion-card-content>
-              <p class="description">
-                Create viral 8-second AI videos using advanced Veo3 technology.
-                Generate short-form content with instant impact.
-              </p>
-              <div class="tech-specs">
-                <div class="spec">⚡ 8-Second Format</div>
-                <div class="spec">🤖 Veo3 AI Engine</div>
-                <div class="spec">📱 Layered Visuals</div>
-              </div>
-              <div class="price-container modern-price">
-                <div class="cta modern-cta">Create AI Videos →</div>
-              </div>
-            </ion-card-content>
-          </ion-card>
-
-          <!-- Claude Subagents Marketplace -->
-          <ion-card
-            class="project-card marketplace"
-            (click)="navigateToSubagents()"
-            (keydown.enter)="navigateToSubagents()"
-            (keydown.space)="navigateToSubagents()"
-            tabindex="4"
-          >
-            <div class="accent-line marketplace-accent"></div>
-            <ion-card-header>
-              <ion-card-title>Claude Subagents</ion-card-title>
-              <div class="sub-line marketplace-sub">
-                AI Agents Marketplace • Open Source
-              </div>
-            </ion-card-header>
-            <ion-card-content>
-              <p class="description">
-                Discover and share specialized Claude AI agents. The GitHub for
-                Claude agents with 51+ agents available.
-              </p>
-              <div class="tech-specs">
-                <div class="spec">🤖 51+ AI Agents</div>
-                <div class="spec">🔗 GitHub Integration</div>
-                <div class="spec">📦 One-Click Download</div>
-              </div>
-              <div class="price-container marketplace-price">
-                <div class="cta marketplace-cta">Explore Agents →</div>
-              </div>
-            </ion-card-content>
-          </ion-card>
-        </div>
+        <!-- Claude Subagents Marketplace -->
+        <ion-card
+          class="product-card subagents-card"
+          (click)="navigateToSubagents()"
+          (keydown.enter)="navigateToSubagents()"
+          (keydown.space)="navigateToSubagents()"
+          tabindex="5"
+        >
+          <div class="accent-line subagents-accent"></div>
+          <div class="icon-container">
+            <div class="product-icon">🤖</div>
+          </div>
+          <ion-card-header>
+            <ion-card-title>Subagents</ion-card-title>
+            <div class="sub-line">AI Marketplace</div>
+          </ion-card-header>
+          <ion-card-content>
+            <p class="card-description">
+              Discover and share 51+ specialized Claude AI agents.
+            </p>
+            <div class="cta-container">
+              <div class="cta">Browse</div>
+            </div>
+          </ion-card-content>
+        </ion-card>
       </div>
+
+      <!-- Footer -->
+      <footer class="site-footer">
+        <div class="footer-content">
+          <p>&copy; 2024 TAAJIRAH. Built with Claude, Angular, and Firebase.</p>
+          <div class="footer-links">
+            <a (click)="router.navigate(['mcp'])">MCP Showcase</a>
+            <a href="https://github.com/turnono" target="_blank">GitHub</a>
+            <a href="mailto:contact@taajirah.com">Contact</a>
+          </div>
+        </div>
+      </footer>
     </ion-content>
   `,
   styles: [
@@ -287,6 +229,112 @@ import { SeoService } from '../../core/services/seo.service';
         --text-medium: #cccccc;
         --text-light: #999999;
         --cyberpunk-glow: rgba(0, 255, 0, 0.3);
+      }
+
+      .hero {
+        background: linear-gradient(
+          135deg,
+          rgba(0, 0, 0, 0.9),
+          rgba(0, 20, 10, 0.85)
+        );
+        text-align: center;
+        padding: 4rem 2rem 3rem 2rem;
+        margin-top: 60px;
+      }
+
+      @media screen and (max-width: 767px) {
+        .hero {
+          padding: 2rem 1rem 2rem 1rem;
+          margin-top: 60px;
+        }
+      }
+
+      .hero-title {
+        font-size: 3rem;
+        font-weight: 700;
+        color: var(--primary-color);
+        margin-bottom: 1rem;
+        line-height: 1.2;
+        text-shadow: 0 0 20px var(--cyberpunk-glow);
+      }
+
+      @media screen and (max-width: 767px) {
+        .hero-title {
+          font-size: 2rem;
+          margin-bottom: 0.75rem;
+        }
+      }
+
+      @media screen and (max-width: 480px) {
+        .hero-title {
+          font-size: 1.75rem;
+        }
+      }
+
+      .hero-sub {
+        font-size: 1.2rem;
+        color: var(--text-medium);
+        margin-bottom: 2rem;
+        opacity: 0.9;
+      }
+
+      @media screen and (max-width: 767px) {
+        .hero-sub {
+          font-size: 1rem;
+          margin-bottom: 1.5rem;
+        }
+      }
+
+      .cta-row {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
+
+      @media screen and (max-width: 480px) {
+        .cta-row {
+          flex-direction: column;
+          align-items: center;
+          gap: 0.75rem;
+        }
+
+        .cta-row ion-button {
+          width: 100%;
+          max-width: 280px;
+        }
+      }
+
+      .nav-actions {
+        display: flex;
+        gap: 0.5rem;
+      }
+
+      @media screen and (max-width: 767px) {
+        .nav-actions {
+          gap: 0.25rem;
+        }
+
+        .nav-actions ion-button {
+          font-size: 0.8rem;
+          --padding-start: 0.5rem;
+          --padding-end: 0.5rem;
+        }
+      }
+
+      @media screen and (max-width: 480px) {
+        .nav-actions {
+          display: none;
+        }
+
+        .logo-container {
+          justify-content: center;
+        }
+      }
+
+      .cta-primary {
+        --background: var(--primary-color);
+        --color: #000;
       }
 
       ion-content {
@@ -376,121 +424,281 @@ import { SeoService } from '../../core/services/seo.service';
         text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
       }
 
-      .card-container {
+      .products-section {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 1.5rem;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 2rem;
         max-width: 1200px;
         width: 100%;
-        margin-top: 1.5rem;
+        margin: 3rem auto;
+        padding: 0 2rem;
       }
 
       @media screen and (min-width: 768px) {
-        .card-container {
-          grid-template-columns: repeat(3, 1fr);
-          gap: 2rem;
+        .products-section {
+          grid-template-columns: repeat(4, 1fr);
+          gap: 2.5rem;
         }
+      }
 
-        .section-title {
-          font-size: 3rem;
+      @media screen and (min-width: 1024px) {
+        .products-section {
+          grid-template-columns: repeat(4, 1fr);
+          gap: 2rem;
         }
       }
 
       @media screen and (max-width: 767px) {
-        .section-title {
-          font-size: 2rem;
-        }
-
-        .content-container {
-          padding: calc(env(safe-area-inset-top, 0px) + 60px + 1rem) 1rem 1rem
-            1rem;
-          min-height: calc(100vh - env(safe-area-inset-bottom, 0px));
-        }
-
-        .intro-section {
-          margin-bottom: 1.5rem;
-          margin-top: 1rem;
-        }
-
-        .logo-container {
-          padding: 0.5rem;
-        }
-
-        .brand {
-          font-size: 1.3rem;
-        }
-
-        .logo {
-          height: 35px;
-        }
-
-        /* Better touch targets */
-        .cta-button {
-          min-height: 48px;
-          font-size: 1rem;
-          margin: 1.5rem 0;
+        .products-section {
+          grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+          gap: 1rem;
+          margin: 2rem auto;
           padding: 0 1rem;
-        }
-
-        .feature {
-          padding: 0.5rem 0.8rem;
-          font-size: 0.8rem;
-          min-height: 32px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-
-        .features-list {
-          gap: 0.8rem;
-          margin: 1.5rem 0;
-        }
-
-        /* Card touch improvements */
-        .project-card {
-          margin-bottom: 2rem;
-          padding: 0.5rem;
-        }
-
-        .project-card ion-card-content {
-          padding: 1.5rem;
-        }
-
-        /* Email input improvements */
-        .email-field {
-          margin-bottom: 1.5rem;
-        }
-
-        ion-input {
-          --padding-start: 1rem;
-          --padding-end: 1rem;
-          min-height: 48px;
-        }
-
-        /* Better spacing for touch */
-        .card-container {
-          gap: 1.5rem;
-          grid-template-columns: 1fr;
-        }
-
-        /* Touch-friendly error buttons */
-        .error-message ion-button {
-          min-height: 32px;
-          margin-top: 0.5rem;
         }
       }
 
-      /* Course card styles */
-      .course-card {
-        box-shadow: 0 4px 16px var(--cyberpunk-glow);
-        border-radius: 8px;
-        overflow: hidden;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-        margin: 0;
+      @media screen and (max-width: 480px) {
+        .products-section {
+          grid-template-columns: 1fr;
+          gap: 1rem;
+          margin: 1.5rem auto;
+          padding: 0 0.5rem;
+        }
+      }
+
+      /* Product card styles */
+      .product-card {
+        background: rgba(0, 0, 0, 0.85);
+        border: 1px solid rgba(0, 255, 0, 0.3);
+        border-radius: 16px;
+        box-shadow: 0 12px 40px rgba(0, 255, 0, 0.15);
+        backdrop-filter: blur(12px);
         position: relative;
-        background: rgba(0, 0, 0, 0.8);
-        border: 1px solid var(--primary-color);
-        backdrop-filter: blur(10px);
+        overflow: hidden;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        height: fit-content;
+        color: var(--text-dark);
+      }
+
+      @media screen and (max-width: 767px) {
+        .product-card {
+          border-radius: 12px;
+          box-shadow: 0 8px 24px rgba(0, 255, 0, 0.1);
+        }
+
+        .product-card ion-card-header {
+          padding: 1rem 1rem 0.5rem 1rem;
+        }
+
+        .product-card ion-card-content {
+          padding: 0.5rem 1rem 1rem 1rem;
+        }
+
+        .product-card ion-card-title {
+          font-size: 1.1rem;
+        }
+
+        .sub-line {
+          font-size: 0.8rem;
+        }
+
+        .cta-container {
+          margin-top: 1rem;
+          padding-top: 0.75rem;
+        }
+
+        .cta {
+          font-size: 1rem;
+        }
+      }
+
+      .product-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 60px rgba(0, 255, 0, 0.25);
+        border-color: rgba(0, 255, 0, 0.6);
+      }
+
+      @media screen and (max-width: 767px) {
+        .product-card:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 12px 32px rgba(0, 255, 0, 0.2);
+        }
+      }
+
+      .mcp-card {
+        border-color: rgba(54, 255, 159, 0.4);
+        box-shadow: 0 12px 40px rgba(54, 255, 159, 0.15);
+      }
+
+      .mcp-card:hover {
+        border-color: rgba(54, 255, 159, 0.7);
+        box-shadow: 0 20px 60px rgba(54, 255, 159, 0.25);
+      }
+
+      .video-card {
+        border-color: rgba(0, 149, 255, 0.4);
+        box-shadow: 0 12px 40px rgba(0, 149, 255, 0.15);
+      }
+
+      .video-card:hover {
+        border-color: rgba(0, 149, 255, 0.7);
+        box-shadow: 0 20px 60px rgba(0, 149, 255, 0.25);
+      }
+
+      .subagents-card {
+        border-color: rgba(255, 107, 53, 0.4);
+        box-shadow: 0 12px 40px rgba(255, 107, 53, 0.15);
+      }
+
+      .subagents-card:hover {
+        border-color: rgba(255, 107, 53, 0.7);
+        box-shadow: 0 20px 60px rgba(255, 107, 53, 0.25);
+      }
+
+      .accent-line {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, var(--primary-color), #36ff9f);
+      }
+
+      .mcp-accent {
+        background: linear-gradient(90deg, #36ff9f, #00d4ff);
+      }
+
+      .course-accent {
+        background: linear-gradient(90deg, var(--primary-color), #7ed321);
+      }
+
+      .video-accent {
+        background: linear-gradient(90deg, #0095ff, #9013fe);
+      }
+
+      .subagents-accent {
+        background: linear-gradient(90deg, #ff6b35, #ff8c42);
+      }
+
+      .cta-container {
+        text-align: center;
+        padding-top: 1rem;
+        border-top: 1px solid rgba(0, 255, 157, 0.2);
+        margin-top: 1.5rem;
+      }
+
+      .cta {
+        color: #36ff9f;
+        font-weight: 600;
+        font-size: 1.1rem;
+        text-shadow: 0 0 5px rgba(54, 255, 159, 0.3);
+        animation: pulse 2s infinite;
+      }
+
+      .icon-container {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        z-index: 3;
+        background: rgba(0, 0, 0, 0.7);
+        border-radius: 50%;
+        padding: 0.5rem;
+        backdrop-filter: blur(5px);
+      }
+
+      .product-icon {
+        font-size: 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 2rem;
+        height: 2rem;
+      }
+
+      .card-description {
+        color: var(--text-medium);
+        font-size: 0.9rem;
+        line-height: 1.4;
+        margin-bottom: 1rem;
+        opacity: 0.9;
+      }
+
+      @media screen and (max-width: 767px) {
+        .icon-container {
+          top: 0.75rem;
+          right: 0.75rem;
+          padding: 0.4rem;
+        }
+
+        .product-icon {
+          font-size: 1.2rem;
+          width: 1.5rem;
+          height: 1.5rem;
+        }
+
+        .card-description {
+          font-size: 0.85rem;
+          margin-bottom: 0.75rem;
+        }
+      }
+
+      .sub-line {
+        color: var(--text-medium);
+        font-size: 0.9rem;
+        opacity: 0.8;
+      }
+
+      .description {
+        color: var(--text-medium);
+        line-height: 1.6;
+        margin-bottom: 1rem;
+      }
+
+      /* Footer styles */
+      .site-footer {
+        background: rgba(0, 0, 0, 0.95);
+        border-top: 1px solid rgba(0, 255, 0, 0.3);
+        padding: 2rem 0;
+        margin-top: 4rem;
+        text-align: center;
+      }
+
+      .footer-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 2rem;
+      }
+
+      .footer-content p {
+        color: var(--text-medium);
+        margin-bottom: 1rem;
+        font-size: 0.9rem;
+      }
+
+      .footer-links {
+        display: flex;
+        justify-content: center;
+        gap: 2rem;
+        flex-wrap: wrap;
+      }
+
+      .footer-links a {
+        color: var(--primary-color);
+        text-decoration: none;
+        font-size: 0.9rem;
+        transition: color 0.3s ease;
+        cursor: pointer;
+      }
+
+      .footer-links a:hover {
+        color: #36ff9f;
+        text-shadow: 0 0 5px rgba(54, 255, 159, 0.3);
+      }
+
+      /* Course card extends product-card */
+      .course-card {
+        border-color: var(--primary-color);
       }
 
       .course-card:hover {
@@ -499,29 +707,28 @@ import { SeoService } from '../../core/services/seo.service';
         border-color: var(--accent-color);
       }
 
-      .accent-line {
-        position: absolute;
-        left: 0;
-        top: 0;
-        bottom: 0;
-        width: 6px;
-        background: var(--primary-color);
-        z-index: 1;
-      }
-
       .image-container {
         position: relative;
         width: 100%;
-        height: 120px;
-        background: var(--primary-dark);
+        height: 200px;
         overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #1a4d3a, #0f2419);
+      }
+
+      @media screen and (max-width: 767px) {
+        .image-container {
+          height: 150px;
+        }
       }
 
       .image-container img {
         width: 100%;
         height: 100%;
         object-fit: cover;
-        opacity: 0.35;
+        transition: transform 0.3s ease;
       }
 
       .image-overlay {
@@ -557,15 +764,46 @@ import { SeoService } from '../../core/services/seo.service';
 
       .free-badge {
         position: absolute;
-        top: 16px;
-        right: 16px;
-        font-size: 0.9rem;
-        padding: 8px 12px;
-        font-weight: bold;
-        z-index: 3;
-        --background: var(--accent-color);
-        --color: #222;
-        border-radius: 4px;
+        top: 1rem;
+        right: 1rem;
+        --background: var(--primary-color);
+        --color: #000;
+        font-weight: 600;
+        z-index: 2;
+      }
+
+      .course-icon {
+        position: absolute;
+        top: 1rem;
+        left: 1rem;
+        background: rgba(0, 0, 0, 0.7);
+        border-radius: 50%;
+        padding: 0.5rem;
+        backdrop-filter: blur(5px);
+        font-size: 1.5rem;
+        width: 2rem;
+        height: 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 2;
+      }
+
+      @media screen and (max-width: 767px) {
+        .free-badge {
+          top: 0.75rem;
+          right: 0.75rem;
+          font-size: 0.8rem;
+        }
+
+        .course-icon {
+          top: 0.75rem;
+          left: 0.75rem;
+          padding: 0.4rem;
+          font-size: 1.2rem;
+          width: 1.5rem;
+          height: 1.5rem;
+        }
       }
 
       ion-card-title {
@@ -615,18 +853,17 @@ import { SeoService } from '../../core/services/seo.service';
       }
 
       .cta-button {
-        font-weight: 600;
-        letter-spacing: 0.5px;
-        margin-top: 1rem;
         --background: var(--primary-color);
-        --background-activated: var(--primary-dark);
-        --background-focused: var(--primary-dark);
-        --background-hover: var(--primary-dark);
-        --color: #000000;
-        height: 48px;
-        position: relative;
-        box-shadow: 0 0 20px var(--cyberpunk-glow);
-        transition: all 0.3s ease;
+        --color: #000;
+        font-weight: 600;
+        margin-top: 1rem;
+      }
+
+      @media screen and (max-width: 767px) {
+        .cta-button {
+          margin-top: 0.75rem;
+          min-height: 44px;
+        }
       }
 
       .cta-button:hover:not([disabled]) {
@@ -753,12 +990,21 @@ import { SeoService } from '../../core/services/seo.service';
         font-family: 'Courier New', monospace;
         text-shadow: 0 0 5px rgba(0, 255, 255, 0.3);
         transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
       }
 
       .spec:hover {
         background: rgba(0, 255, 255, 0.2);
         border-color: var(--accent-color);
         transform: scale(1.05);
+      }
+
+      .spec-icon {
+        width: 14px;
+        height: 14px;
+        opacity: 0.9;
       }
 
       .modern-price {
@@ -782,103 +1028,83 @@ import { SeoService } from '../../core/services/seo.service';
         ) !important;
       }
 
-      /* Marketplace theme for Claude Subagents */
-      .marketplace {
-        background: rgba(40, 20, 0, 0.9);
-        border: 2px solid #ff6b35;
+      /* MCP theme */
+      .mcp {
+        background: rgba(10, 28, 10, 0.9);
+        border: 2px solid #36ff9f;
         color: var(--text-dark);
         backdrop-filter: blur(10px);
       }
 
-      .marketplace:hover {
-        border-color: #ff8c42;
-        box-shadow: 0 6px 20px rgba(255, 107, 53, 0.3);
+      .mcp:hover {
+        border-color: #00ff9d;
+        box-shadow: 0 6px 20px rgba(0, 255, 157, 0.3);
         transform: translateY(-3px);
       }
 
-      .marketplace ion-card-title {
-        color: #ff6b35;
+      .mcp ion-card-title {
+        color: #36ff9f;
         font-weight: 700;
         font-size: 1.2rem;
-        text-shadow: 0 0 10px rgba(255, 107, 53, 0.5);
+        text-shadow: 0 0 10px rgba(0, 255, 157, 0.5);
       }
 
-      .marketplace-sub {
+      .mcp-sub {
         color: var(--text-medium) !important;
         font-weight: 500;
         font-size: 0.9rem !important;
       }
 
-      .marketplace .description {
+      .mcp .description {
         color: var(--text-medium);
         margin-bottom: 1.5rem;
       }
 
-      .marketplace .spec {
-        background: rgba(255, 107, 53, 0.1);
-        color: #ff6b35;
-        border: 1px solid rgba(255, 107, 53, 0.3);
-        text-shadow: 0 0 5px rgba(255, 107, 53, 0.3);
+      .mcp .spec {
+        background: rgba(0, 255, 157, 0.08);
+        color: #36ff9f;
+        border: 1px solid rgba(0, 255, 157, 0.3);
+        text-shadow: 0 0 5px rgba(0, 255, 157, 0.25);
       }
 
-      .marketplace .spec:hover {
-        background: rgba(255, 107, 53, 0.2);
-        border-color: #ff6b35;
+      .mcp .spec:hover {
+        background: rgba(0, 255, 157, 0.15);
+        border-color: #36ff9f;
         transform: scale(1.05);
       }
 
-      .marketplace-price {
-        border-top: 1px solid rgba(255, 107, 53, 0.3);
+      .mcp-price {
+        border-top: 1px solid rgba(0, 255, 157, 0.3);
         padding-top: 1rem;
         text-align: center;
       }
 
-      .marketplace-cta {
-        color: #ff6b35;
+      .mcp-cta {
+        color: #36ff9f;
         font-weight: 600;
         font-size: 1.1rem;
-        text-shadow: 0 0 5px rgba(255, 107, 53, 0.3);
-      }
-
-      .marketplace-accent {
-        background: linear-gradient(90deg, #ff6b35, transparent) !important;
-      }
-
-      .marketplace-cta {
-        animation: marketplace-pulse 2s infinite;
-      }
-
-      @keyframes marketplace-pulse {
-        0%,
-        100% {
-          text-shadow: 0 0 5px rgba(255, 107, 53, 0.3);
-        }
-        50% {
-          text-shadow: 0 0 15px rgba(255, 107, 53, 0.6);
-        }
-      }
-
-      @keyframes blink {
-        0%,
-        100% {
-          opacity: 1;
-        }
-        50% {
-          opacity: 0.5;
-        }
-      }
-
-      .modern-cta {
+        text-shadow: 0 0 5px rgba(54, 255, 159, 0.3);
         animation: pulse 2s infinite;
+      }
+
+      .local-link {
+        margin-top: 0.75rem;
+        text-align: center;
+      }
+
+      .local-link a {
+        color: #36ff9f;
+        text-decoration: underline;
+        cursor: pointer;
       }
 
       @keyframes pulse {
         0%,
         100% {
-          text-shadow: 0 0 5px rgba(0, 255, 255, 0.3);
+          text-shadow: 0 0 5px rgba(54, 255, 159, 0.3);
         }
         50% {
-          text-shadow: 0 0 15px rgba(0, 255, 255, 0.6);
+          text-shadow: 0 0 15px rgba(54, 255, 159, 0.6);
         }
       }
 
@@ -1017,16 +1243,7 @@ import { SeoService } from '../../core/services/seo.service';
         }
       }
 
-      @keyframes typeIn {
-        from {
-          opacity: 0;
-          transform: translateX(-20px);
-        }
-        to {
-          opacity: 1;
-          transform: translateX(0);
-        }
-      }
+      /* Removed unused animations */
 
       /* Countdown/Uptime styles */
       .countdown-container {
@@ -1060,7 +1277,13 @@ import { SeoService } from '../../core/services/seo.service';
 
       /* Email form styles */
       .email-field {
-        margin-bottom: 1rem;
+        margin-bottom: 1.5rem;
+      }
+
+      @media screen and (max-width: 767px) {
+        .email-field {
+          margin-bottom: 1rem;
+        }
       }
 
       .error-message {
@@ -1228,44 +1451,25 @@ import { SeoService } from '../../core/services/seo.service';
     IonBadge,
     IonHeader,
     IonToolbar,
-    IonInput,
-    IonText,
-    IonSpinner,
   ],
 })
 export class LandingComponent implements OnInit, AfterViewInit {
   @ViewChild('content') content!: IonContent;
   @ViewChild('emailInput') emailInput!: any;
+  @ViewChild('courseSection') courseSection!: ElementRef;
 
   emailForm: FormGroup;
-  isInitializing = true;
   isSubmitting = false;
   errorMessage = '';
   hasEmail = false;
   userId = '';
   isValidEmail = false;
 
-  // Loading state properties
-  loadingMessage = 'Initializing AI systems...';
-  loadingProgress = 0;
-
   // Connection status
   isOffline = false;
 
-  // Boot sequence properties
-  bootComplete = false;
-  showScrollInstruction = false;
-  showCountdown = false;
-  systemUptime = '';
-  bootLines: boolean[] = [];
-  bootSequence = [
-    'INITIALIZING SYSTEMS...',
-    'LOADING INTERFACE...',
-    'ACCESS GRANTED',
-  ];
-
   constructor(
-    private router: Router,
+    public router: Router,
     private emailService: EmailCollectionService,
     private fb: FormBuilder,
     private analytics: AnalyticsService,
@@ -1277,120 +1481,36 @@ export class LandingComponent implements OnInit, AfterViewInit {
   }
 
   async ngOnInit() {
-    // SEO optimization for landing page
-    this.seo.updateMetaTags({
-      title:
-        'TAAJIRAH - AI-Powered Quranic Arabic Learning & Video Creation Platform',
-      description:
-        'Master Quranic Arabic with AI-powered interactive learning and create viral AI videos with 82ndrop. Free beginner course with AI study assistant. Advanced Veo3 video generation technology.',
-      keywords:
-        'Quranic Arabic, Arabic learning, AI education, video creation, Veo3, AI videos, Islamic education, language learning, 82ndrop, TAAJIRAH',
-      url: window.location.href,
-      type: 'website',
-      author: 'Abdullah Abrahams',
-    });
-
-    this.seo.updateAIOptimizedTags({
-      topic: 'AI-Powered Education Platform',
-      intent: 'learning_and_creation',
-      expertise_level: 'all_levels',
-      content_type: 'educational_platform',
-      ai_features: [
-        'AI Study Assistant',
-        'Veo3 Video Generation',
-        'Interactive Learning',
-      ],
-      learning_outcomes: [
-        'Quranic Arabic Grammar',
-        'Arabic Morphology',
-        'AI Video Creation',
-      ],
-    });
-
-    // Track page view and AI search optimization
-    this.analytics.trackPageView('TAAJIRAH Landing', window.location.href);
-    this.analytics.trackSearchBehavior(
-      'education_platform_visit',
-      'landing_page_view'
-    );
-
-    // Initialize boot sequence
-    this.bootLines = new Array(this.bootSequence.length).fill(false);
-    this.initializeBootSequence();
-
+    // Simple, fast initialization - no loading delays
     try {
-      // Start loading sequence
-      this.startLoadingSequence();
-
-      // Create anonymous user if needed
+      // Initialize user data quickly
       this.userId = await this.emailService.createAnonymousUserIfNeeded();
 
       // Subscribe to user changes
-      this.emailService.currentUser$.subscribe((user) => {
+      this.emailService.currentUser$.subscribe((user: any) => {
         this.hasEmail = !!user?.email;
 
-        // Track user type for analytics
-        if (user?.email) {
-          this.analytics.setUserProperties({
-            user_type: 'returning_user',
-            learning_level: 'engaged',
-            ai_usage: 'course_access',
-            platform_preference: this.getDeviceType(),
-          });
-          this.analytics.trackEvent(
-            'user_return',
-            'user_journey',
-            'existing_user'
-          );
-        } else {
-          this.analytics.setUserProperties({
-            user_type: 'new_visitor',
-            learning_level: 'beginner',
-            ai_usage: 'none',
-            platform_preference: this.getDeviceType(),
-          });
-          this.analytics.trackEvent('user_visit', 'user_journey', 'new_user');
-        }
+        // Track user type (non-blocking)
+        this.analytics.trackEvent(
+          'user_visit',
+          'user_journey',
+          this.hasEmail ? 'returning_user' : 'new_user'
+        );
       });
-
-      this.isInitializing = false;
     } catch (error: any) {
-      console.error('Error initializing user:', error);
-
-      // Track initialization error
-      this.analytics.trackError(error, 'user_initialization', {
-        component: 'landing',
-        stage: 'ngOnInit',
-      });
-
-      this.analytics.trackEvent(
-        'error',
-        'system',
-        'user_initialization_failed'
-      );
-      this.errorMessage =
-        'Unable to initialize session. Please try refreshing the page.';
-      this.isInitializing = false;
+      console.error('User init error:', error);
+      // Don't block the UI for analytics errors
     }
   }
 
   ngAfterViewInit() {
-    setTimeout(() => {
-      // Scroll to top when landing page loads
-      if (this.content) {
-        this.content.scrollToTop(500);
-      }
+    // Immediate view initialization - no delays
+    if (this.content) {
+      this.content.scrollToTop(0);
+    }
 
-      // Auto-focus email input for new users (after boot sequence)
-      if (!this.hasEmail && !this.isInitializing) {
-        setTimeout(() => {
-          this.focusEmailInput();
-        }, 3000); // After boot sequence completes
-      }
-
-      // Track performance metrics after view initialization
-      this.trackPerformanceMetrics();
-    }, 100);
+    // Track performance metrics immediately
+    this.trackPerformanceMetrics();
   }
 
   // Track performance metrics for optimization
@@ -1408,10 +1528,8 @@ export class LandingComponent implements OnInit, AfterViewInit {
     // Track Core Web Vitals
     this.analytics.trackWebVitals();
 
-    // Track resource loading performance
-    setTimeout(() => {
-      this.analytics.trackResourcePerformance();
-    }, 2000);
+    // Track resource loading performance immediately
+    this.analytics.trackResourcePerformance();
 
     // Track component initialization time
     const componentLoadTime = performance.now();
@@ -1537,6 +1655,46 @@ export class LandingComponent implements OnInit, AfterViewInit {
     window.open('https://82ndrop.web.app/', '_blank', 'noopener,noreferrer');
   }
 
+  navigateToSmotaryMCP() {
+    // External link to Smithery MCP page
+    const url = 'https://smithery.ai/server/@turnono/sevenpace-mcp-server';
+    const startTime = performance.now();
+
+    // Track MCP interaction
+    this.analytics.trackEvent('platform_visit', 'navigation', 'smithery_mcp');
+    this.analytics.trackInteractionPerformance(
+      'smithery_navigation',
+      startTime
+    );
+    this.analytics.trackAIInteraction('mcp', 'platform_navigation', {
+      ai_feature: 'sevenpace_mcp',
+      destination: 'smithery_ai',
+    });
+    this.analytics.trackExternalClick(url, 'Smithery MCP Card');
+    window.open(url, '_blank', 'noopener');
+  }
+
+  navigateToMcpShowcase() {
+    this.analytics.trackEvent('internal_nav', 'navigation', 'mcp_showcase');
+  }
+
+  navigateToCourse() {
+    // Track course interest
+    this.analytics.trackEvent(
+      'course_interest',
+      'navigation',
+      'quranic_arabic'
+    );
+
+    // Navigate directly to course (could show modal for email collection later)
+    if (this.hasEmail) {
+      this.navigateToNotebook();
+    } else {
+      // For now, show a simple alert or redirect to external course page
+      alert('Course coming soon! Check back later for updates.');
+    }
+  }
+
   navigateToSubagents() {
     const startTime = performance.now();
 
@@ -1607,43 +1765,13 @@ export class LandingComponent implements OnInit, AfterViewInit {
     }
   }
 
-  private initializeBootSequence() {
-    // Show boot lines one by one
-    this.bootSequence.forEach((_, index) => {
-      setTimeout(() => {
-        this.bootLines[index] = true;
-
-        // Show instruction after last line
-        if (index === this.bootSequence.length - 1) {
-          setTimeout(() => {
-            this.showScrollInstruction = true;
-            setTimeout(() => {
-              this.bootComplete = true;
-              this.showCountdown = true;
-              this.initializeUptime();
-            }, 2000);
-          }, 1000);
-        }
-      }, index * 400);
-    });
-  }
-
-  private initializeUptime() {
-    const startTime = Date.now();
-
-    const updateUptime = () => {
-      const elapsed = Date.now() - startTime;
-      const hours = Math.floor(elapsed / 3600000);
-      const minutes = Math.floor((elapsed % 3600000) / 60000);
-      const seconds = Math.floor((elapsed % 60000) / 1000);
-
-      this.systemUptime = `${hours.toString().padStart(2, '0')}:${minutes
-        .toString()
-        .padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-    };
-
-    updateUptime();
-    setInterval(updateUptime, 1000);
+  scrollToCourse() {
+    try {
+      const el = this.courseSection?.nativeElement as HTMLElement;
+      if (el && this.content) {
+        this.content.scrollToPoint(0, el.offsetTop - 80, 500);
+      }
+    } catch {}
   }
 
   // Helper method to detect device type
@@ -1658,30 +1786,7 @@ export class LandingComponent implements OnInit, AfterViewInit {
     return isMobile ? 'mobile' : isTablet ? 'tablet' : 'desktop';
   }
 
-  // Enhanced loading sequence with progress
-  private startLoadingSequence() {
-    const messages = [
-      'Connecting to AI systems...',
-      'Loading neural networks...',
-      'Preparing study environment...',
-      'Almost ready...',
-    ];
-
-    let messageIndex = 0;
-    let progress = 0;
-
-    const updateLoading = () => {
-      if (messageIndex < messages.length) {
-        this.loadingMessage = messages[messageIndex];
-        this.loadingProgress = (messageIndex + 1) * 25;
-        messageIndex++;
-
-        setTimeout(updateLoading, 800);
-      }
-    };
-
-    updateLoading();
-  }
+  // Removed loading sequence - instant load now
 
   // Handle offline/online status
   private setupOfflineHandling() {
@@ -1689,12 +1794,10 @@ export class LandingComponent implements OnInit, AfterViewInit {
 
     window.addEventListener('online', () => {
       this.isOffline = false;
-      this.loadingMessage = 'Connection restored!';
     });
 
     window.addEventListener('offline', () => {
       this.isOffline = true;
-      this.loadingMessage = 'You are offline. Some features may be limited.';
     });
   }
 }
