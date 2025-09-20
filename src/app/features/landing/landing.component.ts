@@ -23,6 +23,8 @@ import {
   IonBadge,
   IonHeader,
   IonToolbar,
+  IonButtons,
+  IonTitle,
 } from '@ionic/angular/standalone';
 import { EmailCollectionService } from '../../core/services/email-collection.service';
 import { AnalyticsService } from '../../core/services/analytics.service';
@@ -33,20 +35,23 @@ import { SeoService } from '../../core/services/seo.service';
   template: `
     <ion-header class="ion-no-border">
       <ion-toolbar>
-        <div class="logo-container">
-          <img
-            src="https://firebasestorage.googleapis.com/v0/b/taajirah.appspot.com/o/taajirah_logo_no_bg.png?alt=media&token=85acb1a6-7db2-451f-8ef0-90c436c88cb2"
-            alt="Taajirah Logo"
-            class="logo"
-            loading="lazy"
-            decoding="async"
-          />
-          <h1 class="brand">TAAJIRAH</h1>
-          <div *ngIf="isOffline" class="offline-indicator">
-            <ion-badge color="warning">Offline</ion-badge>
-          </div>
-        </div>
-        <div class="nav-actions">
+        <ion-title>
+          <div class="logo-container">
+            <img
+              src="https://firebasestorage.googleapis.com/v0/b/taajirah.appspot.com/o/taajirah_logo_no_bg.png?alt=media&token=85acb1a6-7db2-451f-8ef0-90c436c88cb2"
+              alt="Taajirah Logo"
+              class="logo"
+              loading="lazy"
+              decoding="async"
+            />
+            <h1 class="brand">TAAJIRAH</h1>
+            <div *ngIf="isOffline" class="offline-indicator">
+              <ion-badge color="warning">Offline</ion-badge>
+            </div>
+          </div></ion-title
+        >
+
+        <ion-buttons slot="end">
           <ion-button fill="clear" size="small" (click)="router.navigate([''])"
             >Home</ion-button
           >
@@ -56,13 +61,19 @@ import { SeoService } from '../../core/services/seo.service';
             (click)="router.navigate(['mcp'])"
             >MCP</ion-button
           >
+          <ion-button
+            fill="clear"
+            size="small"
+            (click)="navigateToBananaBoard()"
+            >BananaBoard</ion-button
+          >
           <ion-button fill="clear" size="small" (click)="navigateTo82ndrop()"
             >82ndrop</ion-button
           >
           <ion-button fill="clear" size="small" (click)="navigateToSubagents()"
             >Subagents</ion-button
           >
-        </div>
+        </ion-buttons>
       </ion-toolbar>
     </ion-header>
 
@@ -74,14 +85,6 @@ import { SeoService } from '../../core/services/seo.service';
           <p class="hero-sub">
             Quranic Arabic Learning • AI Video Creation • Developer Tools
           </p>
-          <div class="cta-row">
-            <ion-button class="cta-primary" (click)="scrollToCourse()"
-              >Start Learning</ion-button
-            >
-            <ion-button fill="outline" (click)="scrollToCourse()"
-              >Start Arabic Course</ion-button
-            >
-          </div>
         </div>
       </section>
 
@@ -97,17 +100,9 @@ import { SeoService } from '../../core/services/seo.service';
           tabindex="1"
         >
           <div class="accent-line course-accent"></div>
-          <div class="image-container">
-            <img
-              src="assets/images/courses/quraanic_course.png"
-              alt="Quraanic Arabic Course"
-              loading="lazy"
-              decoding="async"
-              width="640"
-              height="240"
-            />
-            <ion-badge class="free-badge">FREE</ion-badge>
-            <div class="course-icon">📚</div>
+          <ion-badge class="free-badge">FREE</ion-badge>
+          <div class="icon-container">
+            <div class="product-icon">📚</div>
           </div>
           <ion-card-header>
             <ion-card-title>Quraanic Arabic</ion-card-title>
@@ -120,6 +115,36 @@ import { SeoService } from '../../core/services/seo.service';
             </p>
             <div class="cta-container">
               <div class="cta">Start Learning</div>
+            </div>
+          </ion-card-content>
+        </ion-card>
+
+        <!-- BananaBoard -->
+        <ion-card
+          class="product-card bananaboard-card"
+          (click)="navigateToBananaBoard()"
+          (keydown.enter)="navigateToBananaBoard()"
+          (keydown.space)="navigateToBananaBoard()"
+          tabindex="2"
+        >
+          <div class="accent-line video-accent"></div>
+          <div class="icon-container">
+            <div class="product-icon">🍌</div>
+          </div>
+          <ion-card-header>
+            <ion-card-title>BananaBoard</ion-card-title>
+            <div class="sub-line">
+              Turn ideas into cinematic storyboards for veo 3.
+            </div>
+          </ion-card-header>
+          <ion-card-content>
+            <p class="card-description">
+              Built with Nano-Banana, BananaBoard takes your raw concepts and
+              splits them into visual storyboards and Veo3-ready scripts. A tool
+              we use ourselves — now free for anyone to try.
+            </p>
+            <div class="cta-container">
+              <div class="cta">Try Free</div>
             </div>
           </ion-card-content>
         </ion-card>
@@ -168,10 +193,11 @@ import { SeoService } from '../../core/services/seo.service';
           </ion-card-header>
           <ion-card-content>
             <p class="card-description">
-              Time tracking for Azure DevOps via Model Context Protocol.
+              AI-powered time tracking for Azure DevOps. 87% faster than
+              traditional tools.
             </p>
             <div class="cta-container">
-              <div class="cta">Explore</div>
+              <div class="cta">Visit Website</div>
             </div>
           </ion-card-content>
         </ion-card>
@@ -232,20 +258,20 @@ import { SeoService } from '../../core/services/seo.service';
       }
 
       .hero {
-        background: linear-gradient(
-          135deg,
-          rgba(0, 0, 0, 0.9),
-          rgba(0, 20, 10, 0.85)
-        );
+        // background: linear-gradient(
+        //   135deg,
+        //   rgba(0, 0, 0, 0.9),
+        //   rgba(0, 20, 10, 0.85)
+        // );
         text-align: center;
-        padding: 4rem 2rem 3rem 2rem;
-        margin-top: 60px;
+        padding: 1.5rem 3rem 0.5rem;
+        margin-top: 72px; /* Ensure content is below fixed header */
       }
 
       @media screen and (max-width: 767px) {
         .hero {
-          padding: 2rem 1rem 2rem 1rem;
-          margin-top: 60px;
+          padding: 1.5rem 1rem 1.25rem 1rem;
+          margin-top: 56px;
         }
       }
 
@@ -267,7 +293,7 @@ import { SeoService } from '../../core/services/seo.service';
 
       @media screen and (max-width: 480px) {
         .hero-title {
-          font-size: 1.75rem;
+          font-size: 1.5rem;
         }
       }
 
@@ -280,8 +306,8 @@ import { SeoService } from '../../core/services/seo.service';
 
       @media screen and (max-width: 767px) {
         .hero-sub {
-          font-size: 1rem;
-          margin-bottom: 1.5rem;
+          font-size: 0.95rem;
+          margin-bottom: 1rem;
         }
       }
 
@@ -308,6 +334,11 @@ import { SeoService } from '../../core/services/seo.service';
       .nav-actions {
         display: flex;
         gap: 0.5rem;
+        align-items: center;
+        flex-wrap: nowrap;
+        white-space: nowrap;
+        justify-content: flex-end;
+        flex: 1 1 auto;
       }
 
       @media screen and (max-width: 767px) {
@@ -324,11 +355,18 @@ import { SeoService } from '../../core/services/seo.service';
 
       @media screen and (max-width: 480px) {
         .nav-actions {
+          gap: 0.25rem;
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
+          scrollbar-width: none;
+        }
+        .nav-actions::-webkit-scrollbar {
           display: none;
         }
-
-        .logo-container {
-          justify-content: center;
+        .nav-actions ion-button {
+          font-size: 0.72rem;
+          --padding-start: 0.35rem;
+          --padding-end: 0.35rem;
         }
       }
 
@@ -351,32 +389,50 @@ import { SeoService } from '../../core/services/seo.service';
       }
 
       ion-toolbar {
-        --background: rgba(0, 0, 0, 0.9);
+        --background: rgba(0, 0, 0, 0.85);
         --color: var(--text-dark);
         --border-style: none;
-        box-shadow: 0 2px 4px rgba(0, 255, 0, 0.2);
-        border-bottom: 1px solid rgba(0, 255, 0, 0.3);
-        --min-height: 60px;
+        border-bottom: 1px solid rgba(0, 255, 0, 0.35);
+        --min-height: 64px; /* Taller to fit all nav items */
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.5rem;
+        flex-wrap: nowrap;
+      }
+
+      @media screen and (max-width: 480px) {
+        ion-toolbar {
+          --min-height: 48px;
+        }
       }
 
       .logo-container {
         display: flex;
         align-items: center;
-        gap: 1rem;
-        padding: 0.5rem 1rem;
+        gap: 0.75rem;
+        padding: 0.25rem 0.75rem;
+        flex: 0 0 auto;
       }
 
       .logo {
-        height: 40px;
+        height: 28px;
         width: auto;
       }
 
       .brand {
-        font-size: 1.5rem;
+        font-size: 1.3rem;
         color: var(--primary-dark);
         margin: 0;
         font-family: 'Arial', sans-serif;
         font-weight: 600;
+        letter-spacing: 0.5px;
+      }
+
+      @media screen and (max-width: 480px) {
+        .brand {
+          display: none;
+        }
       }
 
       .content-container {
@@ -426,25 +482,26 @@ import { SeoService } from '../../core/services/seo.service';
 
       .products-section {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-        gap: 2rem;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 1.5rem;
         max-width: 1200px;
         width: 100%;
-        margin: 3rem auto;
-        padding: 0 2rem;
+        margin: 0.5rem auto;
+        padding: 0 1.5rem;
+        align-items: stretch;
       }
 
       @media screen and (min-width: 768px) {
         .products-section {
           grid-template-columns: repeat(4, 1fr);
-          gap: 2.5rem;
+          gap: 1.75rem;
         }
       }
 
       @media screen and (min-width: 1024px) {
         .products-section {
           grid-template-columns: repeat(4, 1fr);
-          gap: 2rem;
+          gap: 1.5rem;
         }
       }
 
@@ -471,13 +528,16 @@ import { SeoService } from '../../core/services/seo.service';
         background: rgba(0, 0, 0, 0.85);
         border: 1px solid rgba(0, 255, 0, 0.3);
         border-radius: 16px;
-        box-shadow: 0 12px 40px rgba(0, 255, 0, 0.15);
+        box-shadow: 0 8px 24px rgba(0, 255, 0, 0.12);
         backdrop-filter: blur(12px);
         position: relative;
         overflow: hidden;
         cursor: pointer;
         transition: all 0.3s ease;
-        height: fit-content;
+        height: 100%;
+        min-height: 280px;
+        display: flex;
+        flex-direction: column;
         color: var(--text-dark);
       }
 
@@ -514,9 +574,9 @@ import { SeoService } from '../../core/services/seo.service';
       }
 
       .product-card:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 20px 60px rgba(0, 255, 0, 0.25);
-        border-color: rgba(0, 255, 0, 0.6);
+        transform: translateY(-6px);
+        box-shadow: 0 16px 40px rgba(0, 255, 0, 0.2);
+        border-color: rgba(0, 255, 0, 0.5);
       }
 
       @media screen and (max-width: 767px) {
@@ -528,32 +588,32 @@ import { SeoService } from '../../core/services/seo.service';
 
       .mcp-card {
         border-color: rgba(54, 255, 159, 0.4);
-        box-shadow: 0 12px 40px rgba(54, 255, 159, 0.15);
+        box-shadow: 0 8px 24px rgba(54, 255, 159, 0.12);
       }
 
       .mcp-card:hover {
-        border-color: rgba(54, 255, 159, 0.7);
-        box-shadow: 0 20px 60px rgba(54, 255, 159, 0.25);
+        border-color: rgba(54, 255, 159, 0.6);
+        box-shadow: 0 16px 40px rgba(54, 255, 159, 0.2);
       }
 
       .video-card {
         border-color: rgba(0, 149, 255, 0.4);
-        box-shadow: 0 12px 40px rgba(0, 149, 255, 0.15);
+        box-shadow: 0 8px 24px rgba(0, 149, 255, 0.12);
       }
 
       .video-card:hover {
-        border-color: rgba(0, 149, 255, 0.7);
-        box-shadow: 0 20px 60px rgba(0, 149, 255, 0.25);
+        border-color: rgba(0, 149, 255, 0.6);
+        box-shadow: 0 16px 40px rgba(0, 149, 255, 0.2);
       }
 
       .subagents-card {
         border-color: rgba(255, 107, 53, 0.4);
-        box-shadow: 0 12px 40px rgba(255, 107, 53, 0.15);
+        box-shadow: 0 8px 24px rgba(255, 107, 53, 0.12);
       }
 
       .subagents-card:hover {
-        border-color: rgba(255, 107, 53, 0.7);
-        box-shadow: 0 20px 60px rgba(255, 107, 53, 0.25);
+        border-color: rgba(255, 107, 53, 0.6);
+        box-shadow: 0 16px 40px rgba(255, 107, 53, 0.2);
       }
 
       .accent-line {
@@ -581,11 +641,17 @@ import { SeoService } from '../../core/services/seo.service';
         background: linear-gradient(90deg, #ff6b35, #ff8c42);
       }
 
+      .product-card ion-card-content {
+        flex: 1 1 auto;
+        display: flex;
+        flex-direction: column;
+      }
+
       .cta-container {
         text-align: center;
         padding-top: 1rem;
         border-top: 1px solid rgba(0, 255, 157, 0.2);
-        margin-top: 1.5rem;
+        margin-top: auto;
       }
 
       .cta {
@@ -593,7 +659,16 @@ import { SeoService } from '../../core/services/seo.service';
         font-weight: 600;
         font-size: 1.1rem;
         text-shadow: 0 0 5px rgba(54, 255, 159, 0.3);
-        animation: pulse 2s infinite;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .product-card:hover {
+          transform: none;
+          box-shadow: 0 8px 24px rgba(0, 255, 0, 0.12);
+        }
+        .cta {
+          animation: none !important;
+        }
       }
 
       .icon-container {
@@ -1451,6 +1526,8 @@ import { SeoService } from '../../core/services/seo.service';
     IonBadge,
     IonHeader,
     IonToolbar,
+    IonButtons,
+    IonTitle,
   ],
 })
 export class LandingComponent implements OnInit, AfterViewInit {
@@ -1483,14 +1560,9 @@ export class LandingComponent implements OnInit, AfterViewInit {
   async ngOnInit() {
     // Simple, fast initialization - no loading delays
     try {
-      // Initialize user data quickly
-      this.userId = await this.emailService.createAnonymousUserIfNeeded();
-
-      // Subscribe to user changes
+      // Subscribe to user changes (non-blocking)
       this.emailService.currentUser$.subscribe((user: any) => {
         this.hasEmail = !!user?.email;
-
-        // Track user type (non-blocking)
         this.analytics.trackEvent(
           'user_visit',
           'user_journey',
@@ -1509,8 +1581,13 @@ export class LandingComponent implements OnInit, AfterViewInit {
       this.content.scrollToTop(0);
     }
 
-    // Track performance metrics immediately
-    this.trackPerformanceMetrics();
+    // Defer non-critical analytics to idle time to avoid holding the load spinner
+    const defer = (fn: () => void) =>
+      (window as any).requestIdleCallback
+        ? (window as any).requestIdleCallback(fn)
+        : setTimeout(fn, 0);
+
+    defer(() => this.trackPerformanceMetrics());
   }
 
   // Track performance metrics for optimization
@@ -1556,7 +1633,10 @@ export class LandingComponent implements OnInit, AfterViewInit {
           'quranic_course'
         );
 
-        // Update the user with email
+        // Ensure anonymous user exists before updating with email
+        if (!this.userId) {
+          this.userId = await this.emailService.createAnonymousUserIfNeeded();
+        }
         await this.emailService.updateUserWithEmail(this.userId, email);
 
         // Track successful conversion
@@ -1653,6 +1733,23 @@ export class LandingComponent implements OnInit, AfterViewInit {
     );
 
     window.open('https://82ndrop.web.app/', '_blank', 'noopener,noreferrer');
+  }
+
+  navigateToBananaBoard() {
+    const url = 'https://tjr-veo.web.app';
+    const startTime = performance.now();
+
+    this.analytics.trackEvent('platform_visit', 'navigation', 'bananaboard');
+    this.analytics.trackInteractionPerformance(
+      'bananaboard_navigation',
+      startTime
+    );
+    this.analytics.trackAIInteraction('video', 'platform_navigation', {
+      ai_feature: 'bananaboard',
+      destination: 'tjr_veo',
+    });
+    this.analytics.trackExternalClick(url, 'BananaBoard Card');
+    window.open(url, '_blank', 'noopener');
   }
 
   navigateToSmotaryMCP() {

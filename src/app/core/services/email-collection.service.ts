@@ -23,8 +23,8 @@ export class EmailCollectionService {
     'https://notebooklm.google.com/notebook/1d9d16c6-a52c-4fb3-a7ac-26e14606b3ad'; // Google Notebook LM URL
 
   constructor(private firestore: Firestore) {
-    // Check for stored user in sessionStorage
-    this.checkStoredUser();
+    // Defer any Firestore network calls until explicitly requested
+    // Consumers can call checkStoredUser() or createAnonymousUserIfNeeded()
   }
 
   /**

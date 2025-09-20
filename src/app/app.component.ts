@@ -12,16 +12,7 @@ import { AnalyticsService } from './core/services/analytics.service';
       <div class="cyberpunk-background">
         <div class="noise-overlay"></div>
         <div class="scan-line"></div>
-        <div class="gif-container">
-          <img
-            *ngFor="let gif of gifs; let i = index"
-            [src]="gif"
-            [class.active]="currentGifIndex === i"
-            class="background-gif"
-            alt="Cyberpunk animation"
-          />
-          <div class="gif-overlay"></div>
-        </div>
+        <!-- Removed heavy GIF animations for performance -->
 
         <!-- Metal Gear Solid Style Overlays -->
         <div class="mgs-overlay">
@@ -118,45 +109,7 @@ import { AnalyticsService } from './core/services/analytics.service';
         }
       }
 
-      .gif-container {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 1;
-        overflow: hidden;
-      }
-
-      .background-gif {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        opacity: 0;
-        transition: opacity 1s ease-in-out;
-        z-index: 1;
-
-        &.active {
-          opacity: 0.15;
-        }
-      }
-
-      .gif-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(
-          rgba(0, 0, 0, 0.8),
-          rgba(0, 0, 0, 0.6),
-          rgba(0, 0, 0, 0.8)
-        );
-        z-index: 2;
-      }
+      /* Removed GIF container styles for performance */
 
       ion-router-outlet {
         position: relative;
@@ -408,12 +361,7 @@ import { AnalyticsService } from './core/services/analytics.service';
   imports: [IonApp, IonRouterOutlet, CommonModule],
 })
 export class AppComponent implements OnInit {
-  currentGifIndex = 0;
-  gifs = [
-    'https://firebasestorage.googleapis.com/v0/b/taajirah.appspot.com/o/Abandoned_Prison.gif?alt=media&token=bfcdb575-a380-4e93-a014-9883de4a20cc',
-    'https://firebasestorage.googleapis.com/v0/b/taajirah.appspot.com/o/Futuristic_Cyber_Glitch.gif?alt=media&token=0639726d-ec9a-484f-8641-20fc50c3f831',
-    'https://firebasestorage.googleapis.com/v0/b/taajirah.appspot.com/o/Transmission_Mystery.gif?alt=media&token=6246625c-7560-456b-a249-66cbe0bff9b6',
-  ];
+  // Removed heavy GIF arrays for performance
 
   mathFormulas: any[] = [];
 
@@ -513,15 +461,8 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     // Set up global error handling
     this.setupErrorHandling();
-    this.startGifSequence();
     this.generateRandomFormulas();
     this.randomizeFormulas();
-  }
-
-  private startGifSequence() {
-    setInterval(() => {
-      this.currentGifIndex = (this.currentGifIndex + 1) % this.gifs.length;
-    }, 10000); // Change GIF every 10 seconds
   }
 
   private generateRandomFormulas() {

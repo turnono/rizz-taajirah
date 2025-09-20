@@ -9,16 +9,7 @@ import { CommonModule } from '@angular/common';
     <div class="scan-line"></div>
 
     <ion-content [forceOverscroll]="false" class="ion-content-custom">
-      <div class="gif-container">
-        <img
-          *ngFor="let gif of gifs; let i = index"
-          [src]="gif"
-          [class.active]="currentGifIndex === i"
-          class="background-gif"
-          alt="Cyberpunk animation"
-        />
-        <div class="gif-overlay"></div>
-      </div>
+      <!-- Removed heavy GIF animations for performance -->
 
       <div class="initial-overlay" [class.fade-out]="canScroll">
         <div class="boot-sequence">
@@ -805,45 +796,7 @@ import { CommonModule } from '@angular/common';
         }
       }
 
-      .gif-container {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 1;
-        overflow: hidden;
-      }
-
-      .background-gif {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        opacity: 0;
-        transition: opacity 1s ease-in-out;
-        z-index: 1;
-
-        &.active {
-          opacity: 0.4;
-        }
-      }
-
-      .gif-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(
-          rgba(0, 0, 0, 0.6),
-          rgba(0, 0, 0, 0.4),
-          rgba(0, 0, 0, 0.6)
-        );
-        z-index: 2;
-      }
+      /* Removed GIF container styles for performance */
     `,
   ],
   standalone: true,
@@ -856,12 +809,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   showScrollInstruction = false;
   signalStrength = 0;
   countdown = '';
-  currentGifIndex = 0;
-  gifs = [
-    'https://firebasestorage.googleapis.com/v0/b/taajirah.appspot.com/o/Abandoned_Prison.gif?alt=media&token=bfcdb575-a380-4e93-a014-9883de4a20cc',
-    'https://firebasestorage.googleapis.com/v0/b/taajirah.appspot.com/o/Futuristic_Cyber_Glitch.gif?alt=media&token=0639726d-ec9a-484f-8641-20fc50c3f831',
-    'https://firebasestorage.googleapis.com/v0/b/taajirah.appspot.com/o/Transmission_Mystery.gif?alt=media&token=6246625c-7560-456b-a249-66cbe0bff9b6',
-  ];
+  // Removed heavy GIF arrays for performance
 
   bootSequence = [
     'INITIALIZING SYSTEM...',
