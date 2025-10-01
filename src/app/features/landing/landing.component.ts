@@ -227,6 +227,33 @@ import { SeoService } from '../../core/services/seo.service';
             </div>
           </ion-card-content>
         </ion-card>
+
+        <!-- Shanal Tours -->
+        <ion-card
+          class="product-card tours-card"
+          (click)="navigateToShanalTours()"
+          (keydown.enter)="navigateToShanalTours()"
+          (keydown.space)="navigateToShanalTours()"
+          tabindex="6"
+        >
+          <div class="accent-line tours-accent"></div>
+          <div class="icon-container">
+            <div class="product-icon">🏝️</div>
+          </div>
+          <ion-card-header>
+            <ion-card-title>Shanal Tours</ion-card-title>
+            <div class="sub-line">Mauritius Travel Services</div>
+          </ion-card-header>
+          <ion-card-content>
+            <p class="card-description">
+              Mobile-friendly booking platform for car rentals, tours, and
+              transfers in Mauritius with WhatsApp integration.
+            </p>
+            <div class="cta-container">
+              <div class="cta">View Project</div>
+            </div>
+          </ion-card-content>
+        </ion-card>
       </div>
 
       <!-- Footer -->
@@ -493,14 +520,14 @@ import { SeoService } from '../../core/services/seo.service';
 
       @media screen and (min-width: 768px) {
         .products-section {
-          grid-template-columns: repeat(4, 1fr);
+          grid-template-columns: repeat(3, 1fr);
           gap: 1.75rem;
         }
       }
 
       @media screen and (min-width: 1024px) {
         .products-section {
-          grid-template-columns: repeat(4, 1fr);
+          grid-template-columns: repeat(3, 1fr);
           gap: 1.5rem;
         }
       }
@@ -616,6 +643,16 @@ import { SeoService } from '../../core/services/seo.service';
         box-shadow: 0 16px 40px rgba(255, 107, 53, 0.2);
       }
 
+      .tours-card {
+        border-color: rgba(0, 212, 170, 0.4);
+        box-shadow: 0 8px 24px rgba(0, 212, 170, 0.12);
+      }
+
+      .tours-card:hover {
+        border-color: rgba(0, 212, 170, 0.6);
+        box-shadow: 0 16px 40px rgba(0, 212, 170, 0.2);
+      }
+
       .accent-line {
         position: absolute;
         top: 0;
@@ -639,6 +676,10 @@ import { SeoService } from '../../core/services/seo.service';
 
       .subagents-accent {
         background: linear-gradient(90deg, #ff6b35, #ff8c42);
+      }
+
+      .tours-accent {
+        background: linear-gradient(90deg, #00d4aa, #00b894);
       }
 
       .product-card ion-card-content {
@@ -1825,6 +1866,34 @@ export class LandingComponent implements OnInit, AfterViewInit {
     );
 
     window.open('https://subagents.web.app/', '_blank', 'noopener,noreferrer');
+  }
+
+  navigateToShanalTours() {
+    const startTime = performance.now();
+
+    // Track Shanal Tours interaction
+    this.analytics.trackEvent('project_visit', 'navigation', 'shanal_tours');
+
+    // Track interaction performance
+    this.analytics.trackInteractionPerformance(
+      'shanal_tours_navigation',
+      startTime
+    );
+
+    // Track project showcase interaction
+    this.analytics.trackEvent(
+      'project_showcase',
+      'travel_platform',
+      'mauritius_tours'
+    );
+
+    // Track external click
+    this.analytics.trackExternalClick(
+      'https://shanal.web.app/',
+      'Shanal Tours Card'
+    );
+
+    window.open('https://shanal.web.app/', '_blank', 'noopener,noreferrer');
   }
 
   clearError() {
