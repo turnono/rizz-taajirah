@@ -25,8 +25,10 @@ import {
   IonToolbar,
   IonButtons,
   IonTitle,
+  ModalController,
 } from '@ionic/angular/standalone';
 import { EmailCollectionService } from '../../core/services/email-collection.service';
+import { HadiyaBusinessSignupService } from '../../core/services/hadia-business-signup.service';
 import { AnalyticsService } from '../../core/services/analytics.service';
 import { SeoService } from '../../core/services/seo.service';
 
@@ -278,6 +280,39 @@ import { SeoService } from '../../core/services/seo.service';
             </p>
             <div class="cta-container">
               <div class="cta">View Project</div>
+            </div>
+          </ion-card-content>
+        </ion-card>
+
+        <!-- Hadiya - Coming Soon -->
+        <ion-card
+          class="product-card hadiya-card"
+          (click)="openBusinessSignup()"
+          (keydown.enter)="openBusinessSignup()"
+          (keydown.space)="openBusinessSignup()"
+          tabindex="8"
+        >
+          <div class="accent-line hadiya-accent"></div>
+          <ion-badge class="coming-soon-badge">EARLY ACCESS</ion-badge>
+          <div class="icon-container">
+            <div class="product-icon">🎁</div>
+          </div>
+          <ion-card-header>
+            <ion-card-title>Hadiya</ion-card-title>
+            <div class="sub-line">AI-Powered Gift Discovery</div>
+          </ion-card-header>
+          <ion-card-content>
+            <p class="card-description">
+              AI-powered gift discovery platform that helps businesses reach
+              customers during gifting moments. Generate contextual gift ideas
+              and connect with local vendors.
+            </p>
+            <div class="business-features">
+              <span class="business-tag">For Businesses</span>
+              <span class="business-tag">Local Vendors</span>
+            </div>
+            <div class="cta-container">
+              <div class="cta">Get Early Access</div>
             </div>
           </ion-card-content>
         </ion-card>
@@ -690,6 +725,16 @@ import { SeoService } from '../../core/services/seo.service';
         box-shadow: 0 16px 40px rgba(138, 43, 226, 0.2);
       }
 
+      .hadiya-card {
+        border-color: rgba(255, 107, 157, 0.4);
+        box-shadow: 0 8px 24px rgba(255, 107, 157, 0.12);
+      }
+
+      .hadiya-card:hover {
+        border-color: rgba(255, 107, 157, 0.6);
+        box-shadow: 0 16px 40px rgba(255, 107, 157, 0.2);
+      }
+
       .accent-line {
         position: absolute;
         top: 0;
@@ -721,6 +766,10 @@ import { SeoService } from '../../core/services/seo.service';
 
       .datacommons-accent {
         background: linear-gradient(90deg, #8a2be2, #9370db);
+      }
+
+      .hadiya-accent {
+        background: linear-gradient(90deg, #ff6b9d, #ff8e9b);
       }
 
       .product-card ion-card-content {
@@ -927,6 +976,162 @@ import { SeoService } from '../../core/services/seo.service';
         --color: #000;
         font-weight: 600;
         z-index: 2;
+      }
+
+      .coming-soon-badge {
+        position: absolute;
+        top: 1rem;
+        left: 1rem;
+        --background: #ff6b9d;
+        --color: #fff;
+        font-weight: 600;
+        z-index: 2;
+        font-size: 0.7rem;
+        padding: 0.3rem 0.6rem;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(255, 107, 157, 0.3);
+      }
+
+      .business-features {
+        display: flex;
+        gap: 0.5rem;
+        margin: 0.75rem 0;
+        flex-wrap: wrap;
+      }
+
+      .business-tag {
+        background: rgba(255, 107, 157, 0.15);
+        color: #ff6b9d;
+        padding: 0.25rem 0.5rem;
+        border-radius: 8px;
+        font-size: 0.7rem;
+        font-weight: 500;
+        border: 1px solid rgba(255, 107, 157, 0.3);
+      }
+
+      .signup-header {
+        text-align: center;
+        margin-bottom: 2rem;
+      }
+
+      .signup-header h2 {
+        color: var(--primary-color);
+        font-size: 1.8rem;
+        margin-bottom: 0.5rem;
+        text-shadow: 0 0 10px var(--cyberpunk-glow);
+      }
+
+      .signup-header p {
+        color: var(--text-medium);
+        font-size: 1rem;
+      }
+
+      .business-form {
+        margin-bottom: 2rem;
+      }
+
+      .business-form ion-item {
+        --background: rgba(0, 0, 0, 0.3);
+        --border-color: rgba(255, 107, 157, 0.3);
+        --color: var(--text-dark);
+        margin-bottom: 1rem;
+        border-radius: 8px;
+      }
+
+      .business-form ion-item.ion-focused {
+        --border-color: #ff6b9d;
+        --border-width: 2px;
+      }
+
+      .business-form ion-label {
+        color: var(--text-medium);
+        font-weight: 500;
+      }
+
+      .business-form ion-input,
+      .business-form ion-textarea,
+      .business-form ion-select {
+        --color: var(--text-dark);
+      }
+
+      .form-actions {
+        margin-top: 1.5rem;
+      }
+
+      .submit-button {
+        --background: linear-gradient(45deg, #ff6b9d, #ff8e9b);
+        --color: #fff;
+        --border-radius: 8px;
+        font-weight: 600;
+        height: 48px;
+      }
+
+      .submit-button:hover:not([disabled]) {
+        --background: linear-gradient(45deg, #ff5a8a, #ff7d8a);
+        box-shadow: 0 4px 15px rgba(255, 107, 157, 0.4);
+      }
+
+      .signup-message {
+        margin-top: 1rem;
+        padding: 0.75rem;
+        border-radius: 8px;
+        text-align: center;
+        font-weight: 500;
+      }
+
+      .signup-message.success {
+        background: rgba(0, 255, 0, 0.1);
+        color: var(--primary-color);
+        border: 1px solid rgba(0, 255, 0, 0.3);
+      }
+
+      .signup-message.error {
+        background: rgba(255, 68, 68, 0.1);
+        color: #ff4444;
+        border: 1px solid rgba(255, 68, 68, 0.3);
+      }
+
+      .benefits-section {
+        background: rgba(255, 107, 157, 0.05);
+        border: 1px solid rgba(255, 107, 157, 0.2);
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-top: 2rem;
+      }
+
+      .benefits-section h3 {
+        color: #ff6b9d;
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+        text-align: center;
+      }
+
+      .benefits-section ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .benefits-section li {
+        color: var(--text-medium);
+        margin-bottom: 0.75rem;
+        padding-left: 0;
+        font-size: 0.9rem;
+        line-height: 1.4;
+      }
+
+      @media screen and (max-width: 767px) {
+        .signup-container {
+          padding: 1rem;
+        }
+
+        .signup-header h2 {
+          font-size: 1.5rem;
+        }
+
+        .benefits-section {
+          padding: 1rem;
+        }
       }
 
       .course-icon {
@@ -1624,18 +1829,35 @@ export class LandingComponent implements OnInit, AfterViewInit {
   userId = '';
   isValidEmail = false;
 
+  // Business signup properties
+  isBusinessSignupOpen = false;
+  businessSignupForm: FormGroup;
+  isSubmittingBusiness = false;
+  businessSignupMessage = '';
+  businessSignupSuccess = false;
+
   // Connection status
   isOffline = false;
 
   constructor(
     public router: Router,
     private emailService: EmailCollectionService,
+    private hadiyaBusinessService: HadiyaBusinessSignupService,
     private fb: FormBuilder,
     private analytics: AnalyticsService,
-    private seo: SeoService
+    private seo: SeoService,
+    private modalCtrl: ModalController
   ) {
     this.emailForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
+    });
+
+    this.businessSignupForm = this.fb.group({
+      businessName: ['', [Validators.required, Validators.minLength(2)]],
+      email: ['', [Validators.required, Validators.email]],
+      businessType: [''],
+      location: [''],
+      description: [''],
     });
   }
 
@@ -1980,6 +2202,191 @@ export class LandingComponent implements OnInit, AfterViewInit {
     );
 
     window.open('https://shanal.web.app/', '_blank', 'noopener,noreferrer');
+  }
+
+  navigateToHadiya() {
+    const startTime = performance.now();
+
+    // Track Hadiya interaction
+    this.analytics.trackEvent(
+      'project_visit',
+      'navigation',
+      'hadiya_coming_soon'
+    );
+
+    // Track interaction performance
+    this.analytics.trackInteractionPerformance('hadiya_navigation', startTime);
+
+    // Track project showcase interaction
+    this.analytics.trackEvent(
+      'project_showcase',
+      'ai_gift_discovery',
+      'coming_soon'
+    );
+
+    // Track external click
+    this.analytics.trackExternalClick(
+      'https://hadiya.web.app/',
+      'Hadiya Coming Soon Card'
+    );
+
+    window.open('https://hadiya.web.app/', '_blank', 'noopener,noreferrer');
+  }
+
+  async openBusinessSignup() {
+    try {
+      // Track business signup modal open
+      this.analytics.trackEvent(
+        'business_signup',
+        'modal_open',
+        'hadiya_early_access'
+      );
+
+      // Import the modal component
+      const { BusinessSignupModalComponent } = await import(
+        './business-signup-modal.component'
+      );
+
+      console.log('BusinessSignupModalComponent', BusinessSignupModalComponent);
+
+      // Create and present the modal
+      const modal = await this.modalCtrl.create({
+        component: BusinessSignupModalComponent,
+        cssClass: 'cyberpunk-modal',
+        backdropDismiss: true,
+        showBackdrop: true,
+      });
+
+      // Handle form submission
+      modal.onDidDismiss().then((result) => {
+        if (result.data && result.data.formData) {
+          this.handleBusinessSignup(result.data.formData);
+        }
+      });
+
+      return await modal.present();
+    } catch (error) {
+      console.error('Error opening business signup modal:', error);
+      this.analytics.trackEvent(
+        'business_signup',
+        'modal_error',
+        'hadiya_early_access'
+      );
+    }
+  }
+
+  async handleBusinessSignup(formData: any) {
+    try {
+      // Track form submission
+      this.analytics.trackEvent(
+        'business_signup',
+        'form_submit',
+        'hadiya_early_access'
+      );
+
+      // Save to Firebase
+      const signupId = await this.hadiyaBusinessService.submitBusinessSignup({
+        businessName: formData.businessName,
+        email: formData.email,
+        businessType: formData.businessType,
+        location: formData.location,
+        description: formData.description,
+      });
+
+      // Track success
+      this.analytics.trackEvent(
+        'business_signup',
+        'success',
+        'hadiya_early_access'
+      );
+
+      console.log('Business signup successful with ID:', signupId);
+    } catch (error) {
+      console.error('Error saving business signup:', error);
+      this.analytics.trackEvent(
+        'business_signup',
+        'error',
+        'hadiya_early_access'
+      );
+    }
+  }
+
+  closeBusinessSignup() {
+    this.isBusinessSignupOpen = false;
+    this.businessSignupForm.reset();
+    this.businessSignupMessage = '';
+    this.businessSignupSuccess = false;
+  }
+
+  async submitBusinessSignup() {
+    if (this.businessSignupForm.invalid) {
+      this.businessSignupMessage = 'Please fill in all required fields.';
+      this.businessSignupSuccess = false;
+      return;
+    }
+
+    this.isSubmittingBusiness = true;
+    this.businessSignupMessage = '';
+
+    try {
+      const formData = this.businessSignupForm.value;
+
+      // Track business signup attempt
+      this.analytics.trackEvent(
+        'business_signup',
+        'form_submit',
+        'hadiya_early_access'
+      );
+
+      // Track business type for analytics
+      if (formData.businessType) {
+        this.analytics.trackEvent(
+          'business_signup',
+          'business_type',
+          formData.businessType
+        );
+      }
+
+      // Save to Hadiya Firebase project
+      const signupId = await this.hadiyaBusinessService.submitBusinessSignup({
+        businessName: formData.businessName,
+        email: formData.email,
+        businessType: formData.businessType,
+        location: formData.location,
+        description: formData.description,
+      });
+
+      console.log('Business signup saved to Hadiya project with ID:', signupId);
+
+      this.businessSignupSuccess = true;
+      this.businessSignupMessage =
+        "Thank you! We'll be in touch soon with early access details.";
+
+      // Track successful signup
+      this.analytics.trackEvent(
+        'business_signup',
+        'success',
+        'hadiya_early_access'
+      );
+
+      // Reset form after success
+      setTimeout(() => {
+        this.closeBusinessSignup();
+      }, 3000);
+    } catch (error) {
+      console.error('Business signup error:', error);
+      this.businessSignupSuccess = false;
+      this.businessSignupMessage = 'Something went wrong. Please try again.';
+
+      // Track signup error
+      this.analytics.trackEvent(
+        'business_signup',
+        'error',
+        'hadiya_early_access'
+      );
+    } finally {
+      this.isSubmittingBusiness = false;
+    }
   }
 
   clearError() {

@@ -1,1 +1,25 @@
 /* You can add global styles to this file, and also import other style files */
+
+/* Cyberpunk Modal Styles */
+.cyberpunk-modal {
+  --width: 90%;
+  --height: 90%;
+  --max-height: 90vh;
+  --border-radius: 15px;
+  --backdrop-opacity: 0.8;
+  --background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+}
+
+.cyberpunk-modal ion-modal {
+  --background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+}
+
+.cyberpunk-modal::part(backdrop) {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.cyberpunk-modal::part(content) {
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+  border-radius: 15px;
+  box-shadow: 0 0 30px rgba(0, 255, 0, 0.3);
+}
