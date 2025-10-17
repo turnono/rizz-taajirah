@@ -202,13 +202,40 @@ import { SeoService } from '../../core/services/seo.service';
           </ion-card-content>
         </ion-card>
 
+        <!-- DataCommons MCP -->
+        <ion-card
+          class="product-card datacommons-card"
+          (click)="navigateToDataCommonsMCP()"
+          (keydown.enter)="navigateToDataCommonsMCP()"
+          (keydown.space)="navigateToDataCommonsMCP()"
+          tabindex="5"
+        >
+          <div class="accent-line datacommons-accent"></div>
+          <div class="icon-container">
+            <div class="product-icon">📊</div>
+          </div>
+          <ion-card-header>
+            <ion-card-title>DataCommons MCP</ion-card-title>
+            <div class="sub-line">Data Analysis Tool</div>
+          </ion-card-header>
+          <ion-card-content>
+            <p class="card-description">
+              Access and analyze global datasets with AI-powered insights and
+              visualization tools.
+            </p>
+            <div class="cta-container">
+              <div class="cta">Explore Data</div>
+            </div>
+          </ion-card-content>
+        </ion-card>
+
         <!-- Claude Subagents Marketplace -->
         <ion-card
           class="product-card subagents-card"
           (click)="navigateToSubagents()"
           (keydown.enter)="navigateToSubagents()"
           (keydown.space)="navigateToSubagents()"
-          tabindex="5"
+          tabindex="6"
         >
           <div class="accent-line subagents-accent"></div>
           <div class="icon-container">
@@ -234,7 +261,7 @@ import { SeoService } from '../../core/services/seo.service';
           (click)="navigateToShanalTours()"
           (keydown.enter)="navigateToShanalTours()"
           (keydown.space)="navigateToShanalTours()"
-          tabindex="6"
+          tabindex="7"
         >
           <div class="accent-line tours-accent"></div>
           <div class="icon-container">
@@ -653,6 +680,16 @@ import { SeoService } from '../../core/services/seo.service';
         box-shadow: 0 16px 40px rgba(0, 212, 170, 0.2);
       }
 
+      .datacommons-card {
+        border-color: rgba(138, 43, 226, 0.4);
+        box-shadow: 0 8px 24px rgba(138, 43, 226, 0.12);
+      }
+
+      .datacommons-card:hover {
+        border-color: rgba(138, 43, 226, 0.6);
+        box-shadow: 0 16px 40px rgba(138, 43, 226, 0.2);
+      }
+
       .accent-line {
         position: absolute;
         top: 0;
@@ -680,6 +717,10 @@ import { SeoService } from '../../core/services/seo.service';
 
       .tours-accent {
         background: linear-gradient(90deg, #00d4aa, #00b894);
+      }
+
+      .datacommons-accent {
+        background: linear-gradient(90deg, #8a2be2, #9370db);
       }
 
       .product-card ion-card-content {
@@ -1812,11 +1853,38 @@ export class LandingComponent implements OnInit, AfterViewInit {
     window.open(url, '_blank', 'noopener');
   }
 
+  navigateToDataCommonsMCP() {
+    // External link to DataCommons MCP page
+    const url = 'https://smithery.ai/server/@turnono/datacommons-mcp-server';
+    const startTime = performance.now();
+
+    // Track MCP interaction
+    this.analytics.trackEvent(
+      'platform_visit',
+      'navigation',
+      'datacommons_mcp'
+    );
+    this.analytics.trackInteractionPerformance(
+      'datacommons_navigation',
+      startTime
+    );
+    this.analytics.trackAIInteraction('mcp', 'platform_navigation', {
+      ai_feature: 'datacommons_mcp',
+      destination: 'smithery_ai',
+    });
+    this.analytics.trackExternalClick(url, 'DataCommons MCP Card');
+    window.open(url, '_blank', 'noopener');
+  }
+
   navigateToMcpShowcase() {
     this.analytics.trackEvent('internal_nav', 'navigation', 'mcp_showcase');
   }
 
   navigateToCourse() {
+    const startTime = performance.now();
+    const notebookUrl =
+      'https://notebooklm.google.com/notebook/1d9d16c6-a52c-4fb3-a7ac-26e14606b3ad';
+
     // Track course interest
     this.analytics.trackEvent(
       'course_interest',
@@ -1824,13 +1892,31 @@ export class LandingComponent implements OnInit, AfterViewInit {
       'quranic_arabic'
     );
 
-    // Navigate directly to course (could show modal for email collection later)
-    if (this.hasEmail) {
-      this.navigateToNotebook();
-    } else {
-      // For now, show a simple alert or redirect to external course page
-      alert('Course coming soon! Check back later for updates.');
-    }
+    // Track interaction performance
+    this.analytics.trackInteractionPerformance(
+      'quranic_arabic_navigation',
+      startTime
+    );
+
+    // Track external click to NotebookLM
+    this.analytics.trackExternalClick(
+      notebookUrl,
+      'Quranic Arabic Course - NotebookLM'
+    );
+
+    // Track AI learning interaction
+    this.analytics.trackAIInteraction(
+      'quranic_arabic_learning',
+      'notebooklm_navigation',
+      {
+        ai_feature: 'notebooklm',
+        destination: 'quranic_arabic_course',
+        learning_platform: 'google_notebooklm',
+      }
+    );
+
+    // Open the NotebookLM notebook
+    window.open(notebookUrl, '_blank', 'noopener,noreferrer');
   }
 
   navigateToSubagents() {
