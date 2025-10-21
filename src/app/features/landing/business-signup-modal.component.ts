@@ -37,7 +37,6 @@ import {
     IonSelect,
     IonSelectOption,
     IonItem,
-    IonLabel,
   ],
   template: `
     <ion-header>
@@ -65,27 +64,30 @@ import {
         (ngSubmit)="onSubmit()"
       >
         <ion-item>
-          <ion-label position="floating">Business Name *</ion-label>
           <ion-input
             formControlName="businessName"
+            label="Business Name *"
+            labelPlacement="floating"
             placeholder="Your business name"
             type="text"
           ></ion-input>
         </ion-item>
 
         <ion-item>
-          <ion-label position="floating">Contact Email *</ion-label>
           <ion-input
             formControlName="email"
+            label="Contact Email *"
+            labelPlacement="floating"
             placeholder="business@example.com"
             type="email"
           ></ion-input>
         </ion-item>
 
         <ion-item>
-          <ion-label position="floating">Business Type</ion-label>
           <ion-select
             formControlName="businessType"
+            label="Business Type"
+            labelPlacement="floating"
             placeholder="Select your business type"
           >
             <ion-select-option value="retail">Retail Store</ion-select-option>
@@ -103,15 +105,18 @@ import {
         <ion-item>
           <ion-input
             formControlName="location"
+            label="Location (City, Country)"
+            labelPlacement="floating"
             placeholder="e.g., Cape Town, South Africa"
             type="text"
           ></ion-input>
         </ion-item>
 
         <ion-item>
-          <ion-label position="floating">Tell us about your business</ion-label>
           <ion-textarea
             formControlName="description"
+            label="Tell us about your business"
+            labelPlacement="floating"
             placeholder="Brief description of your business..."
             rows="3"
           ></ion-textarea>
