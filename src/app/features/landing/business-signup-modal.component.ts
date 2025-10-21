@@ -17,8 +17,7 @@ import {
   IonSelect,
   IonSelectOption,
   IonItem,
-  IonLabel,
-  IonIcon,
+  ModalController,
 } from '@ionic/angular/standalone';
 
 @Component({
@@ -37,15 +36,13 @@ import {
     IonSelect,
     IonSelectOption,
     IonItem,
-    IonLabel,
-    IonIcon,
   ],
   template: `
     <ion-header>
       <ion-toolbar color="dark">
         <ion-title>🎁 GET EARLY ACCESS TO HADIYA</ion-title>
         <ion-button slot="end" fill="clear" (click)="closeModal()">
-          <ion-icon name="close"></ion-icon>
+          ✕
         </ion-button>
       </ion-toolbar>
     </ion-header>
@@ -61,27 +58,27 @@ import {
 
         <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
           <ion-item>
-            <ion-label position="stacked">Business Name *</ion-label>
             <ion-input
               formControlName="businessName"
+              label="Business Name *"
               placeholder="Your business name"
               type="text"
             ></ion-input>
           </ion-item>
 
           <ion-item>
-            <ion-label position="stacked">Contact Email *</ion-label>
             <ion-input
               formControlName="email"
+              label="Contact Email *"
               placeholder="business@example.com"
               type="email"
             ></ion-input>
           </ion-item>
 
           <ion-item>
-            <ion-label position="stacked">Business Type</ion-label>
             <ion-select
               formControlName="businessType"
+              label="Business Type"
               placeholder="Select your business type"
             >
               <ion-select-option value="retail">Retail Store</ion-select-option>
@@ -97,20 +94,18 @@ import {
           </ion-item>
 
           <ion-item>
-            <ion-label position="stacked">Location (City, Country)</ion-label>
             <ion-input
               formControlName="location"
+              label="Location (City, Country)"
               placeholder="e.g., Cape Town, South Africa"
               type="text"
             ></ion-input>
           </ion-item>
 
           <ion-item>
-            <ion-label position="stacked"
-              >Tell us about your business</ion-label
-            >
             <ion-textarea
               formControlName="description"
+              label="Tell us about your business"
               placeholder="Brief description of your business..."
               rows="3"
             ></ion-textarea>
@@ -121,6 +116,7 @@ import {
             type="submit"
             [disabled]="signupForm.invalid || isSubmitting"
             class="submit-btn"
+            (click)="onSubmit()"
           >
             <span *ngIf="!isSubmitting">🚀 JOIN EARLY ACCESS</span>
             <span *ngIf="isSubmitting">⚡ SUBMITTING...</span>
@@ -258,7 +254,7 @@ export class BusinessSignupModalComponent {
 
   signupForm: FormGroup;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private modalCtrl: ModalController) {
     this.signupForm = this.fb.group({
       businessName: ['', [Validators.required, Validators.minLength(2)]],
       email: ['', [Validators.required, Validators.email]],
@@ -268,15 +264,29 @@ export class BusinessSignupModalComponent {
     });
   }
 
-  onSubmit() {
+  async onSubmit() {
     if (this.signupForm.valid) {
-      this.formSubmit.emit(this.signupForm.value);
+      this.isSubmitting = true;
+      this.message = '';
+
+      try {
+        // Emit the form data
+        this.formSubmit.emit(this.signupForm.value);
+
+        // Close the modal with the form data
+        await this.modalCtrl.dismiss({ formData: this.signupForm.value });
+      } catch (error) {
+        console.error('Error submitting form:', error);
+        this.message = 'Error submitting form. Please try again.';
+        this.isSubmitting = false;
+      }
     } else {
       this.message = 'Please fill in all required fields.';
     }
   }
 
-  closeModal() {
+  async closeModal() {
     this.close.emit();
+    await this.modalCtrl.dismiss();
   }
 }

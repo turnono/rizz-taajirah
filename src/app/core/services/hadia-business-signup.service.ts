@@ -4,7 +4,12 @@ import {
   collection,
   addDoc,
   serverTimestamp,
+  connectFirestoreEmulator,
+  initializeFirestore,
+  getFirestore,
 } from '@angular/fire/firestore';
+import { initializeApp, getApps, FirebaseApp } from '@angular/fire/app';
+import { hadiyaFirebaseConfig } from '../../../environments/hadiya-firebase.config';
 
 export interface BusinessSignupData {
   businessName: string;
@@ -22,12 +27,36 @@ export interface BusinessSignupData {
 })
 export class HadiyaBusinessSignupService {
   private firestore = inject(Firestore);
+  private hadiyaFirestore: Firestore | null = null;
+
+  private getHadiyaFirestore(): Firestore {
+    if (!this.hadiyaFirestore) {
+      // Initialize the Hadiya Firebase app if it doesn't exist
+      let hadiyaApp: FirebaseApp;
+      const existingApps = getApps();
+      const hadiyaAppExists = existingApps.find((app) => app.name === 'hadiya');
+
+      if (hadiyaAppExists) {
+        hadiyaApp = hadiyaAppExists;
+      } else {
+        hadiyaApp = initializeApp(hadiyaFirebaseConfig, 'hadiya');
+      }
+
+      // Initialize Firestore for the Hadiya project
+      this.hadiyaFirestore = getFirestore(hadiyaApp);
+    }
+
+    return this.hadiyaFirestore;
+  }
 
   async submitBusinessSignup(
     signupData: Omit<BusinessSignupData, 'signupDate' | 'source' | 'status'>
   ): Promise<string> {
     try {
-      console.log('Preparing business signup data:', signupData);
+      console.log(
+        'Preparing business signup data for Hadiya project:',
+        signupData
+      );
 
       const businessSignup: BusinessSignupData = {
         ...signupData,
@@ -36,14 +65,17 @@ export class HadiyaBusinessSignupService {
         status: 'pending',
       };
 
-      console.log('Saving to Firestore collection: hadiyaBusinessSignups');
+      // Get the Hadiya Firestore instance
+      const hadiyaFirestore = this.getHadiyaFirestore();
+
+      console.log('Saving to Hadiya Firestore collection: businessSignups');
       const docRef = await addDoc(
-        collection(this.firestore, 'hadiyaBusinessSignups'),
+        collection(hadiyaFirestore, 'businessSignups'),
         businessSignup
       );
 
       console.log(
-        'Business signup saved to Taajirah project (hadiyaBusinessSignups collection) with ID:',
+        'Business signup saved to Hadiya project (tjr-gift) with ID:',
         docRef.id
       );
       return docRef.id;

@@ -2235,6 +2235,8 @@ export class LandingComponent implements OnInit, AfterViewInit {
 
   async openBusinessSignup() {
     try {
+      console.log('🚀 Opening business signup modal...');
+
       // Track business signup modal open
       this.analytics.trackEvent(
         'business_signup',
@@ -2247,7 +2249,10 @@ export class LandingComponent implements OnInit, AfterViewInit {
         './business-signup-modal.component'
       );
 
-      console.log('BusinessSignupModalComponent', BusinessSignupModalComponent);
+      console.log(
+        '✅ BusinessSignupModalComponent loaded:',
+        BusinessSignupModalComponent
+      );
 
       // Create and present the modal
       const modal = await this.modalCtrl.create({
@@ -2257,16 +2262,22 @@ export class LandingComponent implements OnInit, AfterViewInit {
         showBackdrop: true,
       });
 
+      console.log('✅ Modal created, presenting...');
+
       // Handle form submission
       modal.onDidDismiss().then((result) => {
+        console.log('📝 Modal dismissed with result:', result);
         if (result.data && result.data.formData) {
+          console.log('📊 Form data received:', result.data.formData);
           this.handleBusinessSignup(result.data.formData);
         }
       });
 
-      return await modal.present();
+      const result = await modal.present();
+      console.log('✅ Modal presented successfully:', result);
+      return result;
     } catch (error) {
-      console.error('Error opening business signup modal:', error);
+      console.error('❌ Error opening business signup modal:', error);
       this.analytics.trackEvent(
         'business_signup',
         'modal_error',
@@ -2277,6 +2288,8 @@ export class LandingComponent implements OnInit, AfterViewInit {
 
   async handleBusinessSignup(formData: any) {
     try {
+      console.log('💾 Processing business signup with data:', formData);
+
       // Track form submission
       this.analytics.trackEvent(
         'business_signup',
@@ -2284,7 +2297,9 @@ export class LandingComponent implements OnInit, AfterViewInit {
         'hadiya_early_access'
       );
 
-      // Save to Firebase
+      console.log('🔥 Saving to Hadiya Firebase project (tjr-gift)...');
+
+      // Save to Hadiya Firebase project
       const signupId = await this.hadiyaBusinessService.submitBusinessSignup({
         businessName: formData.businessName,
         email: formData.email,
@@ -2300,9 +2315,12 @@ export class LandingComponent implements OnInit, AfterViewInit {
         'hadiya_early_access'
       );
 
-      console.log('Business signup successful with ID:', signupId);
+      console.log(
+        '✅ Business signup saved to Hadiya project with ID:',
+        signupId
+      );
     } catch (error) {
-      console.error('Error saving business signup:', error);
+      console.error('❌ Error saving business signup:', error);
       this.analytics.trackEvent(
         'business_signup',
         'error',

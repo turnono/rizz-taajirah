@@ -10,6 +10,18 @@ service cloud.firestore {
       allow read, update: if true;
     }
 
+    // Allow business signups collection
+    match /hadiyaBusinessSignups/{signupId} {
+      // Allow anyone to create business signups (for the landing page form)
+      allow create: if true;
+
+      // Allow read access (for admin purposes)
+      allow read: if true;
+
+      // Allow update (for admin to change status)
+      allow update: if true;
+    }
+
     // Default deny
     match /{document=**} {
       allow read, write: if false;
