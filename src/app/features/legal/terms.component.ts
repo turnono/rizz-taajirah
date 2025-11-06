@@ -9,7 +9,7 @@ import { CommonModule } from '@angular/common';
     <section class="legal">
       <h1>Terms of Use</h1>
       <p>By using this website, you agree to use the services lawfully, respect intellectual property, and not misuse the platform. Services are provided “as is” without warranties. Liability is limited to the maximum extent permitted by law.</p>
-      <p>Contact: <a href="mailto:taajirahsystems@gmail.com">taajirahsystems@gmail.com</a></p>
+      <p>Contact: <a href="mailto:taajirah0@gmail.com">taajirah0&#64;gmail.com</a></p>
       <p>Last updated: {{ today | date:'yyyy-MM-dd' }}</p>
     </section>
   `,

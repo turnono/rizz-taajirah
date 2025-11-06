@@ -347,7 +347,7 @@ import { SeoService } from '../../core/services/seo.service';
           <div class="footer-links">
             <a (click)="router.navigate(['mcp'])">MCP Showcase</a>
             <a href="https://github.com/turnono" target="_blank">GitHub</a>
-            <a href="mailto:taajirahsystems@gmail.com">Contact</a>
+            <a href="mailto:taajirah0@gmail.com">Contact</a>
             <a (click)="router.navigate(['privacy'])">Privacy Policy</a>
             <a (click)="router.navigate(['terms'])">Terms</a>
           </div>
@@ -2283,7 +2283,7 @@ export class LandingComponent implements OnInit, AfterViewInit {
     const body = encodeURIComponent(
       `Hi Taajirah Systems,%0D%0A%0D%0AWe'd like to discuss your internal operations vehicle for engagements/workshops/media.%0D%0A%0D%0ACompany:%0D%0AContact person:%0D%0APhone:%0D%0AWebsite/Social:%0D%0A%0D%0AThanks!`
     );
-    const mailto = `mailto:taajirahsystems@gmail.com?subject=${subject}&body=${body}`;
+    const mailto = `mailto:taajirah0@gmail.com?subject=${subject}&body=${body}`;
     this.analytics.trackExternalClick(mailto, 'Taajirah Mobility Card');
     window.location.href = mailto;
   }

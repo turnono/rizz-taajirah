@@ -8,11 +8,7 @@ import { CommonModule } from '@angular/common';
   template: `
     <section class="contact">
       <h1>Contact Us</h1>
-      <p>Email: <a href="mailto:taajirahsystems@gmail.com">taajirahsystems@gmail.com</a></p>
-      <p>
-        WhatsApp (optional):
-        <a href="https://wa.me/27123456789" target="_blank" rel="noopener">Open Chat</a>
-      </p>
+      <p>Email: <a href="mailto:taajirah0@gmail.com">taajirah0&#64;gmail.com</a></p>
       <p>Region: Cape Town, South Africa</p>
     </section>
   `,
