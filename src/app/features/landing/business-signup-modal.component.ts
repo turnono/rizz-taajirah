@@ -13,12 +13,12 @@ import {
   IonToolbar,
   IonButton,
   IonInput,
-  IonTextarea,
   IonSelect,
   IonSelectOption,
   IonItem,
-  ModalController,
+  IonCheckbox,
   IonLabel,
+  ModalController,
 } from '@ionic/angular/standalone';
 
 @Component({
@@ -33,10 +33,9 @@ import {
     IonToolbar,
     IonButton,
     IonInput,
-    IonTextarea,
-    IonSelect,
-    IonSelectOption,
     IonItem,
+    IonCheckbox,
+    IonLabel,
   ],
   template: `
     <ion-header>
@@ -48,14 +47,18 @@ import {
       </ion-toolbar>
     </ion-header>
 
-    <ion-content class="ion-padding ion-margin" [scrollY]="true">
+    <ion-content
+      class="ion-padding"
+      [scrollY]="true"
+      style="--padding-bottom: 100px;"
+    >
       <h2 style="margin-left: 16px; margin-right: 16px;">
-        🚀 Join the Hadiya Early Access Program
+        🎁 Get your products recommended by AI
       </h2>
       <p style="margin-left: 16px; margin-right: 16px;">
-        Be among the first businesses to leverage AI-powered gift discovery.
-        Transform your customer engagement with intelligent gift
-        recommendations.
+        Hadiya is an AI-powered gift discovery tool that recommends real gifts
+        from real businesses. We're inviting selected vendors to join our early
+        access program.
       </p>
 
       <form
@@ -75,51 +78,52 @@ import {
 
         <ion-item>
           <ion-input
-            formControlName="email"
-            label="Contact Email *"
+            formControlName="contactPerson"
+            label="Contact Person *"
             labelPlacement="floating"
-            placeholder="business@example.com"
-            type="email"
-          ></ion-input>
-        </ion-item>
-
-        <ion-item>
-          <ion-select
-            formControlName="businessType"
-            label="Business Type"
-            labelPlacement="floating"
-            placeholder="Select your business type"
-          >
-            <ion-select-option value="retail">Retail Store</ion-select-option>
-            <ion-select-option value="restaurant"
-              >Restaurant/Café</ion-select-option
-            >
-            <ion-select-option value="services">Services</ion-select-option>
-            <ion-select-option value="artisan"
-              >Artisan/Crafts</ion-select-option
-            >
-            <ion-select-option value="other">Other</ion-select-option>
-          </ion-select>
-        </ion-item>
-
-        <ion-item>
-          <ion-input
-            formControlName="location"
-            label="Location (City, Country)"
-            labelPlacement="floating"
-            placeholder="e.g., Cape Town, South Africa"
+            placeholder="Your full name"
             type="text"
           ></ion-input>
         </ion-item>
 
         <ion-item>
-          <ion-textarea
-            formControlName="description"
-            label="Tell us about your business"
+          <ion-input
+            formControlName="email"
+            label="Email Address *"
             labelPlacement="floating"
-            placeholder="Brief description of your business..."
-            rows="3"
-          ></ion-textarea>
+            placeholder="your@email.com"
+            type="email"
+          ></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-input
+            formControlName="phone"
+            label="Phone Number"
+            labelPlacement="floating"
+            placeholder="+27 82 123 4567"
+            type="tel"
+          ></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-input
+            formControlName="websiteOrSocial"
+            label="Website or Social Handle"
+            labelPlacement="floating"
+            placeholder="Instagram, Facebook, website, etc."
+            type="text"
+          ></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-checkbox
+            formControlName="contentCreatorInterest"
+            slot="start"
+          ></ion-checkbox>
+          <ion-label>
+            I'm interested in working with content creators when ready.
+          </ion-label>
         </ion-item>
 
         <ion-button
@@ -127,10 +131,11 @@ import {
           type="submit"
           [disabled]="signupForm.invalid || isSubmitting"
           class="submit-btn"
+          style="margin-bottom: 20px;"
           (click)="onSubmit()"
         >
-          <span *ngIf="!isSubmitting">🚀 JOIN EARLY ACCESS 🎁 FOR FREE</span>
-          <span *ngIf="isSubmitting">⚡ SUBMITTING...</span>
+          <span *ngIf="!isSubmitting">👉 Apply for Early Access</span>
+          <span *ngIf="isSubmitting">⚡ Submitting...</span>
         </ion-button>
 
         <div
@@ -181,10 +186,11 @@ export class BusinessSignupModalComponent {
   constructor(private fb: FormBuilder, private modalCtrl: ModalController) {
     this.signupForm = this.fb.group({
       businessName: ['', [Validators.required, Validators.minLength(2)]],
+      contactPerson: ['', [Validators.required, Validators.minLength(2)]],
       email: ['', [Validators.required, Validators.email]],
-      businessType: [''],
-      location: [''],
-      description: [''],
+      phone: [''],
+      websiteOrSocial: [''],
+      contentCreatorInterest: [false],
     });
 
     // Enable the form by default

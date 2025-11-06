@@ -46,7 +46,7 @@ import { SeoService } from '../../core/services/seo.service';
               loading="lazy"
               decoding="async"
             />
-            <h1 class="brand">TAAJIRAH</h1>
+            <h1 class="brand">Taajirah Systems</h1>
             <div *ngIf="isOffline" class="offline-indicator">
               <ion-badge color="warning">Offline</ion-badge>
             </div>
@@ -54,27 +54,12 @@ import { SeoService } from '../../core/services/seo.service';
         >
 
         <ion-buttons slot="end">
-          <ion-button fill="clear" size="small" (click)="router.navigate([''])"
-            >Home</ion-button
-          >
-          <ion-button
-            fill="clear"
-            size="small"
-            (click)="router.navigate(['mcp'])"
-            >MCP</ion-button
-          >
-          <ion-button
-            fill="clear"
-            size="small"
-            (click)="navigateToBananaBoard()"
-            >BananaBoard</ion-button
-          >
-          <ion-button fill="clear" size="small" (click)="navigateTo82ndrop()"
-            >82ndrop</ion-button
-          >
-          <ion-button fill="clear" size="small" (click)="navigateToSubagents()"
-            >Subagents</ion-button
-          >
+          <ion-button fill="clear" size="small" (click)="router.navigate([''])">Home</ion-button>
+          <ion-button fill="clear" size="small" (click)="scrollToSection('hadiya')">Hadiya</ion-button>
+          <ion-button fill="clear" size="small" (click)="scrollToSection('ai-tools')">AI Tools</ion-button>
+          <ion-button fill="clear" size="small" (click)="scrollToSection('mobility')">Mobility</ion-button>
+          <ion-button fill="clear" size="small" (click)="scrollToSection('quranic-arabic')">Quranic Arabic</ion-button>
+          <ion-button fill="clear" size="small" (click)="router.navigate(['contact'])">Contact</ion-button>
         </ion-buttons>
       </ion-toolbar>
     </ion-header>
@@ -87,11 +72,45 @@ import { SeoService } from '../../core/services/seo.service';
           <p class="hero-sub">
             Quranic Arabic Learning • AI Video Creation • Developer Tools
           </p>
+          <p class="tagline">Taajirah Systems — Human • Intelligent • Moving</p>
         </div>
       </section>
 
       <!-- Product Cards -->
-      <div class="products-section">
+      <section id="hadiya" class="products-section">
+        <!-- Hadiya Featured Banner (top priority) -->
+        <ion-card
+          class="product-card hadiya-card"
+          (click)="openBusinessSignup()"
+          (keydown.enter)="openBusinessSignup()"
+          (keydown.space)="openBusinessSignup()"
+          tabindex="0"
+        >
+          <div class="accent-line hadiya-accent"></div>
+          <ion-badge class="coming-soon-badge">EARLY ACCESS</ion-badge>
+          <div class="icon-container">
+            <div class="product-icon">🎁</div>
+          </div>
+          <ion-card-header>
+            <ion-card-title>Hadiya Gift AI</ion-card-title>
+            <div class="sub-line">AI gift recommendations from real local businesses</div>
+          </ion-card-header>
+          <ion-card-content>
+            <p class="card-description">
+              Vendors: join early access and get your products recommended by AI to shoppers.
+            </p>
+            <div class="business-features">
+              <span class="business-tag">For Businesses</span>
+              <span class="business-tag">Local Vendors</span>
+            </div>
+            <div class="cta-container">
+              <div class="cta">👉 Join Early Access</div>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </section>
+
+      <div id="ai-tools" class="products-section">
         <!-- Quranic Arabic Course - PRIMARY -->
         <ion-card
           class="product-card course-card"
@@ -284,35 +303,38 @@ import { SeoService } from '../../core/services/seo.service';
           </ion-card-content>
         </ion-card>
 
-        <!-- Hadiya - Coming Soon -->
+        <div id="quranic-arabic"></div>
+
+        <!-- Mobility: Vehicle Highlight -->
         <ion-card
-          class="product-card hadiya-card"
-          (click)="openBusinessSignup()"
-          (keydown.enter)="openBusinessSignup()"
-          (keydown.space)="openBusinessSignup()"
-          tabindex="8"
+          class="product-card vehicle-card"
+          (click)="navigateToHadiyaVehicle()"
+          (keydown.enter)="navigateToHadiyaVehicle()"
+          (keydown.space)="navigateToHadiyaVehicle()"
+          tabindex="9"
+          aria-label="Taajirah Mobility — Internal Operations Vehicle"
         >
-          <div class="accent-line hadiya-accent"></div>
-          <ion-badge class="coming-soon-badge">EARLY ACCESS</ion-badge>
+          <div class="accent-line vehicle-accent"></div>
           <div class="icon-container">
-            <div class="product-icon">🎁</div>
+            <div class="product-icon">🚐</div>
           </div>
           <ion-card-header>
-            <ion-card-title>Hadiya</ion-card-title>
-            <div class="sub-line">AI-Powered Gift Discovery</div>
+            <ion-card-title>Taajirah Mobility — Internal Operations Vehicle</ion-card-title>
+            <div class="sub-line">Supports engagements, workshops, media, and team mobility</div>
           </ion-card-header>
           <ion-card-content>
             <p class="card-description">
-              AI-powered gift discovery platform that helps businesses reach
-              customers during gifting moments. Generate contextual gift ideas
-              and connect with local vendors.
+              Our executive Hyundai Staria supports Taajirah Systems by enabling client engagements, workshop travel, media production,
+              and internal team mobility. It is not used for transport-for-hire services.
             </p>
-            <div class="business-features">
-              <span class="business-tag">For Businesses</span>
-              <span class="business-tag">Local Vendors</span>
+            <div class="features-list">
+              <span class="feature">Client engagements</span>
+              <span class="feature">Workshop travel</span>
+              <span class="feature">Media production</span>
+              <span class="feature">Team mobility</span>
             </div>
             <div class="cta-container">
-              <div class="cta">Get Early Access</div>
+              <div class="cta">Contact Us</div>
             </div>
           </ion-card-content>
         </ion-card>
@@ -321,11 +343,13 @@ import { SeoService } from '../../core/services/seo.service';
       <!-- Footer -->
       <footer class="site-footer">
         <div class="footer-content">
-          <p>&copy; 2024 TAAJIRAH. Built with Claude, Angular, and Firebase.</p>
+          <p>&copy; 2024 Taajirah Systems. Built with Claude, Angular, and Firebase.</p>
           <div class="footer-links">
             <a (click)="router.navigate(['mcp'])">MCP Showcase</a>
             <a href="https://github.com/turnono" target="_blank">GitHub</a>
-            <a href="mailto:contact@taajirah.com">Contact</a>
+            <a href="mailto:taajirahsystems@gmail.com">Contact</a>
+            <a (click)="router.navigate(['privacy'])">Privacy Policy</a>
+            <a (click)="router.navigate(['terms'])">Terms</a>
           </div>
         </div>
       </footer>
@@ -770,6 +794,20 @@ import { SeoService } from '../../core/services/seo.service';
 
       .hadiya-accent {
         background: linear-gradient(90deg, #ff6b9d, #ff8e9b);
+      }
+
+      .vehicle-card {
+        border-color: rgba(0, 200, 255, 0.4);
+        box-shadow: 0 8px 24px rgba(0, 200, 255, 0.12);
+      }
+
+      .vehicle-card:hover {
+        border-color: rgba(0, 200, 255, 0.6);
+        box-shadow: 0 16px 40px rgba(0, 200, 255, 0.2);
+      }
+
+      .vehicle-accent {
+        background: linear-gradient(90deg, #00c8ff, #00ffd9);
       }
 
       .product-card ion-card-content {
@@ -2233,6 +2271,23 @@ export class LandingComponent implements OnInit, AfterViewInit {
     window.open('https://hadiya.web.app/', '_blank', 'noopener,noreferrer');
   }
 
+  navigateToHadiyaVehicle() {
+    const startTime = performance.now();
+
+    // Track vehicle showcase interaction
+    this.analytics.trackEvent('vehicle_showcase', 'navigation', 'hadiya_vehicle');
+    this.analytics.trackInteractionPerformance('hadiya_vehicle_navigation', startTime);
+
+    // Open email for vehicle partnerships/details
+    const subject = encodeURIComponent('Taajirah Mobility — Vehicle details');
+    const body = encodeURIComponent(
+      `Hi Taajirah Systems,%0D%0A%0D%0AWe'd like to discuss your internal operations vehicle for engagements/workshops/media.%0D%0A%0D%0ACompany:%0D%0AContact person:%0D%0APhone:%0D%0AWebsite/Social:%0D%0A%0D%0AThanks!`
+    );
+    const mailto = `mailto:taajirahsystems@gmail.com?subject=${subject}&body=${body}`;
+    this.analytics.trackExternalClick(mailto, 'Taajirah Mobility Card');
+    window.location.href = mailto;
+  }
+
   async openBusinessSignup() {
     try {
       console.log('🚀 Opening business signup modal...');
@@ -2302,10 +2357,11 @@ export class LandingComponent implements OnInit, AfterViewInit {
       // Save to Hadiya Firebase project
       const signupId = await this.hadiyaBusinessService.submitBusinessSignup({
         businessName: formData.businessName,
+        contactPerson: formData.contactPerson,
         email: formData.email,
-        businessType: formData.businessType,
-        location: formData.location,
-        description: formData.description,
+        phone: formData.phone,
+        websiteOrSocial: formData.websiteOrSocial,
+        contentCreatorInterest: formData.contentCreatorInterest,
       });
 
       // Track success
@@ -2368,10 +2424,11 @@ export class LandingComponent implements OnInit, AfterViewInit {
       // Save to Hadiya Firebase project
       const signupId = await this.hadiyaBusinessService.submitBusinessSignup({
         businessName: formData.businessName,
+        contactPerson: formData.contactPerson,
         email: formData.email,
-        businessType: formData.businessType,
-        location: formData.location,
-        description: formData.description,
+        phone: formData.phone,
+        websiteOrSocial: formData.websiteOrSocial,
+        contentCreatorInterest: formData.contentCreatorInterest,
       });
 
       console.log('Business signup saved to Hadiya project with ID:', signupId);
@@ -2447,6 +2504,16 @@ export class LandingComponent implements OnInit, AfterViewInit {
       const el = this.courseSection?.nativeElement as HTMLElement;
       if (el && this.content) {
         this.content.scrollToPoint(0, el.offsetTop - 80, 500);
+      }
+    } catch {}
+  }
+
+  scrollToSection(sectionId: string) {
+    try {
+      const el = document.getElementById(sectionId);
+      if (el && this.content) {
+        const y = el.getBoundingClientRect().top + window.scrollY - 80;
+        this.content.scrollToPoint(0, y, 400);
       }
     } catch {}
   }

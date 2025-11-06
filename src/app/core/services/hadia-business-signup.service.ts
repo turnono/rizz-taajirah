@@ -13,13 +13,24 @@ import { hadiyaFirebaseConfig } from '../../../environments/hadiya-firebase.conf
 
 export interface BusinessSignupData {
   businessName: string;
+  contactPerson: string;
   email: string;
-  businessType?: string;
-  location?: string;
-  description?: string;
+  phone?: string;
+  websiteOrSocial?: string;
+  contentCreatorInterest?: boolean;
   signupDate: any; // Firestore timestamp
   source: string; // Where they signed up from
   status: 'pending' | 'contacted' | 'onboarded';
+}
+
+export interface VendorApplication {
+  name: string;
+  businessName: string;
+  contact: string; // email or phone
+  category?: string;
+  city?: string;
+  products?: string;
+  submissionDate: any; // Firestore timestamp
 }
 
 @Injectable({
@@ -68,9 +79,9 @@ export class HadiyaBusinessSignupService {
       // Get the Hadiya Firestore instance
       const hadiyaFirestore = this.getHadiyaFirestore();
 
-      console.log('Saving to Hadiya Firestore collection: businessSignups');
+      console.log('Saving to Hadiya Firestore collection: businesses');
       const docRef = await addDoc(
-        collection(hadiyaFirestore, 'businessSignups'),
+        collection(hadiyaFirestore, 'businesses'),
         businessSignup
       );
 
@@ -86,6 +97,27 @@ export class HadiyaBusinessSignupService {
         stack: error instanceof Error ? error.stack : undefined,
         signupData,
       });
+      throw error;
+    }
+  }
+
+  async submitVendorApplication(
+    data: Omit<VendorApplication, 'submissionDate'>
+  ): Promise<string> {
+    try {
+      const hadiyaFirestore = this.getHadiyaFirestore();
+      const payload: VendorApplication = {
+        ...data,
+        submissionDate: serverTimestamp(),
+      };
+
+      const docRef = await addDoc(
+        collection(hadiyaFirestore, 'vendorApplications'),
+        payload
+      );
+      return docRef.id;
+    } catch (error) {
+      console.error('Error saving vendor application:', error);
       throw error;
     }
   }

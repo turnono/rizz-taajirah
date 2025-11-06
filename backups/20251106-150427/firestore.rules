@@ -1,0 +1,54 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Allow users to read and write their own documents
+    match /users/{userId} {
+      // Allow anyone to create a new user document (for anonymous users)
+      allow create: if true;
+
+      // Allow read and update for the user's own document
+      allow read, update: if true;
+    }
+
+    // Allow gift requests collection (Hadiya MVP)
+    match /giftRequests/{requestId} {
+      // Allow anyone to create gift requests (for the landing page form)
+      allow create: if true;
+
+      // Allow read access (for admin purposes)
+      allow read: if true;
+
+      // Allow update (for admin to change status)
+      allow update: if true;
+    }
+
+    // Allow businesses collection (Hadiya vendor signups)
+    match /businesses/{businessId} {
+      // Allow anyone to create a business (signup form)
+      allow create: if true;
+
+      // Allow read access (for admin purposes)
+      allow read: if true;
+
+      // Allow update (for admin to change status)
+      allow update: if true;
+    }
+
+    // Allow vendor applications collection (Hadiya page)
+    match /vendorApplications/{applicationId} {
+      // Allow anyone to create vendor applications (public form)
+      allow create: if true;
+
+      // Allow read access (for admin purposes)
+      allow read: if true;
+
+      // Allow update (for admin to change status)
+      allow update: if true;
+    }
+
+    // Default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
