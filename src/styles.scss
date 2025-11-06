@@ -16,3 +16,47 @@
     --max-height: 80vh;
   }
 }
+
+/* Global warm palette (additive, non-breaking) */
+:root {
+  --tjr-sand: #f4efe6;
+  --tjr-bronze: #c07d3e;
+  --tjr-charcoal: #333333;
+  --tjr-deep-teal: #0d4f4a;
+
+  /* Map existing tokens softly (do not break existing) */
+  --background-color: var(--tjr-charcoal);
+  --text-color: #ffffff;
+  --accent-warm: var(--tjr-bronze);
+  --accent-deep: var(--tjr-deep-teal);
+}
+
+body {
+  background: radial-gradient(1200px 800px at 50% 0%, rgba(13,79,74,0.25), transparent) var(--tjr-charcoal);
+  color: var(--text-color);
+}
+
+/* Subtle animations */
+.fade-in {
+  opacity: 0;
+  transform: translateY(10px);
+  animation: fadeInUp .6s ease forwards;
+}
+
+.hover-grow {
+  transition: transform .2s ease;
+}
+.hover-grow:hover {
+  transform: translateY(-4px) scale(1.01);
+}
+
+.parallax-bg {
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}

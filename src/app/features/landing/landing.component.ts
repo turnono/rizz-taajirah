@@ -65,16 +65,21 @@ import { SeoService } from '../../core/services/seo.service';
     </ion-header>
 
     <ion-content #content [fullscreen]="true">
-      <!-- Hero Section -->
-      <section class="hero">
-        <div class="hero-content">
-          <h1 class="hero-title">Learn. Create. Innovate.</h1>
+      <!-- Brand Taglines -->
+      <section class="hero parallax-bg" style="background-image: url('assets/images/hero/hero-bg.jpg')">
+        <div class="hero-content fade-in">
+          <h1 class="hero-title">Tājirah — South Africa’s AI Developer & Storyteller.</h1>
           <p class="hero-sub">
-            Quranic Arabic Learning • AI Video Creation • Developer Tools
+            We build tools, teach skills, and help businesses adopt AI with confidence.
           </p>
-          <p class="tagline">Taajirah Systems — Human • Intelligent • Moving</p>
         </div>
       </section>
+
+      <!-- CEO Intro -->
+      <hero-tajirah></hero-tajirah>
+
+      <!-- What We Do (Three Pillars) -->
+      <pillars-section></pillars-section>
 
       <!-- Product Cards -->
       <section id="hadiya" class="products-section">
@@ -92,16 +97,14 @@ import { SeoService } from '../../core/services/seo.service';
             <div class="product-icon">🎁</div>
           </div>
           <ion-card-header>
-            <ion-card-title>Hadiya Gift AI</ion-card-title>
-            <div class="sub-line">AI gift recommendations from real local businesses</div>
+            <ion-card-title>Hadiya Gift AI — Early Access</ion-card-title>
+            <div class="sub-line">AI-powered gift recommendations from real South African brands.</div>
           </ion-card-header>
           <ion-card-content>
-            <p class="card-description">
-              Vendors: join early access and get your products recommended by AI to shoppers.
-            </p>
+            <p class="card-description">Get featured when shoppers ask Hadiya for gift ideas.</p>
             <div class="business-features">
-              <span class="business-tag">For Businesses</span>
-              <span class="business-tag">Local Vendors</span>
+              <span class="business-tag" (click)="$event.stopPropagation(); openBusinessSignup()">For Businesses</span>
+              <span class="business-tag" (click)="$event.stopPropagation(); openBusinessSignup()">For Vendors</span>
             </div>
             <div class="cta-container">
               <div class="cta">👉 Join Early Access</div>
@@ -340,10 +343,14 @@ import { SeoService } from '../../core/services/seo.service';
         </ion-card>
       </div>
 
+      <!-- Local Identity -->
+      <local-identity-section></local-identity-section>
+
       <!-- Footer -->
       <footer class="site-footer">
         <div class="footer-content">
-          <p>&copy; 2024 Taajirah Systems. Built with Claude, Angular, and Firebase.</p>
+          <p>Tājirah — Human • Intelligent • Moving.</p>
+          <p>Contact: <a href="mailto:taajirah0@gmail.com">taajirah0@gmail.com</a></p>
           <div class="footer-links">
             <a (click)="router.navigate(['mcp'])">MCP Showcase</a>
             <a href="https://github.com/turnono" target="_blank">GitHub</a>
@@ -1853,6 +1860,9 @@ import { SeoService } from '../../core/services/seo.service';
     IonToolbar,
     IonButtons,
     IonTitle,
+    (await import('./components/hero-tajirah.component')).HeroTajirahComponent,
+    (await import('./components/pillars-section.component')).PillarsSectionComponent,
+    (await import('./components/local-identity-section.component')).LocalIdentitySectionComponent,
   ],
 })
 export class LandingComponent implements OnInit, AfterViewInit {
