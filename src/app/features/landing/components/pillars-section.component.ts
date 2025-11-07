@@ -1,11 +1,10 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CtaButtonComponent } from './cta-button.component';
 
 @Component({
   selector: 'pillars-section',
   standalone: true,
-  imports: [CommonModule, CtaButtonComponent],
+  imports: [CommonModule],
   template: `
     <section class="pillars fade-in">
       <h2 class="title">What We Do</h2>
@@ -13,17 +12,14 @@ import { CtaButtonComponent } from './cta-button.component';
         <article class="pillar hover-grow">
           <h3>AI Consulting & Developer Services</h3>
           <p>We help businesses adopt AI, automate workflows, and build internal tools.</p>
-          <cta-button label="Talk to Tājirah"></cta-button>
         </article>
         <article class="pillar hover-grow">
           <h3>Media & Storytelling</h3>
           <p>AI-powered videos, 82ndrop workflows, BananaBoard storyboards.</p>
-          <cta-button label="Talk to Tājirah"></cta-button>
         </article>
         <article class="pillar hover-grow">
           <h3>Education & Tools</h3>
           <p>Quranic Arabic, coding tools, MCP agents, AI learning.</p>
-          <cta-button label="Talk to Tājirah"></cta-button>
         </article>
       </div>
     </section>

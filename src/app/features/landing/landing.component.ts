@@ -43,7 +43,7 @@ import { LocalIdentitySectionComponent } from './components/local-identity-secti
         <ion-title>
           <div class="logo-container">
             <img
-              src="https://firebasestorage.googleapis.com/v0/b/taajirah.appspot.com/o/taajirah_logo_no_bg.png?alt=media&token=85acb1a6-7db2-451f-8ef0-90c436c88cb2"
+              src="assets/branding/taajirah-logo.jpeg"
               alt="Taajirah Logo"
               class="logo"
               loading="lazy"
@@ -75,11 +75,29 @@ import { LocalIdentitySectionComponent } from './components/local-identity-secti
           <p class="hero-sub">
             We build tools, teach skills, and help businesses adopt AI with confidence.
           </p>
+          <img
+            src="assets/branding/taajirah-banner.png"
+            alt="Taajirah Hero Banner"
+            class="hero-banner"
+            loading="lazy"
+          />
+          <p class="hero-sub">Led by a Founder & Lead Consultant, powered by our AI CEO, Tājirah.</p>
         </div>
       </section>
 
       <!-- CEO Intro -->
       <hero-tajirah></hero-tajirah>
+
+      <!-- Leadership Bridge -->
+      <section class="fade-in" style="padding: 0.5rem 1rem 0;">
+        <h2>Leadership</h2>
+        <p>Taajirah Systems is led by our AI CEO, Tājirah, together with the Founder & Lead Consultant who delivers solutions and works directly with clients.</p>
+      </section>
+
+      <section class="fade-in" style="padding: 0 1rem 0.5rem;">
+        <h3>Founder & Lead Consultant</h3>
+        <p>The company is built and operated by an experienced South African software engineer specializing in AI systems, frontend development, and applied AI workflows.</p>
+      </section>
 
       <!-- What We Do (Three Pillars) -->
       <pillars-section></pillars-section>
@@ -117,6 +135,7 @@ import { LocalIdentitySectionComponent } from './components/local-identity-secti
       </section>
 
       <div id="ai-tools" class="products-section">
+        <div class="cards-grid">
         <!-- Quranic Arabic Course - PRIMARY -->
         <ion-card
           class="product-card course-card"
@@ -309,8 +328,6 @@ import { LocalIdentitySectionComponent } from './components/local-identity-secti
           </ion-card-content>
         </ion-card>
 
-        <div id="quranic-arabic"></div>
-
         <!-- Mobility: Vehicle Highlight -->
         <ion-card
           class="product-card vehicle-card"
@@ -325,14 +342,18 @@ import { LocalIdentitySectionComponent } from './components/local-identity-secti
             <div class="product-icon">🚐</div>
           </div>
           <ion-card-header>
-            <ion-card-title>Taajirah Mobility — Internal Operations Vehicle</ion-card-title>
-            <div class="sub-line">Supports engagements, workshops, media, and team mobility</div>
+            <ion-card-title>🚐 Taajirah Mobility — Executive Operations Vehicle</ion-card-title>
+            <div class="sub-line">Executive Operations Vehicle</div>
           </ion-card-header>
           <ion-card-content>
-            <p class="card-description">
-              Our executive Hyundai Staria supports Taajirah Systems by enabling client engagements, workshop travel, media production,
-              and internal team mobility. It is not used for transport-for-hire services.
-            </p>
+            <img
+              src="https://firebasestorage.googleapis.com/v0/b/taajirah.appspot.com/o/staria%2F2A23788D-5384-49D8-9F01-B08BD70BD47F.JPG?alt=media&token=1ddfbc59-8c31-4802-a1f8-207b75349e48"
+              alt="Taajirah Mobility Banner"
+              class="mobility-banner"
+              loading="lazy"
+            />
+            <p class="card-description"><strong>Internal-only vehicle supporting client engagements, workshops, filming, and team mobility.</strong></p>
+            <p class="card-description">Our Hyundai Staria (Copper Edition) serves as a moving workspace and media support unit for Taajirah Systems. It is not used for transport-for-hire or public services.</p>
             <div class="features-list">
               <span class="feature">Client engagements</span>
               <span class="feature">Workshop travel</span>
@@ -344,6 +365,9 @@ import { LocalIdentitySectionComponent } from './components/local-identity-secti
             </div>
           </ion-card-content>
         </ion-card>
+        </div>
+
+        <div id="quranic-arabic"></div>
       </div>
 
       <!-- Local Identity -->
@@ -353,7 +377,8 @@ import { LocalIdentitySectionComponent } from './components/local-identity-secti
       <footer class="site-footer">
         <div class="footer-content">
           <p>Tājirah — Human • Intelligent • Moving.</p>
-          <p>Contact: <a href="mailto:taajirah0@gmail.com">taajirah0&#64;gmail.com</a></p>
+          <p><strong>Taajirah Systems — AI-led vision. Human-delivered expertise.</strong></p>
+          <p>Contact: <a class="email-link" href="mailto:taajirah0@gmail.com">✉️ taajirah0&#64;gmail.com</a></p>
           <div class="footer-links">
             <a (click)="router.navigate(['mcp'])">MCP Showcase</a>
             <a href="https://github.com/turnono" target="_blank">GitHub</a>
@@ -389,6 +414,22 @@ import { LocalIdentitySectionComponent } from './components/local-identity-secti
         text-align: center;
         padding: 1.5rem 3rem 0.5rem;
         margin-top: 72px; /* Ensure content is below fixed header */
+        position: relative;
+      }
+
+      /* Scrim overlay for better text contrast */
+      .hero::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to bottom, rgba(0,0,0,.36), rgba(0,0,0,.36));
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      .hero .hero-content {
+        position: relative;
+        z-index: 1;
       }
 
       @media screen and (max-width: 767px) {
@@ -401,10 +442,10 @@ import { LocalIdentitySectionComponent } from './components/local-identity-secti
       .hero-title {
         font-size: 3rem;
         font-weight: 700;
-        color: var(--primary-color);
+        color: var(--tjr-bronze);
         margin-bottom: 1rem;
         line-height: 1.2;
-        text-shadow: 0 0 20px var(--cyberpunk-glow);
+        text-shadow: 0 0 8px rgba(0, 0, 0, 0.35);
       }
 
       @media screen and (max-width: 767px) {
@@ -421,10 +462,10 @@ import { LocalIdentitySectionComponent } from './components/local-identity-secti
       }
 
       .hero-sub {
-        font-size: 1.2rem;
-        color: var(--text-medium);
-        margin-bottom: 2rem;
-        opacity: 0.9;
+        font-size: 1.25rem;
+        color: #e0e0e0;
+        margin-bottom: 1.25rem;
+        opacity: 0.95;
       }
 
       @media screen and (max-width: 767px) {
@@ -604,46 +645,35 @@ import { LocalIdentitySectionComponent } from './components/local-identity-secti
       }
 
       .products-section {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-        gap: 1.5rem;
+        display: block; /* let inner grid control layout */
         max-width: 1200px;
         width: 100%;
         margin: 0.5rem auto;
         padding: 0 1.5rem;
-        align-items: stretch;
       }
 
-      @media screen and (min-width: 768px) {
-        .products-section {
-          grid-template-columns: repeat(3, 1fr);
-          gap: 1.75rem;
-        }
+      /* Tools/cards grid: variable height cards aligned neatly */
+      .cards-grid {
+        display: grid;
+        gap: 1rem;
+        align-items: start;
+        grid-template-columns: 1fr; /* mobile default */
+      }
+
+      @media screen and (min-width: 640px) {
+        .cards-grid { grid-template-columns: repeat(2, 1fr); }
       }
 
       @media screen and (min-width: 1024px) {
-        .products-section {
-          grid-template-columns: repeat(3, 1fr);
-          gap: 1.5rem;
-        }
+        .cards-grid { grid-template-columns: repeat(3, 1fr); }
       }
 
       @media screen and (max-width: 767px) {
-        .products-section {
-          grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-          gap: 1rem;
-          margin: 2rem auto;
-          padding: 0 1rem;
-        }
+        .products-section { margin: 2rem auto; padding: 0 1rem; }
       }
 
       @media screen and (max-width: 480px) {
-        .products-section {
-          grid-template-columns: 1fr;
-          gap: 1rem;
-          margin: 1.5rem auto;
-          padding: 0 0.5rem;
-        }
+        .products-section { margin: 1.5rem auto; padding: 0 0.5rem; }
       }
 
       /* Product card styles */
@@ -657,11 +687,14 @@ import { LocalIdentitySectionComponent } from './components/local-identity-secti
         overflow: hidden;
         cursor: pointer;
         transition: all 0.3s ease;
-        height: 100%;
-        min-height: 280px;
         display: flex;
         flex-direction: column;
         color: var(--text-dark);
+      }
+
+      /* Allow ion-card to size to content */
+      ion-card {
+        height: auto;
       }
 
       @media screen and (max-width: 767px) {
@@ -871,11 +904,11 @@ import { LocalIdentitySectionComponent } from './components/local-identity-secti
       }
 
       .card-description {
-        color: var(--text-medium);
-        font-size: 0.9rem;
-        line-height: 1.4;
+        color: #e0e0e0;
+        font-size: 1rem;
+        line-height: 1.55;
         margin-bottom: 1rem;
-        opacity: 0.9;
+        opacity: 0.95;
       }
 
       @media screen and (max-width: 767px) {
@@ -898,15 +931,16 @@ import { LocalIdentitySectionComponent } from './components/local-identity-secti
       }
 
       .sub-line {
-        color: var(--text-medium);
-        font-size: 0.9rem;
-        opacity: 0.8;
+        color: #d2d2d2;
+        font-size: 1rem;
+        opacity: 0.9;
       }
 
       .description {
-        color: var(--text-medium);
-        line-height: 1.6;
+        color: #dddddd;
+        line-height: 1.65;
         margin-bottom: 1rem;
+        font-size: 1rem;
       }
 
       /* Footer styles */
@@ -950,6 +984,12 @@ import { LocalIdentitySectionComponent } from './components/local-identity-secti
         text-shadow: 0 0 5px rgba(54, 255, 159, 0.3);
       }
 
+      .email-link {
+        color: var(--tjr-bronze);
+        font-weight: 600;
+        text-decoration: none;
+      }
+
       /* Course card extends product-card */
       .course-card {
         border-color: var(--primary-color);
@@ -983,6 +1023,41 @@ import { LocalIdentitySectionComponent } from './components/local-identity-secti
         height: 100%;
         object-fit: cover;
         transition: transform 0.3s ease;
+      }
+
+      /* Hero banner styles */
+      .hero-banner {
+        width: 100%;
+        max-height: 280px;
+        object-fit: cover;
+        border-radius: 12px;
+        margin: 1rem 0 1.25rem 0;
+        filter: brightness(.85) contrast(1.05);
+      }
+      @media (max-width: 600px) {
+        .hero-banner { max-height: 160px; }
+        /* Optional mobile text plate */
+        .hero .hero-content {
+          background: rgba(0,0,0,.22);
+          backdrop-filter: blur(2px);
+          border-radius: 10px;
+          padding: .5rem .75rem;
+          display: inline-block;
+        }
+      }
+
+      /* (no leadership banner) */
+
+      /* Mobility banner styles */
+      .mobility-banner {
+        width: 100%;
+        border-radius: 12px;
+        object-fit: cover;
+        margin-bottom: 1.5rem;
+        max-height: 420px;
+      }
+      @media (max-width: 600px) {
+        .mobility-banner { max-height: 240px; }
       }
 
       .image-overlay {
