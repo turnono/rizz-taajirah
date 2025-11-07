@@ -31,6 +31,9 @@ import { EmailCollectionService } from '../../core/services/email-collection.ser
 import { HadiyaBusinessSignupService } from '../../core/services/hadia-business-signup.service';
 import { AnalyticsService } from '../../core/services/analytics.service';
 import { SeoService } from '../../core/services/seo.service';
+import { HeroTajirahComponent } from './components/hero-tajirah.component';
+import { PillarsSectionComponent } from './components/pillars-section.component';
+import { LocalIdentitySectionComponent } from './components/local-identity-section.component';
 
 @Component({
   selector: 'app-landing',
@@ -350,7 +353,7 @@ import { SeoService } from '../../core/services/seo.service';
       <footer class="site-footer">
         <div class="footer-content">
           <p>Tājirah — Human • Intelligent • Moving.</p>
-          <p>Contact: <a href="mailto:taajirah0@gmail.com">taajirah0@gmail.com</a></p>
+          <p>Contact: <a href="mailto:taajirah0@gmail.com">taajirah0&#64;gmail.com</a></p>
           <div class="footer-links">
             <a (click)="router.navigate(['mcp'])">MCP Showcase</a>
             <a href="https://github.com/turnono" target="_blank">GitHub</a>
@@ -1860,9 +1863,9 @@ import { SeoService } from '../../core/services/seo.service';
     IonToolbar,
     IonButtons,
     IonTitle,
-    (await import('./components/hero-tajirah.component')).HeroTajirahComponent,
-    (await import('./components/pillars-section.component')).PillarsSectionComponent,
-    (await import('./components/local-identity-section.component')).LocalIdentitySectionComponent,
+    HeroTajirahComponent,
+    PillarsSectionComponent,
+    LocalIdentitySectionComponent,
   ],
 })
 export class LandingComponent implements OnInit, AfterViewInit {
