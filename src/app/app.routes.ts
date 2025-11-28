@@ -25,6 +25,11 @@ export const routes: Routes = [
       import('./features/legal/terms.component').then((m) => m.TermsComponent),
   },
   {
+    path: 'hadiya/vendors',
+    loadComponent: () =>
+      import('./features/hadiya/vendor-onboarding.component').then((m) => m.VendorOnboardingComponent),
+  },
+  {
     path: 'mcp',
     loadComponent: () =>
       import('./features/mcp/mcp.component').then((m) => m.McpComponent),

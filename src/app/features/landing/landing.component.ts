@@ -25,13 +25,17 @@ import {
   IonToolbar,
   IonButtons,
   IonTitle,
+  IonIcon,
+  IonMenu,
+  IonMenuButton,
   ModalController,
 } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import { menu, close } from 'ionicons/icons';
 import { EmailCollectionService } from '../../core/services/email-collection.service';
 import { HadiyaBusinessSignupService } from '../../core/services/hadia-business-signup.service';
 import { AnalyticsService } from '../../core/services/analytics.service';
 import { SeoService } from '../../core/services/seo.service';
-import { HeroTajirahComponent } from './components/hero-tajirah.component';
 import { PillarsSectionComponent } from './components/pillars-section.component';
 import { LocalIdentitySectionComponent } from './components/local-identity-section.component';
 
@@ -56,94 +60,352 @@ import { LocalIdentitySectionComponent } from './components/local-identity-secti
           </div></ion-title
         >
 
-        <ion-buttons slot="end">
+        <!-- Desktop Navigation -->
+        <ion-buttons slot="end" class="desktop-nav">
           <ion-button fill="clear" size="small" (click)="router.navigate([''])">Home</ion-button>
-          <ion-button fill="clear" size="small" (click)="scrollToSection('hadiya')">Hadiya</ion-button>
+          <ion-button fill="clear" size="small" (click)="navigateToHadiya()">Hadiya</ion-button>
           <ion-button fill="clear" size="small" (click)="scrollToSection('ai-tools')">AI Tools</ion-button>
           <ion-button fill="clear" size="small" (click)="scrollToSection('mobility')">Mobility</ion-button>
           <ion-button fill="clear" size="small" (click)="scrollToSection('quranic-arabic')">Quranic Arabic</ion-button>
           <ion-button fill="clear" size="small" (click)="router.navigate(['contact'])">Contact</ion-button>
         </ion-buttons>
+
+        <!-- Mobile Menu Button -->
+        <ion-buttons slot="end" class="mobile-menu-btn">
+          <ion-button fill="clear" (click)="toggleMobileMenu()" aria-label="Toggle mobile menu">
+            <ion-icon [name]="isMobileMenuOpen ? 'close' : 'menu'" slot="icon-only" aria-hidden="true"></ion-icon>
+          </ion-button>
+        </ion-buttons>
       </ion-toolbar>
+
+      <!-- Mobile Menu Panel -->
+      <div class="mobile-menu" [class.open]="isMobileMenuOpen">
+        <div class="mobile-menu-content">
+          <ion-button fill="clear" expand="block" (click)="router.navigate(['']); closeMobileMenu()">
+            Home
+          </ion-button>
+          <ion-button fill="clear" expand="block" (click)="navigateToHadiya(); closeMobileMenu()">
+            Hadiya
+          </ion-button>
+          <ion-button fill="clear" expand="block" (click)="scrollToSection('ai-tools')">
+            AI Tools
+          </ion-button>
+          <ion-button fill="clear" expand="block" (click)="scrollToSection('mobility')">
+            Mobility
+          </ion-button>
+          <ion-button fill="clear" expand="block" (click)="scrollToSection('quranic-arabic')">
+            Quranic Arabic
+          </ion-button>
+          <ion-button fill="clear" expand="block" (click)="router.navigate(['contact']); closeMobileMenu()">
+            Contact
+          </ion-button>
+        </div>
+      </div>
     </ion-header>
 
     <ion-content #content [fullscreen]="true">
-      <!-- Brand Taglines -->
-      <section class="hero parallax-bg" style="background-image: url('assets/images/hero/hero-bg.jpg')">
+      <!-- Hero Section -->
+      <section class="hero">
+        <div class="hero-bg-container">
+          <img
+            src="assets/images/hero/hero-bg.jpg"
+            alt="Abstract background representing AI and storytelling in South Africa"
+            class="hero-bg"
+            loading="eager"
+            fetchpriority="high"
+          />
+          <div class="hero-overlay"></div>
+        </div>
         <div class="hero-content fade-in">
-          <h1 class="hero-title">Tājirah — South Africa’s AI Developer & Storyteller.</h1>
+          <h1 class="hero-title">South Africa's AI Developer & Storyteller</h1>
           <p class="hero-sub">
             We build tools, teach skills, and help businesses adopt AI with confidence.
           </p>
-          <img
-            src="assets/branding/taajirah-banner.png"
-            alt="Taajirah Hero Banner"
-            class="hero-banner"
-            loading="lazy"
-          />
-          <p class="hero-sub">Led by a Founder & Lead Consultant, powered by our AI CEO, Tājirah.</p>
+          <div class="cta-row">
+            <ion-button class="cta-primary" (click)="router.navigate(['contact'])">
+              Work With Us
+            </ion-button>
+            <ion-button fill="outline" (click)="scrollToSection('ai-tools')">
+              Explore AI Tools
+            </ion-button>
+          </div>
         </div>
       </section>
 
-      <!-- CEO Intro -->
-      <hero-tajirah></hero-tajirah>
-
-      <!-- Leadership Bridge -->
-      <section class="fade-in" style="padding: 0.5rem 1rem 0;">
+      <!-- Leadership Section -->
+      <section class="leadership-section fade-in">
         <h2>Leadership</h2>
-        <p>Taajirah Systems is led by our AI CEO, Tājirah, together with the Founder & Lead Consultant who delivers solutions and works directly with clients.</p>
-      </section>
-
-      <section class="fade-in" style="padding: 0 1rem 0.5rem;">
-        <h3>Founder & Lead Consultant</h3>
-        <p>The company is built and operated by an experienced South African software engineer specializing in AI systems, frontend development, and applied AI workflows.</p>
+        <div class="leadership-grid">
+          <div class="leader-card">
+            <div class="leader-avatar">
+              <div class="avatar-placeholder">👨🏽‍💻</div>
+            </div>
+            <h3>Founder & Lead Consultant</h3>
+            <ul class="leader-points">
+              <li>Experienced South African software engineer</li>
+              <li>Specializes in AI systems, frontend development, and applied AI workflows</li>
+              <li>Delivers solutions and works directly with clients</li>
+            </ul>
+          </div>
+          <div class="leader-card">
+            <div class="leader-avatar">
+              <div class="avatar-placeholder">🤖</div>
+            </div>
+            <h3>AI CEO — Tājirah</h3>
+            <ul class="leader-points">
+              <li>Strategic AI decision-making and planning</li>
+              <li>Automates workflows and optimizes operations</li>
+              <li>Enhances client solutions with AI capabilities</li>
+            </ul>
+          </div>
+        </div>
       </section>
 
       <!-- What We Do (Three Pillars) -->
       <pillars-section></pillars-section>
 
-      <!-- Product Cards -->
-      <section id="hadiya" class="products-section">
-        <!-- Hadiya Featured Banner (top priority) -->
-        <ion-card
-          class="product-card hadiya-card"
-          (click)="openBusinessSignup()"
-          (keydown.enter)="openBusinessSignup()"
-          (keydown.space)="openBusinessSignup()"
-          tabindex="0"
-        >
+      <!-- Hadiya Section (LIVE) -->
+      <section id="hadiya" class="products-section hadiya-featured">
+        <h2 class="section-heading">🎁 Hadiya Gift AI — Now Live</h2>
+        <ion-card class="product-card hadiya-card featured-card">
           <div class="accent-line hadiya-accent"></div>
-          <ion-badge class="coming-soon-badge">EARLY ACCESS</ion-badge>
+          <ion-badge class="live-badge" color="success">LIVE</ion-badge>
           <div class="icon-container">
             <div class="product-icon">🎁</div>
           </div>
           <ion-card-header>
-            <ion-card-title>Hadiya Gift AI — Early Access</ion-card-title>
-            <div class="sub-line">AI-powered gift recommendations from real South African brands.</div>
+            <ion-card-title>Hadiya Gift AI</ion-card-title>
+            <div class="sub-line">AI-powered, personalised gifting recommendations from real South African vendors.</div>
           </ion-card-header>
           <ion-card-content>
-            <p class="card-description">Get featured when shoppers ask Hadiya for gift ideas.</p>
-            <div class="business-features">
-              <span class="business-tag" (click)="$event.stopPropagation(); openBusinessSignup()">For Businesses</span>
-              <span class="business-tag" (click)="$event.stopPropagation(); openBusinessSignup()">For Vendors</span>
-            </div>
-            <div class="cta-container">
-              <div class="cta">👉 Join Early Access</div>
+            <p class="card-description">Browse gifts instantly or list your products as a vendor.</p>
+            <div class="hadiya-cta-buttons">
+              <ion-button class="hadiya-primary-btn" (click)="navigateToHadiya()">
+                Open Hadiya
+              </ion-button>
+              <ion-button fill="outline" class="hadiya-vendor-btn" (click)="navigateToVendorOnboarding()">
+                Vendor Onboarding
+              </ion-button>
             </div>
           </ion-card-content>
         </ion-card>
       </section>
 
-      <div id="ai-tools" class="products-section">
+      <!-- AI Tools Section -->
+      <section id="ai-tools" class="products-section">
+        <h2 class="section-heading">AI Tools & Resources</h2>
         <div class="cards-grid">
-        <!-- Quranic Arabic Course - PRIMARY -->
+          <!-- VisionaryClones -->
+          <ion-card
+            class="product-card visionary-card"
+            (click)="navigateToVisionaryClones()"
+            tabindex="0"
+          >
+            <div class="accent-line visionary-accent"></div>
+            <div class="icon-container">
+              <div class="product-icon">🧬</div>
+            </div>
+            <ion-card-header>
+              <ion-card-title>VisionaryClones</ion-card-title>
+              <div class="sub-line">AI Persona & Content Engine</div>
+            </ion-card-header>
+            <ion-card-content>
+              <p class="card-description">
+                Advanced AI toolkit for creating cohesive, persona-driven social media content with Identity Lock.
+              </p>
+              <div class="cta-container">
+                <div class="cta">Create Bundle</div>
+              </div>
+            </ion-card-content>
+          </ion-card>
+
+          <!-- BananaBoard -->
+          <ion-card
+            class="product-card bananaboard-card"
+            (click)="navigateToBananaBoard()"
+            tabindex="0"
+          >
+            <div class="accent-line video-accent"></div>
+            <div class="icon-container">
+              <div class="product-icon">🍌</div>
+            </div>
+            <ion-card-header>
+              <ion-card-title>BananaBoard</ion-card-title>
+              <div class="sub-line">Cinematic Storyboards</div>
+            </ion-card-header>
+            <ion-card-content>
+              <p class="card-description">
+                Turn raw concepts into visual storyboards and Veo3-ready scripts.
+              </p>
+              <div class="cta-container">
+                <div class="cta">Try Free</div>
+              </div>
+            </ion-card-content>
+          </ion-card>
+
+          <!-- 82ndrop -->
+          <ion-card
+            class="product-card video-card"
+            (click)="navigateTo82ndrop()"
+            tabindex="0"
+          >
+            <div class="accent-line video-accent"></div>
+            <div class="icon-container">
+              <div class="product-icon">🎬</div>
+            </div>
+            <ion-card-header>
+              <ion-card-title>82ndrop</ion-card-title>
+              <div class="sub-line">AI Video Creation</div>
+            </ion-card-header>
+            <ion-card-content>
+              <p class="card-description">
+                Create viral 8-second AI videos with advanced Veo3 technology.
+              </p>
+              <div class="cta-container">
+                <div class="cta">Create Videos</div>
+              </div>
+            </ion-card-content>
+          </ion-card>
+
+          <!-- 7pace Timetracker MCP -->
+          <ion-card
+            class="product-card mcp-card"
+            (click)="navigateToSmotaryMCP()"
+            tabindex="0"
+          >
+            <div class="accent-line mcp-accent"></div>
+            <div class="icon-container">
+              <div class="product-icon">⏰</div>
+            </div>
+            <ion-card-header>
+              <ion-card-title>7pace MCP</ion-card-title>
+              <div class="sub-line">Developer Tool</div>
+            </ion-card-header>
+            <ion-card-content>
+              <p class="card-description">
+                AI-powered time tracking for Azure DevOps. 87% faster.
+              </p>
+              <div class="cta-container">
+                <div class="cta">Visit Website</div>
+              </div>
+            </ion-card-content>
+          </ion-card>
+
+          <!-- DataCommons MCP -->
+          <ion-card
+            class="product-card datacommons-card"
+            (click)="navigateToDataCommonsMCP()"
+            tabindex="0"
+          >
+            <div class="accent-line datacommons-accent"></div>
+            <div class="icon-container">
+              <div class="product-icon">📊</div>
+            </div>
+            <ion-card-header>
+              <ion-card-title>DataCommons MCP</ion-card-title>
+              <div class="sub-line">Data Analysis Tool</div>
+            </ion-card-header>
+            <ion-card-content>
+              <p class="card-description">
+                Access and analyze global datasets with AI-powered insights.
+              </p>
+              <div class="cta-container">
+                <div class="cta">Explore Data</div>
+              </div>
+            </ion-card-content>
+          </ion-card>
+
+          <!-- Claude Subagents -->
+          <ion-card
+            class="product-card subagents-card"
+            (click)="navigateToSubagents()"
+            tabindex="0"
+          >
+            <div class="accent-line subagents-accent"></div>
+            <div class="icon-container">
+              <div class="product-icon">🤖</div>
+            </div>
+            <ion-card-header>
+              <ion-card-title>Subagents</ion-card-title>
+              <div class="sub-line">AI Marketplace</div>
+            </ion-card-header>
+            <ion-card-content>
+              <p class="card-description">
+                Discover and share 51+ specialized Claude AI agents.
+              </p>
+              <div class="cta-container">
+                <div class="cta">Browse</div>
+              </div>
+            </ion-card-content>
+          </ion-card>
+        </div>
+      </section>
+
+      <!-- Mobility Section -->
+      <section id="mobility" class="products-section mobility-section">
+        <h2 class="section-heading">Mobility</h2>
+        <div class="cards-grid">
+          <!-- Taajirah Mobility (Internal) -->
+          <ion-card
+            class="product-card vehicle-card"
+            (click)="navigateToHadiyaVehicle()"
+            tabindex="0"
+          >
+            <div class="accent-line vehicle-accent"></div>
+            <div class="icon-container">
+              <div class="product-icon">🚐</div>
+            </div>
+            <ion-card-header>
+              <ion-card-title>Taajirah Mobility</ion-card-title>
+              <div class="sub-line">Internal Operations</div>
+            </ion-card-header>
+            <ion-card-content>
+              <p class="card-description">
+                Dedicated mobility solution for client engagements, workshops, and media production.
+              </p>
+              <div class="tags-container">
+                <span class="tag">Client Engagements</span>
+                <span class="tag">Workshop Travel</span>
+              </div>
+              <div class="cta-container">
+                <div class="cta">Contact Us</div>
+              </div>
+            </ion-card-content>
+          </ion-card>
+
+          <!-- Shanal Tours (Partner) -->
+          <ion-card
+            class="product-card tours-card"
+            (click)="navigateToShanalTours()"
+            tabindex="0"
+          >
+            <div class="accent-line tours-accent"></div>
+            <div class="icon-container">
+              <div class="product-icon">🏝️</div>
+            </div>
+            <ion-card-header>
+              <ion-card-title>Shanal Tours</ion-card-title>
+              <div class="sub-line">Mauritius Travel Partner</div>
+            </ion-card-header>
+            <ion-card-content>
+              <p class="card-description">
+                Mobile-friendly booking platform for car rentals, tours, and transfers in Mauritius.
+              </p>
+              <div class="cta-container">
+                <div class="cta">View Project</div>
+              </div>
+            </ion-card-content>
+          </ion-card>
+        </div>
+      </section>
+
+      <!-- Quranic Arabic Section -->
+      <section id="quranic-arabic" class="products-section quranic-section">
+        <h2 class="section-heading">Quranic Arabic</h2>
         <ion-card
-          class="product-card course-card"
-          #courseSection
+          class="product-card course-card featured-card"
           (click)="navigateToCourse()"
-          (keydown.enter)="navigateToCourse()"
-          (keydown.space)="navigateToCourse()"
-          tabindex="1"
+          tabindex="0"
         >
           <div class="accent-line course-accent"></div>
           <ion-badge class="free-badge">FREE</ion-badge>
@@ -156,219 +418,15 @@ import { LocalIdentitySectionComponent } from './components/local-identity-secti
           </ion-card-header>
           <ion-card-content>
             <p class="card-description">
-              Master Quranic Arabic with AI assistance. Interactive learning
-              with instant feedback.
+              Master Quranic Arabic with AI assistance. Interactive learning with instant feedback.
             </p>
             <div class="cta-container">
               <div class="cta">Start Learning</div>
             </div>
           </ion-card-content>
         </ion-card>
+      </section>
 
-        <!-- BananaBoard -->
-        <ion-card
-          class="product-card bananaboard-card"
-          (click)="navigateToBananaBoard()"
-          (keydown.enter)="navigateToBananaBoard()"
-          (keydown.space)="navigateToBananaBoard()"
-          tabindex="2"
-        >
-          <div class="accent-line video-accent"></div>
-          <div class="icon-container">
-            <div class="product-icon">🍌</div>
-          </div>
-          <ion-card-header>
-            <ion-card-title>BananaBoard</ion-card-title>
-            <div class="sub-line">
-              Turn ideas into cinematic storyboards for veo 3.
-            </div>
-          </ion-card-header>
-          <ion-card-content>
-            <p class="card-description">
-              Built with Nano-Banana, BananaBoard takes your raw concepts and
-              splits them into visual storyboards and Veo3-ready scripts. A tool
-              we use ourselves — now free for anyone to try.
-            </p>
-            <div class="cta-container">
-              <div class="cta">Try Free</div>
-            </div>
-          </ion-card-content>
-        </ion-card>
-
-        <!-- 82ndrop -->
-        <ion-card
-          class="product-card video-card"
-          (click)="navigateTo82ndrop()"
-          (keydown.enter)="navigateTo82ndrop()"
-          (keydown.space)="navigateTo82ndrop()"
-          tabindex="3"
-        >
-          <div class="accent-line video-accent"></div>
-          <div class="icon-container">
-            <div class="product-icon">🎬</div>
-          </div>
-          <ion-card-header>
-            <ion-card-title>82ndrop</ion-card-title>
-            <div class="sub-line">AI Video Creation</div>
-          </ion-card-header>
-          <ion-card-content>
-            <p class="card-description">
-              Create viral 8-second AI videos with advanced Veo3 technology.
-            </p>
-            <div class="cta-container">
-              <div class="cta">Create Videos</div>
-            </div>
-          </ion-card-content>
-        </ion-card>
-
-        <!-- 7pace Timetracker MCP -->
-        <ion-card
-          class="product-card mcp-card"
-          (click)="navigateToSmotaryMCP()"
-          (keydown.enter)="navigateToSmotaryMCP()"
-          (keydown.space)="navigateToSmotaryMCP()"
-          tabindex="4"
-        >
-          <div class="accent-line mcp-accent"></div>
-          <div class="icon-container">
-            <div class="product-icon">⏰</div>
-          </div>
-          <ion-card-header>
-            <ion-card-title>7pace MCP</ion-card-title>
-            <div class="sub-line">Developer Tool</div>
-          </ion-card-header>
-          <ion-card-content>
-            <p class="card-description">
-              AI-powered time tracking for Azure DevOps. 87% faster than
-              traditional tools.
-            </p>
-            <div class="cta-container">
-              <div class="cta">Visit Website</div>
-            </div>
-          </ion-card-content>
-        </ion-card>
-
-        <!-- DataCommons MCP -->
-        <ion-card
-          class="product-card datacommons-card"
-          (click)="navigateToDataCommonsMCP()"
-          (keydown.enter)="navigateToDataCommonsMCP()"
-          (keydown.space)="navigateToDataCommonsMCP()"
-          tabindex="5"
-        >
-          <div class="accent-line datacommons-accent"></div>
-          <div class="icon-container">
-            <div class="product-icon">📊</div>
-          </div>
-          <ion-card-header>
-            <ion-card-title>DataCommons MCP</ion-card-title>
-            <div class="sub-line">Data Analysis Tool</div>
-          </ion-card-header>
-          <ion-card-content>
-            <p class="card-description">
-              Access and analyze global datasets with AI-powered insights and
-              visualization tools.
-            </p>
-            <div class="cta-container">
-              <div class="cta">Explore Data</div>
-            </div>
-          </ion-card-content>
-        </ion-card>
-
-        <!-- Claude Subagents Marketplace -->
-        <ion-card
-          class="product-card subagents-card"
-          (click)="navigateToSubagents()"
-          (keydown.enter)="navigateToSubagents()"
-          (keydown.space)="navigateToSubagents()"
-          tabindex="6"
-        >
-          <div class="accent-line subagents-accent"></div>
-          <div class="icon-container">
-            <div class="product-icon">🤖</div>
-          </div>
-          <ion-card-header>
-            <ion-card-title>Subagents</ion-card-title>
-            <div class="sub-line">AI Marketplace</div>
-          </ion-card-header>
-          <ion-card-content>
-            <p class="card-description">
-              Discover and share 51+ specialized Claude AI agents.
-            </p>
-            <div class="cta-container">
-              <div class="cta">Browse</div>
-            </div>
-          </ion-card-content>
-        </ion-card>
-
-        <!-- Shanal Tours -->
-        <ion-card
-          class="product-card tours-card"
-          (click)="navigateToShanalTours()"
-          (keydown.enter)="navigateToShanalTours()"
-          (keydown.space)="navigateToShanalTours()"
-          tabindex="7"
-        >
-          <div class="accent-line tours-accent"></div>
-          <div class="icon-container">
-            <div class="product-icon">🏝️</div>
-          </div>
-          <ion-card-header>
-            <ion-card-title>Shanal Tours</ion-card-title>
-            <div class="sub-line">Mauritius Travel Services</div>
-          </ion-card-header>
-          <ion-card-content>
-            <p class="card-description">
-              Mobile-friendly booking platform for car rentals, tours, and
-              transfers in Mauritius with WhatsApp integration.
-            </p>
-            <div class="cta-container">
-              <div class="cta">View Project</div>
-            </div>
-          </ion-card-content>
-        </ion-card>
-
-        <!-- Mobility: Vehicle Highlight -->
-        <ion-card
-          class="product-card vehicle-card"
-          (click)="navigateToHadiyaVehicle()"
-          (keydown.enter)="navigateToHadiyaVehicle()"
-          (keydown.space)="navigateToHadiyaVehicle()"
-          tabindex="9"
-          aria-label="Taajirah Mobility — Internal Operations Vehicle"
-        >
-          <div class="accent-line vehicle-accent"></div>
-          <div class="icon-container">
-            <div class="product-icon">🚐</div>
-          </div>
-          <ion-card-header>
-            <ion-card-title>🚐 Taajirah Mobility — Executive Operations Vehicle</ion-card-title>
-            <div class="sub-line">Executive Operations Vehicle</div>
-          </ion-card-header>
-          <ion-card-content>
-            <img
-              src="https://firebasestorage.googleapis.com/v0/b/taajirah.appspot.com/o/staria%2F2A23788D-5384-49D8-9F01-B08BD70BD47F.JPG?alt=media&token=1ddfbc59-8c31-4802-a1f8-207b75349e48"
-              alt="Taajirah Mobility Banner"
-              class="mobility-banner"
-              loading="lazy"
-            />
-            <p class="card-description"><strong>Internal-only vehicle supporting client engagements, workshops, filming, and team mobility.</strong></p>
-            <p class="card-description">Our Hyundai Staria (Copper Edition) serves as a moving workspace and media support unit for Taajirah Systems. It is not used for transport-for-hire or public services.</p>
-            <div class="features-list">
-              <span class="feature">Client engagements</span>
-              <span class="feature">Workshop travel</span>
-              <span class="feature">Media production</span>
-              <span class="feature">Team mobility</span>
-            </div>
-            <div class="cta-container">
-              <div class="cta">Contact Us</div>
-            </div>
-          </ion-card-content>
-        </ion-card>
-        </div>
-
-        <div id="quranic-arabic"></div>
-      </div>
 
       <!-- Local Identity -->
       <local-identity-section></local-identity-section>
@@ -376,15 +434,48 @@ import { LocalIdentitySectionComponent } from './components/local-identity-secti
       <!-- Footer -->
       <footer class="site-footer">
         <div class="footer-content">
-          <p>Tājirah — Human • Intelligent • Moving.</p>
-          <p><strong>Taajirah Systems — AI-led vision. Human-delivered expertise.</strong></p>
-          <p>Contact: <a class="email-link" href="mailto:taajirah0@gmail.com">✉️ taajirah0&#64;gmail.com</a></p>
+          <p class="footer-tagline">Taajirah Systems — Human • Intelligent • Moving</p>
+          <p class="footer-description">AI-led vision. Human-delivered expertise.</p>
+          
           <div class="footer-links">
-            <a (click)="router.navigate(['mcp'])">MCP Showcase</a>
-            <a href="https://github.com/turnono" target="_blank">GitHub</a>
-            <a href="mailto:taajirah0@gmail.com">Contact</a>
-            <a (click)="router.navigate(['privacy'])">Privacy Policy</a>
-            <a (click)="router.navigate(['terms'])">Terms</a>
+            <div class="footer-section">
+              <h4>Navigation</h4>
+              <a (click)="router.navigate([''])">Home</a>
+              <a (click)="navigateToHadiya()">Hadiya</a>
+              <a (click)="scrollToSection('ai-tools')">AI Tools</a>
+              <a (click)="scrollToSection('mobility')">Mobility</a>
+              <a (click)="scrollToSection('quranic-arabic')">Quranic Arabic</a>
+              <a (click)="router.navigate(['contact'])">Contact</a>
+            </div>
+            
+            <div class="footer-section">
+              <h4>Products</h4>
+              <a (click)="navigateToHadiya()">Hadiya Gift AI</a>
+              <a (click)="navigateToVisionaryClones()">VisionaryClones</a>
+              <a (click)="navigateToBananaBoard()">BananaBoard</a>
+              <a (click)="navigateTo82ndrop()">82ndrop</a>
+            </div>
+            
+            <div class="footer-section">
+              <h4>Resources</h4>
+              <a (click)="navigateToVendorOnboarding()">Vendor Onboarding</a>
+              <a (click)="router.navigate(['mcp'])">MCP Showcase</a>
+              <a href="https://github.com/turnono" target="_blank">GitHub</a>
+            </div>
+            
+            <div class="footer-section">
+              <h4>Legal</h4>
+              <a (click)="router.navigate(['privacy'])">Privacy Policy</a>
+              <a (click)="router.navigate(['terms'])">Terms</a>
+            </div>
+          </div>
+          
+          <p class="footer-contact">
+            Get in touch: <a class="email-link" href="mailto:taajirah0@gmail.com">✉️ taajirah0&#64;gmail.com</a>
+          </p>
+          
+          <div class="footer-bottom">
+            <p>&copy; {{ currentYear }} Taajirah Systems. All rights reserved.</p>
           </div>
         </div>
       </footer>
@@ -406,30 +497,46 @@ import { LocalIdentitySectionComponent } from './components/local-identity-secti
       }
 
       .hero {
-        // background: linear-gradient(
-        //   135deg,
-        //   rgba(0, 0, 0, 0.9),
-        //   rgba(0, 20, 10, 0.85)
-        // );
-        text-align: center;
-        padding: 1.5rem 3rem 0.5rem;
-        margin-top: 72px; /* Ensure content is below fixed header */
         position: relative;
+        text-align: center;
+        padding: 4rem 1.5rem 3rem;
+        margin-top: 64px;
+        overflow: hidden;
+        min-height: 80vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
 
-      /* Scrim overlay for better text contrast */
-      .hero::before {
-        content: "";
+      .hero-bg-container {
         position: absolute;
-        inset: 0;
-        background: linear-gradient(to bottom, rgba(0,0,0,.36), rgba(0,0,0,.36));
-        pointer-events: none;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
         z-index: 0;
+      }
+
+      .hero-bg {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .hero-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(to bottom, rgba(0,0,0,0.5), rgba(0,0,0,0.7));
       }
 
       .hero .hero-content {
         position: relative;
         z-index: 1;
+        max-width: 800px;
+        margin: 0 auto;
       }
 
       @media screen and (max-width: 767px) {
@@ -599,6 +706,68 @@ import { LocalIdentitySectionComponent } from './components/local-identity-secti
         }
       }
 
+      /* Mobile Menu Styles */
+      .mobile-menu-btn {
+        display: none;
+      }
+
+      .desktop-nav {
+        display: flex;
+      }
+
+      @media screen and (max-width: 768px) {
+        .desktop-nav {
+          display: none;
+        }
+
+        .mobile-menu-btn {
+          display: flex;
+        }
+      }
+
+      .mobile-menu {
+        position: fixed;
+        top: 64px;
+        right: 0;
+        width: 250px;
+        height: calc(100vh - 64px);
+        background: rgba(0, 0, 0, 0.95);
+        border-left: 1px solid rgba(0, 255, 0, 0.35);
+        transform: translateX(100%);
+        transition: transform 0.3s ease;
+        z-index: 998;
+        overflow-y: auto;
+      }
+
+      .mobile-menu.open {
+        transform: translateX(0);
+      }
+
+      .mobile-menu-content {
+        padding: 1rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      .mobile-menu-content ion-button {
+        --color: var(--text-dark);
+        text-align: left;
+        justify-content: flex-start;
+        font-size: 1.1rem;
+      }
+
+      .mobile-menu-content ion-button:hover {
+        --background: rgba(0, 255, 0, 0.1);
+      }
+
+      @media screen and (max-width: 480px) {
+        .mobile-menu {
+          top: 48px;
+          height: calc(100vh - 48px);
+        }
+      }
+
       .content-container {
         width: 100%;
         min-height: 100vh;
@@ -644,6 +813,152 @@ import { LocalIdentitySectionComponent } from './components/local-identity-secti
         text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
       }
 
+      /* Leadership Section Styles */
+      .leadership-section {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 2rem 1.5rem;
+      }
+
+      .leadership-section h2 {
+        font-size: 2rem;
+        color: var(--tjr-bronze);
+        margin-bottom: 1.5rem;
+        text-align: center;
+      }
+
+      .leadership-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+
+      @media screen and (min-width: 768px) {
+        .leadership-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      .leader-card {
+        background: rgba(0, 0, 0, 0.6);
+        border: 1px solid rgba(192, 125, 62, 0.3);
+        border-radius: 12px;
+        padding: 1.5rem;
+        backdrop-filter: blur(8px);
+      }
+
+      .leader-card h3 {
+        font-size: 1.3rem;
+        color: var(--tjr-bronze);
+        margin-bottom: 1rem;
+      }
+
+      .leader-points {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .leader-points li {
+        padding: 0.5rem 0;
+        padding-left: 1.5rem;
+        position: relative;
+        color: #e0e0e0;
+        line-height: 1.5;
+      }
+
+      .leader-points li::before {
+        content: "→";
+        position: absolute;
+        left: 0;
+        color: var(--tjr-bronze);
+        font-weight: bold;
+      }
+
+      .leader-avatar {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 1rem;
+      }
+
+      .avatar-placeholder {
+        width: 80px;
+        height: 80px;
+        background: rgba(192, 125, 62, 0.2);
+        border: 2px solid var(--tjr-bronze);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.5rem;
+      }
+
+      .leader-card h3 {
+        text-align: center;
+      }
+
+      /* Hadiya Featured Section */
+      .hadiya-featured {
+        margin: 3rem auto;
+      }
+
+      .hadiya-featured .section-heading {
+        font-size: 2.2rem;
+        color: var(--tjr-bronze);
+        text-align: center;
+        margin-bottom: 1.5rem;
+      }
+
+      .featured-card {
+        max-width: 800px;
+        margin: 0 auto;
+        cursor: default;
+      }
+
+      .featured-card:hover {
+        transform: none;
+      }
+
+      .live-badge {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        font-weight: 600;
+        font-size: 0.85rem;
+      }
+
+      .hadiya-cta-buttons {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1.5rem;
+        flex-wrap: wrap;
+      }
+
+      .hadiya-primary-btn {
+        --background: var(--tjr-bronze);
+        --color: #ffffff;
+        flex: 1;
+        min-width: 150px;
+      }
+
+      .hadiya-vendor-btn {
+        --border-color: var(--tjr-bronze);
+        --color: var(--tjr-bronze);
+        flex: 1;
+        min-width: 150px;
+      }
+
+      @media screen and (max-width: 480px) {
+        .hadiya-cta-buttons {
+          flex-direction: column;
+        }
+
+        .hadiya-primary-btn,
+        .hadiya-vendor-btn {
+          width: 100%;
+        }
+      }
+
       .products-section {
         display: block; /* let inner grid control layout */
         max-width: 1200px;
@@ -678,10 +993,10 @@ import { LocalIdentitySectionComponent } from './components/local-identity-secti
 
       /* Product card styles */
       .product-card {
-        background: rgba(0, 0, 0, 0.85);
-        border: 1px solid rgba(0, 255, 0, 0.3);
-        border-radius: 16px;
-        box-shadow: 0 8px 24px rgba(0, 255, 0, 0.12);
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: var(--radius-md);
+        box-shadow: var(--shadow-md);
         backdrop-filter: blur(12px);
         position: relative;
         overflow: hidden;
@@ -689,7 +1004,7 @@ import { LocalIdentitySectionComponent } from './components/local-identity-secti
         transition: all 0.3s ease;
         display: flex;
         flex-direction: column;
-        color: var(--text-dark);
+        color: var(--text-color);
       }
 
       /* Allow ion-card to size to content */
@@ -699,46 +1014,46 @@ import { LocalIdentitySectionComponent } from './components/local-identity-secti
 
       @media screen and (max-width: 767px) {
         .product-card {
-          border-radius: 12px;
-          box-shadow: 0 8px 24px rgba(0, 255, 0, 0.1);
+          border-radius: var(--radius-sm);
+          box-shadow: var(--shadow-sm);
         }
 
         .product-card ion-card-header {
-          padding: 1rem 1rem 0.5rem 1rem;
+          padding: var(--spacing-md) var(--spacing-md) var(--spacing-sm) var(--spacing-md);
         }
 
         .product-card ion-card-content {
-          padding: 0.5rem 1rem 1rem 1rem;
+          padding: var(--spacing-sm) var(--spacing-md) var(--spacing-md) var(--spacing-md);
         }
 
         .product-card ion-card-title {
-          font-size: 1.1rem;
+          font-size: var(--font-size-lg);
         }
 
         .sub-line {
-          font-size: 0.8rem;
+          font-size: var(--font-size-sm);
         }
 
         .cta-container {
-          margin-top: 1rem;
-          padding-top: 0.75rem;
+          margin-top: var(--spacing-md);
+          padding-top: var(--spacing-sm);
         }
 
         .cta {
-          font-size: 1rem;
+          font-size: var(--font-size-base);
         }
       }
 
       .product-card:hover {
         transform: translateY(-6px);
-        box-shadow: 0 16px 40px rgba(0, 255, 0, 0.2);
-        border-color: rgba(0, 255, 0, 0.5);
+        box-shadow: var(--shadow-lg);
+        border-color: var(--card-border-hover);
       }
 
       @media screen and (max-width: 767px) {
         .product-card:hover {
           transform: translateY(-4px);
-          box-shadow: 0 12px 32px rgba(0, 255, 0, 0.2);
+          box-shadow: var(--shadow-md);
         }
       }
 
@@ -837,6 +1152,20 @@ import { LocalIdentitySectionComponent } from './components/local-identity-secti
 
       .hadiya-accent {
         background: linear-gradient(90deg, #ff6b9d, #ff8e9b);
+      }
+
+      .visionary-card {
+        border-color: rgba(153, 50, 204, 0.4);
+        box-shadow: 0 8px 24px rgba(153, 50, 204, 0.12);
+      }
+
+      .visionary-card:hover {
+        border-color: rgba(153, 50, 204, 0.6);
+        box-shadow: 0 16px 40px rgba(153, 50, 204, 0.2);
+      }
+
+      .visionary-accent {
+        background: linear-gradient(90deg, #9932CC, #FF00FF);
       }
 
       .vehicle-card {
@@ -943,34 +1272,169 @@ import { LocalIdentitySectionComponent } from './components/local-identity-secti
         font-size: 1rem;
       }
 
+      /* Mobility Section Styles */
+      .mobility-card {
+        cursor: pointer;
+        overflow: hidden;
+      }
+
+      .mobility-content {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .mobility-image-container {
+        background: rgba(0, 0, 0, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+        border-bottom: 1px solid rgba(192, 125, 62, 0.2);
+      }
+
+      .mobility-details {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+
+      @media screen and (min-width: 768px) {
+        .mobility-content {
+          flex-direction: row;
+          align-items: stretch;
+        }
+
+        .mobility-image-container {
+          width: 40%;
+          border-bottom: none;
+          border-right: 1px solid rgba(192, 125, 62, 0.2);
+        }
+
+        .mobility-details {
+          width: 60%;
+        }
+      }
+
+      .tags-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin: 1rem 0;
+      }
+
+      .tag {
+        background: rgba(192, 125, 62, 0.15);
+        color: var(--tjr-bronze);
+        padding: 0.25rem 0.75rem;
+        border-radius: 12px;
+        font-size: 0.85rem;
+        border: 1px solid rgba(192, 125, 62, 0.3);
+      }
+
+      /* Quranic Arabic Section Styles */
+      .quranic-section .product-card {
+        max-width: 800px;
+        margin: 0 auto;
+      }
+
+      /* General Section Headings */
+      .section-heading {
+        font-size: 2rem;
+        color: var(--tjr-bronze);
+        text-align: center;
+        margin-bottom: 2rem;
+        margin-top: 1rem;
+      }
+
+      /* Icon Sizes */
+      .product-icon.large {
+        font-size: 5rem;
+      }
+
       /* Footer styles */
       .site-footer {
-        background: rgba(0, 0, 0, 0.95);
-        border-top: 1px solid rgba(0, 255, 0, 0.3);
-        padding: 2rem 0;
+        background: rgba(0, 0, 0, 0.9);
+        border-top: 1px solid rgba(192, 125, 62, 0.3);
+        padding: 3rem 1.5rem 2rem;
         margin-top: 4rem;
-        text-align: center;
       }
 
       .footer-content {
         max-width: 1200px;
         margin: 0 auto;
-        padding: 0 2rem;
+        text-align: center;
       }
 
-      .footer-content p {
-        color: var(--text-medium);
-        margin-bottom: 1rem;
-        font-size: 0.9rem;
+      .footer-tagline {
+        font-size: 1.3rem;
+        color: var(--tjr-bronze);
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+      }
+
+      .footer-description {
+        font-size: 1rem;
+        color: #e0e0e0;
+        margin-bottom: 2rem;
       }
 
       .footer-links {
-        display: flex;
-        justify-content: center;
+        display: grid;
+        grid-template-columns: 1fr;
         gap: 2rem;
-        flex-wrap: wrap;
+        margin-bottom: 2rem;
+        text-align: left;
       }
 
+      @media screen and (min-width: 640px) {
+        .footer-links {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      @media screen and (min-width: 1024px) {
+        .footer-links {
+          grid-template-columns: repeat(4, 1fr);
+        }
+      }
+
+      .footer-section h4 {
+        color: var(--tjr-bronze);
+        font-size: 1.1rem;
+        margin-bottom: 0.75rem;
+        font-weight: 600;
+      }
+
+      .footer-section a {
+        display: block;
+        color: #cccccc;
+        text-decoration: none;
+        padding: 0.4rem 0;
+        transition: color 0.2s ease;
+        cursor: pointer;
+      }
+
+      .footer-section a:hover {
+        color: var(--tjr-bronze);
+      }
+
+      .footer-contact {
+        font-size: 1rem;
+        color: #e0e0e0;
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 1px solid rgba(192, 125, 62, 0.2);
+      }
+
+      .email-link {
+        color: var(--tjr-bronze);
+        text-decoration: none;
+        transition: opacity 0.2s ease;
+      }
+
+      .email-link:hover {
+        opacity: 0.8;
+      }
       .footer-links a {
         color: var(--primary-color);
         text-decoration: none;
@@ -980,8 +1444,8 @@ import { LocalIdentitySectionComponent } from './components/local-identity-secti
       }
 
       .footer-links a:hover {
-        color: #36ff9f;
-        text-shadow: 0 0 5px rgba(54, 255, 159, 0.3);
+        color: var(--tjr-bronze);
+        text-decoration: underline;
       }
 
       .email-link {
@@ -989,16 +1453,24 @@ import { LocalIdentitySectionComponent } from './components/local-identity-secti
         font-weight: 600;
         text-decoration: none;
       }
+      
+      .footer-bottom {
+        margin-top: 2rem;
+        padding-top: 1rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        font-size: 0.8rem;
+        color: var(--text-muted);
+      }
 
       /* Course card extends product-card */
       .course-card {
-        border-color: var(--primary-color);
+        border-color: rgba(192, 125, 62, 0.4);
+        box-shadow: 0 8px 24px rgba(192, 125, 62, 0.12);
       }
 
       .course-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 8px 20px rgba(0, 255, 0, 0.4);
-        border-color: var(--accent-color);
+        border-color: rgba(192, 125, 62, 0.6);
+        box-shadow: 0 16px 40px rgba(192, 125, 62, 0.2);
       }
 
       .image-container {
@@ -1054,7 +1526,7 @@ import { LocalIdentitySectionComponent } from './components/local-identity-secti
         border-radius: 12px;
         object-fit: cover;
         margin-bottom: 1.5rem;
-        max-height: 420px;
+        aspect-ratio: 16 / 9;
       }
       @media (max-width: 600px) {
         .mobility-banner { max-height: 240px; }
@@ -1938,7 +2410,7 @@ import { LocalIdentitySectionComponent } from './components/local-identity-secti
     IonToolbar,
     IonButtons,
     IonTitle,
-    HeroTajirahComponent,
+    IonIcon,
     PillarsSectionComponent,
     LocalIdentitySectionComponent,
   ],
@@ -1965,6 +2437,11 @@ export class LandingComponent implements OnInit, AfterViewInit {
   // Connection status
   isOffline = false;
 
+  // Mobile menu toggle
+  isMobileMenuOpen = false;
+  
+  currentYear = new Date().getFullYear();
+
   constructor(
     public router: Router,
     private emailService: EmailCollectionService,
@@ -1974,6 +2451,9 @@ export class LandingComponent implements OnInit, AfterViewInit {
     private seo: SeoService,
     private modalCtrl: ModalController
   ) {
+    // Register icons
+    addIcons({ menu, close });
+
     this.emailForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
     });
@@ -1988,6 +2468,37 @@ export class LandingComponent implements OnInit, AfterViewInit {
   }
 
   async ngOnInit() {
+    // Set SEO Meta Tags
+    this.seo.updateMetaTags({
+      title: "Taajirah Systems | South Africa's AI Developer & Storyteller",
+      description:
+        'We build tools, teach skills, and help businesses adopt AI with confidence. Expert AI consulting, development, and storytelling services in South Africa.',
+      keywords:
+        'AI developer South Africa, AI consulting, AI storytelling, Taajirah Systems, AI tools, Hadiya Gift AI',
+      image: 'assets/images/hero/hero-bg.jpg',
+      url: 'https://taajirah.web.app',
+      type: 'website',
+      author: 'Taajirah Systems',
+    });
+
+    this.seo.updateAIOptimizedTags({
+      topic: 'Artificial Intelligence Development & Consulting',
+      intent: 'service_offering',
+      expertise_level: 'expert',
+      content_type: 'landing_page',
+      ai_features: [
+        'AI Consulting',
+        'AI Development',
+        'AI Storytelling',
+        'Hadiya Gift AI',
+      ],
+      learning_outcomes: [
+        'AI Adoption',
+        'Digital Transformation',
+        'AI Tools',
+      ],
+    });
+
     // Simple, fast initialization - no loading delays
     try {
       // Subscribe to user changes (non-blocking)
@@ -2302,6 +2813,42 @@ export class LandingComponent implements OnInit, AfterViewInit {
     window.open('https://subagents.web.app/', '_blank', 'noopener,noreferrer');
   }
 
+  navigateToVisionaryClones() {
+    const startTime = performance.now();
+
+    // Track VisionaryClones interaction
+    this.analytics.trackEvent(
+      'product_visit',
+      'navigation',
+      'visionary_clones'
+    );
+
+    // Track interaction performance
+    this.analytics.trackInteractionPerformance(
+      'visionary_clones_navigation',
+      startTime
+    );
+
+    // Track AI product interaction
+    this.analytics.trackAIInteraction(
+      'content_creation',
+      'product_navigation',
+      {
+        ai_feature: 'identity_lock',
+        destination: 'visionary_clones',
+        product_type: 'pre_production_toolkit'
+      }
+    );
+
+    // Track external click
+    this.analytics.trackExternalClick(
+      'https://visionaryclones.web.app/',
+      'VisionaryClones Card'
+    );
+
+    window.open('https://visionaryclones.web.app/', '_blank', 'noopener,noreferrer');
+  }
+
   navigateToShanalTours() {
     const startTime = performance.now();
 
@@ -2357,6 +2904,23 @@ export class LandingComponent implements OnInit, AfterViewInit {
     );
 
     window.open('https://hadiya.web.app/', '_blank', 'noopener,noreferrer');
+  }
+
+  navigateToVendorOnboarding() {
+    const startTime = performance.now();
+
+    // Track vendor onboarding interaction
+    this.analytics.trackEvent(
+      'vendor_onboarding',
+      'navigation',
+      'hadiya_vendors'
+    );
+
+    // Track interaction performance
+    this.analytics.trackInteractionPerformance('vendor_onboarding_navigation', startTime);
+
+    // Navigate to vendor onboarding page (internal route)
+    this.router.navigate(['/hadiya/vendors']);
   }
 
   navigateToHadiyaVehicle() {
@@ -2603,7 +3167,22 @@ export class LandingComponent implements OnInit, AfterViewInit {
         const y = el.getBoundingClientRect().top + window.scrollY - 80;
         this.content.scrollToPoint(0, y, 400);
       }
+      // Close mobile menu after navigation
+      this.isMobileMenuOpen = false;
     } catch {}
+  }
+
+  toggleMobileMenu() {
+    this.isMobileMenuOpen = !this.isMobileMenuOpen;
+    this.analytics.trackEvent(
+      'mobile_menu_toggle',
+      'user_interaction',
+      this.isMobileMenuOpen ? 'open' : 'close'
+    );
+  }
+
+  closeMobileMenu() {
+    this.isMobileMenuOpen = false;
   }
 
   // Helper method to detect device type

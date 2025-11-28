@@ -9,7 +9,7 @@ import { AnalyticsService } from './core/services/analytics.service';
   template: `
     <ion-app>
       <!-- Cyberpunk background elements -->
-      <div class="cyberpunk-background">
+      <div class="cyberpunk-background"></div>
         <div class="noise-overlay"></div>
         <div class="scan-line"></div>
         <!-- Removed heavy GIF animations for performance -->
@@ -48,7 +48,6 @@ import { AnalyticsService } from './core/services/analytics.service';
             </div>
           </div>
         </div>
-      </div>
       <ion-router-outlet></ion-router-outlet>
     </ion-app>
   `,
@@ -124,7 +123,7 @@ import { AnalyticsService } from './core/services/analytics.service';
         right: 0;
         bottom: 0;
         pointer-events: none;
-        z-index: 3;
+        z-index: 6;
       }
 
       .tactical-grid {
