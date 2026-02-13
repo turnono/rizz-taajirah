@@ -3,6 +3,7 @@ import { RouterOutlet } from '@angular/router';
 import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
 import { CommonModule } from '@angular/common';
 import { AnalyticsService } from './core/services/analytics.service';
+import { VisualAgentComponent } from './features/visual-agent/visual-agent.component';
 
 @Component({
   selector: 'app-root',
@@ -10,44 +11,48 @@ import { AnalyticsService } from './core/services/analytics.service';
     <ion-app>
       <!-- Cyberpunk background elements -->
       <div class="cyberpunk-background"></div>
-        <div class="noise-overlay"></div>
-        <div class="scan-line"></div>
-        <!-- Removed heavy GIF animations for performance -->
+      <div class="noise-overlay"></div>
+      <div class="scan-line"></div>
+      <!-- Removed heavy GIF animations for performance -->
 
-        <!-- Metal Gear Solid Style Overlays -->
-        <div class="mgs-overlay">
-          <!-- Tactical Grid -->
-          <div class="tactical-grid"></div>
+      <!-- Metal Gear Solid Style Overlays -->
+      <div class="mgs-overlay">
+        <!-- Tactical Grid -->
+        <div class="tactical-grid"></div>
 
-          <!-- Corner Frames -->
-          <div class="corner-frame top-left"></div>
-          <div class="corner-frame top-right"></div>
-          <div class="corner-frame bottom-left"></div>
-          <div class="corner-frame bottom-right"></div>
+        <!-- Corner Frames -->
+        <div class="corner-frame top-left"></div>
+        <div class="corner-frame top-right"></div>
+        <div class="corner-frame bottom-left"></div>
+        <div class="corner-frame bottom-right"></div>
 
-          <!-- Side HUD Elements -->
-          <div class="hud-element left-hud">
-            <div class="hud-line"></div>
-            <div class="hud-indicator"></div>
-          </div>
-          <div class="hud-element right-hud">
-            <div class="hud-line"></div>
-            <div class="hud-indicator"></div>
-          </div>
+        <!-- Side HUD Elements -->
+        <div class="hud-element left-hud">
+          <div class="hud-line"></div>
+          <div class="hud-indicator"></div>
+        </div>
+        <div class="hud-element right-hud">
+          <div class="hud-line"></div>
+          <div class="hud-indicator"></div>
+        </div>
 
-          <!-- Mathematics Overlay -->
-          <div class="mathematics-overlay">
-            <div
-              class="math-formula"
-              *ngFor="let formula of mathFormulas; let i = index"
-              [style.top.%]="formula.top"
-              [style.left.%]="formula.left"
-              [style.animation-delay]="i * 2 + 's'"
-            >
-              {{ formula.text }}
-            </div>
+        <!-- Mathematics Overlay -->
+        <div class="mathematics-overlay">
+          <div
+            class="math-formula"
+            *ngFor="let formula of mathFormulas; let i = index"
+            [style.top.%]="formula.top"
+            [style.left.%]="formula.left"
+            [style.animation-delay]="i * 2 + 's'"
+          >
+            {{ formula.text }}
           </div>
         </div>
+      </div>
+      
+      <!-- Visual Agent Overlay -->
+      <app-visual-agent></app-visual-agent>
+
       <ion-router-outlet></ion-router-outlet>
     </ion-app>
   `,
@@ -58,6 +63,11 @@ import { AnalyticsService } from './core/services/analytics.service';
         --cyberpunk-primary: #00ff00;
         --cyberpunk-bg: #000000;
         --cyberpunk-bg-transparent: rgba(0, 0, 0, 0.95);
+      }
+
+      /* Force hidden pages to be truly hidden */
+      .ion-page-hidden {
+        display: none !important;
       }
 
       .cyberpunk-background {
@@ -111,8 +121,12 @@ import { AnalyticsService } from './core/services/analytics.service';
       /* Removed GIF container styles for performance */
 
       ion-router-outlet {
-        position: relative;
-        z-index: 5;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 7;
       }
 
       /* Metal Gear Solid Style Overlays */
@@ -357,7 +371,7 @@ import { AnalyticsService } from './core/services/analytics.service';
     `,
   ],
   standalone: true,
-  imports: [IonApp, IonRouterOutlet, CommonModule],
+  imports: [IonApp, IonRouterOutlet, CommonModule, VisualAgentComponent],
 })
 export class AppComponent implements OnInit {
   // Removed heavy GIF arrays for performance

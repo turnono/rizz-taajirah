@@ -29,6 +29,7 @@ import {
   IonMenu,
   IonMenuButton,
   ModalController,
+  NavController,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { menu, close } from 'ionicons/icons';
@@ -42,6 +43,15 @@ import { LocalIdentitySectionComponent } from './components/local-identity-secti
 @Component({
   selector: 'app-landing',
   template: `
+    <div class="global-background">
+      <img
+        src="assets/hero/hero-taajirah-3.jpg"
+        alt=""
+        class="global-bg-img"
+      />
+      <div class="global-overlay"></div>
+    </div>
+
     <ion-header class="ion-no-border">
       <ion-toolbar>
         <ion-title>
@@ -106,16 +116,6 @@ import { LocalIdentitySectionComponent } from './components/local-identity-secti
     <ion-content #content [fullscreen]="true">
       <!-- Hero Section -->
       <section class="hero">
-        <div class="hero-bg-container">
-          <img
-            src="assets/images/hero/hero-bg.jpg"
-            alt="Abstract background representing AI and storytelling in South Africa"
-            class="hero-bg"
-            loading="eager"
-            fetchpriority="high"
-          />
-          <div class="hero-overlay"></div>
-        </div>
         <div class="hero-content fade-in">
           <h1 class="hero-title">South Africa's AI Developer & Storyteller</h1>
           <p class="hero-sub">
@@ -373,6 +373,34 @@ import { LocalIdentitySectionComponent } from './components/local-identity-secti
             </ion-card-content>
           </ion-card>
 
+          <!-- Taajirah Supply (New) -->
+          <ion-card
+            class="product-card supply-card"
+            (click)="navigateToSupply()"
+            tabindex="0"
+          >
+            <div class="accent-line supply-accent"></div>
+            <div class="icon-container">
+              <div class="product-icon">🚚</div>
+            </div>
+            <ion-card-header>
+              <ion-card-title>Taajirah Supply</ion-card-title>
+              <div class="sub-line">Business Essentials Delivered</div>
+            </ion-card-header>
+            <ion-card-content>
+              <p class="card-description">
+                Same-day delivery of office, packaging, and business essentials.
+              </p>
+              <div class="tags-container">
+                <span class="tag">Same-Day Delivery</span>
+                <span class="tag">Logistics</span>
+              </div>
+              <div class="cta-container">
+                <div class="cta">Request Delivery</div>
+              </div>
+            </ion-card-content>
+          </ion-card>
+
           <!-- Shanal Tours (Partner) -->
           <ion-card
             class="product-card tours-card"
@@ -432,7 +460,16 @@ import { LocalIdentitySectionComponent } from './components/local-identity-secti
       <local-identity-section></local-identity-section>
 
       <!-- Footer -->
-      <footer class="site-footer">
+      <footer class="site-footer with-bg">
+        <div class="footer-bg-container">
+          <img
+            src="assets/hero/hero-branded.jpg"
+            alt=""
+            class="footer-bg"
+            loading="lazy"
+          />
+          <div class="footer-overlay"></div>
+        </div>
         <div class="footer-content">
           <p class="footer-tagline">Taajirah Systems — Human • Intelligent • Moving</p>
           <p class="footer-description">AI-led vision. Human-delivered expertise.</p>
@@ -496,6 +533,31 @@ import { LocalIdentitySectionComponent } from './components/local-identity-secti
         --cyberpunk-glow: rgba(0, 255, 0, 0.3);
       }
 
+      .global-background {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: -1;
+        pointer-events: none;
+      }
+
+      .global-bg-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .global-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.75); /* Darken for readability */
+      }
+
       .hero {
         position: relative;
         text-align: center;
@@ -506,31 +568,10 @@ import { LocalIdentitySectionComponent } from './components/local-identity-secti
         display: flex;
         align-items: center;
         justify-content: center;
+        /* No local background */
       }
 
-      .hero-bg-container {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 0;
-      }
 
-      .hero-bg {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-      }
-
-      .hero-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(to bottom, rgba(0,0,0,0.5), rgba(0,0,0,0.7));
-      }
 
       .hero .hero-content {
         position: relative;
@@ -656,7 +697,7 @@ import { LocalIdentitySectionComponent } from './components/local-identity-secti
         top: 0;
         left: 0;
         right: 0;
-        z-index: 999;
+        z-index: 10;
       }
 
       ion-toolbar {
@@ -788,6 +829,49 @@ import { LocalIdentitySectionComponent } from './components/local-identity-secti
         }
       }
 
+      .site-footer {
+        position: relative;
+        background: transparent;
+        padding: 0;
+        margin: 0;
+        width: 100%;
+      }
+
+      .site-footer.with-bg {
+        overflow: hidden;
+      }
+
+      .footer-bg-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+      }
+
+      .footer-bg {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        opacity: 0.9; /* High opacity to hide global bg lines */
+      }
+
+      .footer-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(to top, rgba(0,0,0,0.95), rgba(0,0,0,0.7));
+      }
+
+      .footer-content {
+        position: relative;
+        z-index: 1;
+        padding: 4rem 2rem 2rem; /* Restore padding here */
+      }
+
       .intro-section {
         text-align: center;
         margin-bottom: 1.5rem;
@@ -898,8 +982,9 @@ import { LocalIdentitySectionComponent } from './components/local-identity-secti
       }
 
       /* Hadiya Featured Section */
-      .hadiya-featured {
-        margin: 3rem auto;
+      /* Hadiya Featured Section */
+      .products-section.hadiya-featured {
+        margin: 6rem auto 3rem auto;
       }
 
       .hadiya-featured .section-heading {
@@ -1117,6 +1202,31 @@ import { LocalIdentitySectionComponent } from './components/local-identity-secti
         box-shadow: 0 16px 40px rgba(255, 107, 157, 0.2);
       }
 
+      .visionary-card {
+        border-color: rgba(153, 50, 204, 0.4);
+        box-shadow: 0 8px 24px rgba(153, 50, 204, 0.12);
+      }
+
+      .visionary-card:hover {
+        border-color: rgba(153, 50, 204, 0.6);
+        box-shadow: 0 16px 40px rgba(153, 50, 204, 0.2);
+      }
+
+      .vehicle-card {
+        border-color: rgba(0, 200, 255, 0.4);
+        box-shadow: 0 8px 24px rgba(0, 200, 255, 0.12);
+      }
+
+      .vehicle-card:hover {
+        border-color: rgba(255, 196, 9, 0.5);
+        box-shadow: 0 10px 30px rgba(255, 196, 9, 0.15);
+      }
+
+      .supply-card:hover {
+        border-color: rgba(61, 194, 255, 0.5);
+        box-shadow: 0 10px 30px rgba(61, 194, 255, 0.15);
+      }
+
       .accent-line {
         position: absolute;
         top: 0;
@@ -1154,34 +1264,37 @@ import { LocalIdentitySectionComponent } from './components/local-identity-secti
         background: linear-gradient(90deg, #ff6b9d, #ff8e9b);
       }
 
-      .visionary-card {
-        border-color: rgba(153, 50, 204, 0.4);
-        box-shadow: 0 8px 24px rgba(153, 50, 204, 0.12);
-      }
-
-      .visionary-card:hover {
-        border-color: rgba(153, 50, 204, 0.6);
-        box-shadow: 0 16px 40px rgba(153, 50, 204, 0.2);
-      }
-
       .visionary-accent {
         background: linear-gradient(90deg, #9932CC, #FF00FF);
       }
 
       .vehicle-card {
-        border-color: rgba(0, 200, 255, 0.4);
-        box-shadow: 0 8px 24px rgba(0, 200, 255, 0.12);
+        border-color: rgba(255, 196, 9, 0.4);
+        box-shadow: 0 8px 24px rgba(255, 196, 9, 0.12);
       }
 
       .vehicle-card:hover {
-        border-color: rgba(0, 200, 255, 0.6);
-        box-shadow: 0 16px 40px rgba(0, 200, 255, 0.2);
+        border-color: rgba(255, 196, 9, 0.6);
+        box-shadow: 0 16px 40px rgba(255, 196, 9, 0.2);
       }
 
       .vehicle-accent {
-        background: linear-gradient(90deg, #00c8ff, #00ffd9);
+        background: linear-gradient(90deg, #ffc409, #ff9f0a); /* Warning/Amber */
       }
 
+      .supply-card {
+        border-color: rgba(61, 194, 255, 0.4);
+        box-shadow: 0 8px 24px rgba(61, 194, 255, 0.12);
+      }
+
+      .supply-card:hover {
+        border-color: rgba(61, 194, 255, 0.6);
+        box-shadow: 0 16px 40px rgba(61, 194, 255, 0.2);
+      }
+
+      .supply-accent {
+        background: linear-gradient(90deg, #3dc2ff, #5260ff); /* Blue/Cyan for logistics */
+      }
       .product-card ion-card-content {
         flex: 1 1 auto;
         display: flex;
@@ -2449,7 +2562,8 @@ export class LandingComponent implements OnInit, AfterViewInit {
     private fb: FormBuilder,
     private analytics: AnalyticsService,
     private seo: SeoService,
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private navCtrl: NavController
   ) {
     // Register icons
     addIcons({ menu, close });
@@ -2465,6 +2579,10 @@ export class LandingComponent implements OnInit, AfterViewInit {
       location: [''],
       description: [''],
     });
+  }
+
+  navigateToSupply() {
+    this.navCtrl.navigateRoot('/supply', { animated: true });
   }
 
   async ngOnInit() {
@@ -2842,11 +2960,11 @@ export class LandingComponent implements OnInit, AfterViewInit {
 
     // Track external click
     this.analytics.trackExternalClick(
-      'https://visionaryclones.web.app/',
+      'https://vclones.web.app/',
       'VisionaryClones Card'
     );
 
-    window.open('https://visionaryclones.web.app/', '_blank', 'noopener,noreferrer');
+    window.open('https://vclones.web.app/', '_blank', 'noopener,noreferrer');
   }
 
   navigateToShanalTours() {
@@ -2919,8 +3037,8 @@ export class LandingComponent implements OnInit, AfterViewInit {
     // Track interaction performance
     this.analytics.trackInteractionPerformance('vendor_onboarding_navigation', startTime);
 
-    // Navigate to vendor onboarding page (internal route)
-    this.router.navigate(['/hadiya/vendors']);
+    // Open the business signup modal (popup) instead of navigating
+    this.openBusinessSignup();
   }
 
   navigateToHadiyaVehicle() {

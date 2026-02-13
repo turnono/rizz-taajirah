@@ -11,7 +11,17 @@ import {
   IonCardHeader,
   IonCardTitle,
   IonCardContent,
+  IonItem,
+  IonLabel,
+  IonInput,
+  IonTextarea,
+  IonList,
+  IonLoading,
+  ToastController,
 } from '@ionic/angular/standalone';
+import { FormsModule } from '@angular/forms';
+import { inject } from '@angular/core';
+import { HadiyaBusinessSignupService } from '../../core/services/hadia-business-signup.service';
 
 @Component({
   selector: 'app-vendor-onboarding',
@@ -27,6 +37,13 @@ import {
     IonCardHeader,
     IonCardTitle,
     IonCardContent,
+    IonItem,
+    IonLabel,
+    IonInput,
+    IonTextarea,
+    IonList,
+    IonLoading,
+    FormsModule,
   ],
   template: `
     <ion-header class="ion-no-border">
@@ -74,29 +91,56 @@ import {
 
         <ion-card class="info-card">
           <ion-card-header>
-            <ion-card-title>Get Started</ion-card-title>
+            <ion-card-title>Vendor Application</ion-card-title>
           </ion-card-header>
           <ion-card-content>
             <p>
-              We're currently onboarding vendors for Hadiya. To get started, please contact us with the following information:
+              Fill out the form below to start your application. We'll review your details and get back to you shortly.
             </p>
-            <ul class="requirements-list">
-              <li>Business name and registration details</li>
-              <li>Product catalog or website</li>
-              <li>Contact person and details</li>
-              <li>Brief description of your products</li>
-            </ul>
-            <div class="cta-buttons">
-              <ion-button expand="block" class="primary-btn" (click)="contactUs()">
-                Contact Us to Join
-              </ion-button>
-              <ion-button expand="block" fill="outline" (click)="openHadiya()">
-                Visit Hadiya
-              </ion-button>
-            </div>
+            
+            <form (ngSubmit)="submitForm()">
+              <ion-list class="form-list" style="background: transparent;">
+                <ion-item class="form-item">
+                  <ion-label position="stacked">Business Name</ion-label>
+                  <ion-input [(ngModel)]="formData.businessName" name="businessName" placeholder="e.g. Gifted Hands SA" required></ion-input>
+                </ion-item>
+
+                <ion-item class="form-item">
+                  <ion-label position="stacked">Contact Person</ion-label>
+                  <ion-input [(ngModel)]="formData.contactPerson" name="contactPerson" placeholder="Your Name" required></ion-input>
+                </ion-item>
+
+                <ion-item class="form-item">
+                  <ion-label position="stacked">Email Address</ion-label>
+                  <ion-input [(ngModel)]="formData.email" name="email" type="email" placeholder="you@example.com" required></ion-input>
+                </ion-item>
+
+                <ion-item class="form-item">
+                  <ion-label position="stacked">Phone Number</ion-label>
+                  <ion-input [(ngModel)]="formData.phone" name="phone" type="tel" placeholder="+27..." required></ion-input>
+                </ion-item>
+
+                <ion-item class="form-item">
+                  <ion-label position="stacked">Website / Social Media</ion-label>
+                  <ion-input [(ngModel)]="formData.website" name="website" placeholder="Instagram, Facebook, or Website URL"></ion-input>
+                </ion-item>
+
+                <ion-item class="form-item">
+                  <ion-label position="stacked">Product Description</ion-label>
+                  <ion-textarea [(ngModel)]="formData.description" name="description" rows="4" placeholder="Tell us about what you sell..." required></ion-textarea>
+                </ion-item>
+              </ion-list>
+
+              <div class="cta-buttons">
+                <ion-button expand="block" class="primary-btn" type="submit">
+                  Submit Application
+                </ion-button>
+              </div>
+            </form>
           </ion-card-content>
         </ion-card>
       </div>
+      <ion-loading [isOpen]="isLoading" message="Submitting application..." spinner="crescent"></ion-loading>
     </ion-content>
   `,
   styles: [
@@ -143,7 +187,7 @@ import {
       ion-content {
         --background: var(--tjr-charcoal);
         --color: #ffffff;
-        margin-top: 64px;
+        --padding-top: 64px;
       }
 
       .vendor-container {
@@ -238,21 +282,62 @@ import {
   ],
 })
 export class VendorOnboardingComponent {
+  formData = {
+    businessName: '',
+    contactPerson: '',
+    email: '',
+    phone: '',
+    website: '',
+    description: ''
+  };
+  
+  isLoading = false;
+  private signupService = inject(HadiyaBusinessSignupService);
+  private toastCtrl = inject(ToastController);
+
   constructor(private router: Router) {}
 
   goHome() {
     this.router.navigate(['']);
   }
 
-  contactUs() {
-    const subject = encodeURIComponent('Hadiya Vendor Onboarding Inquiry');
-    const body = encodeURIComponent(
-      `Hi Taajirah Systems,\n\nI'm interested in joining Hadiya as a vendor.\n\nBusiness Details:\nBusiness Name:\nRegistration Number:\nWebsite/Social Media:\nContact Person:\nEmail:\nPhone:\n\nProduct Information:\nProduct Categories:\nBrief Description:\n\nThanks!`
-    );
-    window.location.href = `mailto:taajirah0@gmail.com?subject=${subject}&body=${body}`;
+  async submitForm() {
+    const { businessName, contactPerson, email, phone, website, description } = this.formData;
+    
+    if (!businessName || !contactPerson || !email || !phone || !description) {
+      await this.showToast('Please fill in all required fields.', 'danger');
+      return;
+    }
+
+    this.isLoading = true;
+
+    try {
+      await this.signupService.submitBusinessSignup({
+        businessName: businessName,
+        contactPerson: contactPerson,
+        email: email,
+        phone: phone,
+        websiteOrSocial: `${website} \n\nDescription: ${description}`,
+        contentCreatorInterest: false // Default
+      });
+      
+      await this.showToast('Application submitted successfully! We will be in touch shortly.', 'success');
+      this.goHome();
+    } catch (error) {
+      console.error('Error submitting application:', error);
+      await this.showToast('There was an error submitting your application. Please try again later.', 'danger');
+    } finally {
+      this.isLoading = false;
+    }
   }
 
-  openHadiya() {
-    window.open('https://hadiya.web.app/', '_blank', 'noopener,noreferrer');
+  async showToast(message: string, color: 'success' | 'danger') {
+    const toast = await this.toastCtrl.create({
+      message,
+      duration: 3000,
+      color,
+      position: 'bottom'
+    });
+    await toast.present();
   }
 }

@@ -35,6 +35,11 @@ export const routes: Routes = [
       import('./features/mcp/mcp.component').then((m) => m.McpComponent),
   },
   {
+    path: 'supply',
+    loadComponent: () =>
+      import('./features/supply/supply.component').then((m) => m.SupplyComponent),
+  },
+  {
     path: '**',
     redirectTo: '',
   },

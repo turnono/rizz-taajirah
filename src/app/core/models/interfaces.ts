@@ -88,3 +88,17 @@ export interface User {
   orders?: string[];
   courses?: string[];
 }
+
+export interface SupplyProduct {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  category: 'office' | 'packaging' | 'tech' | 'cleaning';
+  subCategory?: string; // e.g., 'Paper', 'Ink', 'Tape'
+  image?: string; // URL or emoji icon
+  unit: string; // 'Ream', 'Box of 10', 'Each'
+  minOrder?: number;
+  inStock: boolean;
+  isPopular?: boolean;
+}
