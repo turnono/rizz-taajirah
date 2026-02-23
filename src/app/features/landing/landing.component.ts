@@ -345,10 +345,12 @@ import { LocalIdentitySectionComponent } from './components/local-identity-secti
       <section id="mobility" class="products-section mobility-section">
         <h2 class="section-heading">Mobility</h2>
         <div class="cards-grid">
-          <!-- Taajirah Mobility (Internal) -->
+          <!-- Taajirah Mobility -->
           <ion-card
             class="product-card vehicle-card"
-            (click)="navigateToHadiyaVehicle()"
+            (click)="navigateToMobility()"
+            (keydown.enter)="navigateToMobility()"
+            (keydown.space)="navigateToMobility()"
             tabindex="0"
           >
             <div class="accent-line vehicle-accent"></div>
@@ -357,18 +359,19 @@ import { LocalIdentitySectionComponent } from './components/local-identity-secti
             </div>
             <ion-card-header>
               <ion-card-title>Taajirah Mobility</ion-card-title>
-              <div class="sub-line">Internal Operations</div>
+              <div class="sub-line">Private Trips & Transfers</div>
             </ion-card-header>
             <ion-card-content>
               <p class="card-description">
-                Dedicated mobility solution for client engagements, workshops, and media production.
+                Licensed private transport in our Hyundai Staria. Airport runs, events, workshops, day tours — quote on request.
               </p>
               <div class="tags-container">
-                <span class="tag">Client Engagements</span>
-                <span class="tag">Workshop Travel</span>
+                <span class="tag">Airport Transfers</span>
+                <span class="tag">Events</span>
+                <span class="tag">Up to 8 pax</span>
               </div>
               <div class="cta-container">
-                <div class="cta">Contact Us</div>
+                <div class="cta">Book a Trip</div>
               </div>
             </ion-card-content>
           </ion-card>
@@ -2552,7 +2555,7 @@ export class LandingComponent implements OnInit, AfterViewInit {
 
   // Mobile menu toggle
   isMobileMenuOpen = false;
-  
+
   currentYear = new Date().getFullYear();
 
   constructor(
@@ -3058,6 +3061,13 @@ export class LandingComponent implements OnInit, AfterViewInit {
     window.location.href = mailto;
   }
 
+  navigateToMobility() {
+    const startTime = performance.now();
+    this.analytics.trackEvent('mobility_booking', 'navigation', 'mobility_page');
+    this.analytics.trackInteractionPerformance('mobility_navigation', startTime);
+    this.navCtrl.navigateRoot('/mobility', { animated: true });
+  }
+
   async openBusinessSignup() {
     try {
       console.log('🚀 Opening business signup modal...');
@@ -3275,7 +3285,7 @@ export class LandingComponent implements OnInit, AfterViewInit {
       if (el && this.content) {
         this.content.scrollToPoint(0, el.offsetTop - 80, 500);
       }
-    } catch {}
+    } catch { }
   }
 
   scrollToSection(sectionId: string) {
@@ -3287,7 +3297,7 @@ export class LandingComponent implements OnInit, AfterViewInit {
       }
       // Close mobile menu after navigation
       this.isMobileMenuOpen = false;
-    } catch {}
+    } catch { }
   }
 
   toggleMobileMenu() {

@@ -40,6 +40,11 @@ export const routes: Routes = [
       import('./features/supply/supply.component').then((m) => m.SupplyComponent),
   },
   {
+    path: 'mobility',
+    loadComponent: () =>
+      import('./features/mobility/mobility.component').then((m) => m.MobilityComponent),
+  },
+  {
     path: '**',
     redirectTo: '',
   },
