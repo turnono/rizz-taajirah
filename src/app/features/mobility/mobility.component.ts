@@ -27,7 +27,7 @@ const WHATSAPP_NUMBER = '27658623499';
           <div class="badge">🚐 Taajirah Mobility</div>
           <h1>Private Trips.<br>Done Right.</h1>
           <p class="hero-sub">
-            Professional chauffeur service across the Western Cape. Hyundai Staria — clean, comfortable, on time.
+            Premium private transport in our Hyundai Staria — clean, comfortable, always on time.
           </p>
           <button class="cta-btn" (click)="scrollToForm()">Book a Trip ↓</button>
         </div>
@@ -88,7 +88,7 @@ const WHATSAPP_NUMBER = '27658623499';
                 <input
                   type="text"
                   formControlName="name"
-                  placeholder="e.g. Abdullah Abrahams"
+                  placeholder="Your full name"
                   [class.error]="isFieldInvalid('name')"
                 />
                 <span class="field-error" *ngIf="isFieldInvalid('name')">Name is required</span>
@@ -99,7 +99,7 @@ const WHATSAPP_NUMBER = '27658623499';
                 <input
                   type="tel"
                   formControlName="phone"
-                  placeholder="+27 82 000 0000"
+                  placeholder="e.g. +27 82 000 0000"
                   [class.error]="isFieldInvalid('phone')"
                 />
                 <span class="field-error" *ngIf="isFieldInvalid('phone')">Phone number is required</span>
@@ -110,7 +110,7 @@ const WHATSAPP_NUMBER = '27658623499';
                 <input
                   type="text"
                   formControlName="pickup"
-                  placeholder="e.g. 12 Long Street, Cape Town"
+                  placeholder="Street address, suburb, city"
                   [class.error]="isFieldInvalid('pickup')"
                 />
                 <span class="field-error" *ngIf="isFieldInvalid('pickup')">Pickup location is required</span>
@@ -121,7 +121,7 @@ const WHATSAPP_NUMBER = '27658623499';
                 <input
                   type="text"
                   formControlName="dropoff"
-                  placeholder="e.g. Cape Town International Airport"
+                  placeholder="Destination address or landmark"
                   [class.error]="isFieldInvalid('dropoff')"
                 />
                 <span class="field-error" *ngIf="isFieldInvalid('dropoff')">Drop-off location is required</span>
@@ -229,12 +229,12 @@ const WHATSAPP_NUMBER = '27658623499';
     /* ── Hero ─────────────────────────────────────────── */
     .hero {
       position: relative;
-      min-height: 80vh;
+      min-height: 60vh;
       display: flex;
       align-items: center;
       justify-content: center;
       text-align: center;
-      padding: 4rem 2rem;
+      padding: 5rem 1.25rem 3rem;
       background: radial-gradient(ellipse at 30% 50%, rgba(0,255,157,0.07) 0%, transparent 60%),
                   linear-gradient(160deg, #0a1a0e 0%, #050d08 50%, #000 100%);
       overflow: hidden;
@@ -268,18 +268,18 @@ const WHATSAPP_NUMBER = '27658623499';
     }
 
     h1 {
-      font-size: 3.5rem;
+      font-size: clamp(1.8rem, 5vw, 3.2rem);
       font-weight: 800;
-      line-height: 1.1;
+      line-height: 1.15;
       color: #fff;
       margin-bottom: 1.25rem;
     }
 
     .hero-sub {
-      font-size: 1.2rem;
+      font-size: clamp(0.95rem, 2.5vw, 1.2rem);
       color: #ccc;
       line-height: 1.7;
-      margin-bottom: 2.5rem;
+      margin-bottom: 2rem;
       max-width: 520px;
       margin-left: auto;
       margin-right: auto;
@@ -305,18 +305,18 @@ const WHATSAPP_NUMBER = '27658623499';
 
     /* ── Layout ─────────────────────────────────────── */
     .section {
-      padding: 5rem 0;
+      padding: 3rem 0;
       border-top: 1px solid rgba(255,255,255,0.06);
     }
 
     .container {
       max-width: 960px;
       margin: 0 auto;
-      padding: 0 1.5rem;
+      padding: 0 1rem;
     }
 
     .section-title {
-      font-size: 2rem;
+      font-size: clamp(1.4rem, 4vw, 2rem);
       font-weight: 700;
       text-align: center;
       margin-bottom: 1rem;
@@ -326,8 +326,8 @@ const WHATSAPP_NUMBER = '27658623499';
     .section-sub {
       text-align: center;
       color: #999;
-      font-size: 1.05rem;
-      margin-bottom: 3rem;
+      font-size: 0.95rem;
+      margin-bottom: 2rem;
       line-height: 1.6;
     }
 
@@ -411,8 +411,8 @@ const WHATSAPP_NUMBER = '27658623499';
     .booking-form {
       background: var(--card-bg);
       border: 1px solid var(--mobility-border);
-      border-radius: 20px;
-      padding: 2.5rem;
+      border-radius: 16px;
+      padding: 1.5rem;
       box-shadow: 0 20px 60px rgba(0,0,0,0.5);
     }
 
@@ -564,27 +564,47 @@ const WHATSAPP_NUMBER = '27658623499';
 
     /* ── Responsive ─────────────────────────────────── */
     @media (max-width: 768px) {
-      h1 { font-size: 2.4rem; }
+      .hero { min-height: 55vh; padding: 4rem 1rem 2.5rem; }
 
-      .form-grid {
-        grid-template-columns: 1fr;
-      }
+      .section { padding: 2.5rem 0; }
+
+      .perks-grid { grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+      .perk-card { padding: 1.25rem 1rem; }
+
+      .form-grid { grid-template-columns: 1fr; gap: 1rem; }
 
       .field.full { grid-column: 1; }
 
       .form-footer {
         flex-direction: column;
         align-items: stretch;
+        gap: 0.75rem;
       }
+
+      .privacy-note { text-align: center; }
 
       .submit-btn { min-width: unset; width: 100%; text-align: center; }
 
-      .booking-form { padding: 1.5rem; }
+      .booking-form { padding: 1.25rem; border-radius: 12px; }
+
+      .success-card { padding: 2.5rem 1rem; }
     }
 
     @media (max-width: 480px) {
-      h1 { font-size: 1.9rem; }
-      .hero { min-height: 70vh; }
+      .hero { min-height: 50vh; padding: 3.5rem 1rem 2rem; }
+
+      .section { padding: 2rem 0; }
+
+      .perks-grid { grid-template-columns: 1fr; }
+
+      .trip-card { padding: 0.6rem 1rem; font-size: 0.88rem; }
+
+      input, select, textarea { font-size: 0.95rem; padding: 0.75rem 0.875rem; }
+
+      .booking-form { padding: 1rem; }
+
+      .cta-btn { width: 100%; padding: 0.9rem 1.5rem; }
     }
   `],
 })
