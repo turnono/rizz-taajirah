@@ -3,7 +3,6 @@ import { RouterOutlet } from '@angular/router';
 import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
 import { CommonModule } from '@angular/common';
 import { AnalyticsService } from './core/services/analytics.service';
-import { VisualAgentComponent } from './features/visual-agent/visual-agent.component';
 
 @Component({
   selector: 'app-root',
@@ -50,9 +49,6 @@ import { VisualAgentComponent } from './features/visual-agent/visual-agent.compo
         </div>
       </div>
       
-      <!-- Visual Agent Overlay -->
-      <app-visual-agent></app-visual-agent>
-
       <ion-router-outlet></ion-router-outlet>
     </ion-app>
   `,
@@ -371,7 +367,7 @@ import { VisualAgentComponent } from './features/visual-agent/visual-agent.compo
     `,
   ],
   standalone: true,
-  imports: [IonApp, IonRouterOutlet, CommonModule, VisualAgentComponent],
+  imports: [IonApp, IonRouterOutlet, CommonModule],
 })
 export class AppComponent implements OnInit {
   // Removed heavy GIF arrays for performance
@@ -469,7 +465,7 @@ export class AppComponent implements OnInit {
     'rgba(255, 200, 100, 0.3)', // subtle peach
   ];
 
-  constructor(private analytics: AnalyticsService) {}
+  constructor(private analytics: AnalyticsService) { }
 
   ngOnInit() {
     // Set up global error handling
