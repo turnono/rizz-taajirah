@@ -80,6 +80,46 @@ import { WebService } from '../../core/models/interfaces';
         }
       </div>
 
+      <!-- New Tech-Van Section -->
+      <ion-card class="tech-van-card">
+        <ion-card-header>
+          <div class="tech-van-header">
+            <ion-icon name="business" class="header-icon"></ion-icon>
+            <ion-card-title>Tech-Van: Executive Transit & Mobile Workspace</ion-card-title>
+          </div>
+        </ion-card-header>
+        <ion-card-content>
+          <p class="tech-van-prop">
+            Turn your commute into billable hours. The Taajirah Tech-Van offers secure, high-speed Wi-Fi and a premium mobile office environment for executives on the move.
+          </p>
+          
+          <div class="rate-card">
+            <ion-list>
+              <ion-item lines="none">
+                <ion-icon name="airplane" slot="start" color="primary"></ion-icon>
+                <ion-label>OR Tambo ↔ Sandton Transfers</ion-label>
+                <span slot="end" class="rate">R850</span>
+              </ion-item>
+              <ion-item lines="none">
+                <ion-icon name="time" slot="start" color="primary"></ion-icon>
+                <ion-label>Hourly Retainer / Executive Wait Time</ion-label>
+                <span slot="end" class="rate">R350/hr</span>
+              </ion-item>
+              <ion-item lines="none">
+                <ion-icon name="car" slot="start" color="primary"></ion-icon>
+                <ion-label>Base Call-out</ion-label>
+                <span slot="end" class="rate">R450</span>
+              </ion-item>
+            </ion-list>
+          </div>
+
+          <a href="https://wa.me/2767537092?text=Hi%20Concierge,%20I%20need%20to%20book%20the%20Tech-Van." target="_blank" class="tech-van-cta">
+            Message Concierge to Book
+            <ion-icon name="chatbubbles"></ion-icon>
+          </a>
+        </ion-card-content>
+      </ion-card>
+
       <ion-card class="process-card">
         <ion-card-header>
           <ion-card-title>Our Process</ion-card-title>
@@ -192,6 +232,72 @@ import { WebService } from '../../core/models/interfaces';
       .process-card p {
         color: var(--ion-color-medium);
       }
+
+      /* Tech-Van Section Styles */
+      .tech-van-card {
+        margin-top: 2.5rem;
+        background: rgba(0, 20, 0, 0.4);
+        border: 1px solid var(--ion-color-primary);
+        box-shadow: 0 0 20px rgba(0, 255, 0, 0.1);
+      }
+
+      .tech-van-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .tech-van-header .header-icon {
+        font-size: 2rem;
+        color: var(--ion-color-primary);
+      }
+
+      .tech-van-prop {
+        font-size: 1.1rem;
+        color: var(--ion-color-light);
+        line-height: 1.6;
+        margin-bottom: 1.5rem;
+      }
+
+      .rate-card {
+        background: rgba(0, 0, 0, 0.5);
+        border-radius: 8px;
+        padding: 0.5rem;
+        margin-bottom: 2rem;
+      }
+
+      .rate-card ion-item {
+        --background: transparent;
+        --color: var(--ion-color-light);
+      }
+
+      .rate-card .rate {
+        font-weight: bold;
+        color: var(--ion-color-primary);
+        font-size: 1.1rem;
+        padding-left: 1rem;
+      }
+
+      .tech-van-cta {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        background: #25D366; /* WhatsApp Green */
+        color: #fff;
+        padding: 1rem;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 1.1rem;
+        transition: all 0.3s ease;
+      }
+
+      .tech-van-cta:hover {
+        background: #128C7E;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
+      }
     `,
   ],
   standalone: true,
@@ -266,7 +372,7 @@ export class ServicesComponent {
     },
   ];
 
-  constructor(private cartService: CartService) {}
+  constructor(private cartService: CartService) { }
 
   requestService(service: WebService) {
     this.cartService.addToCart({

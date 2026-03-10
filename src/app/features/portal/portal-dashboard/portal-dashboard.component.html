@@ -1,0 +1,48 @@
+<div style="min-height: 100vh; padding: 2rem;">
+  <div style="max-width: 1200px; margin: 0 auto;">
+    
+    <header style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem; margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.1);">
+      <div>
+        <h1 style="font-size: 2rem; font-weight: 700; color: var(--tjr-bronze); margin: 0 0 0.5rem 0;">
+          Sovereign Provider Portal
+        </h1>
+        <p style="color: var(--text-secondary); margin: 0;">Federation Transparency & Analytics Hub</p>
+      </div>
+      
+      <div style="display: flex; gap: 0.5rem; background: rgba(0,0,0,0.5); padding: 0.25rem; border-radius: var(--radius-sm); align-items: center;">
+        <button 
+          (click)="activeTab = 'logs'"
+          [ngStyle]="{'background': activeTab === 'logs' ? 'var(--tjr-charcoal-light)' : 'transparent', 'color': activeTab === 'logs' ? '#fff' : 'var(--text-muted)'}"
+          style="padding: 0.5rem 1.25rem; border-radius: 4px; font-size: 0.9rem; font-weight: 500; border: none; cursor: pointer; transition: all 0.2s;">
+          Audit Logs
+        </button>
+        <button 
+          (click)="activeTab = 'reports'"
+          [ngStyle]="{'background': activeTab === 'reports' ? 'var(--tjr-charcoal-light)' : 'transparent', 'color': activeTab === 'reports' ? '#fff' : 'var(--text-muted)'}"
+          style="padding: 0.5rem 1.25rem; border-radius: 4px; font-size: 0.9rem; font-weight: 500; border: none; cursor: pointer; transition: all 0.2s;">
+          Compliance Reports
+        </button>
+        
+        <div style="width: 1px; height: 1.5rem; background: rgba(255,255,255,0.2); margin: 0 0.5rem;"></div>
+        
+        <button 
+          (click)="logout()"
+          class="tjr-btn tjr-btn-outline"
+          style="padding: 0.4rem 1rem; border-radius: 4px; font-size: 0.8rem; font-weight: 500; margin-right: 0.25rem;">
+          Sign Out
+        </button>
+      </div>
+    </header>
+
+    <main class="tjr-card">
+      <ng-container *ngIf="activeTab === 'logs'">
+        <app-audit-logs></app-audit-logs>
+      </ng-container>
+
+      <ng-container *ngIf="activeTab === 'reports'">
+        <app-compliance-reports></app-compliance-reports>
+      </ng-container>
+    </main>
+    
+  </div>
+</div>

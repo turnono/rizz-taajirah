@@ -46,6 +46,17 @@ service cloud.firestore {
       allow update: if true;
     }
 
+    // Allow Sovereign Portal collections
+    match /AuditLogs/{logId} {
+      allow read: if request.auth != null;
+      allow write: if false; // written by admin SDK
+    }
+
+    match /ComplianceReports/{reportId} {
+      allow read: if request.auth != null;
+      allow write: if false; // written by admin SDK
+    }
+
     // Default deny
     match /{document=**} {
       allow read, write: if false;

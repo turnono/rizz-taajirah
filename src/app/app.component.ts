@@ -50,6 +50,16 @@ import { AnalyticsService } from './core/services/analytics.service';
       </div>
       
       <ion-router-outlet></ion-router-outlet>
+
+      <!-- Global Tech-Van CTA -->
+      <a 
+        href="https://wa.me/2767537092?text=Hi%20Concierge,%20I%20need%20to%20book%20the%20Tech-Van." 
+        target="_blank" 
+        class="global-fab tech-van-fab"
+        aria-label="Book Tech-Van Concierge">
+        <span class="fab-icon">🚐</span>
+        <span class="fab-text">Book Tech-Van</span>
+      </a>
     </ion-app>
   `,
   styles: [
@@ -363,6 +373,49 @@ import { AnalyticsService } from './core/services/analytics.service';
         text-shadow: 0 0 5px currentColor;
         transition: all 0.8s ease;
         z-index: 1;
+      }
+
+      /* Tech-Van Global FAB */
+      .global-fab.tech-van-fab {
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(0, 0, 0, 0.85);
+        color: var(--cyberpunk-primary);
+        text-decoration: none;
+        padding: 12px 20px;
+        border-radius: 50px;
+        font-family: monospace;
+        font-weight: bold;
+        border: 1px solid var(--cyberpunk-primary);
+        box-shadow: 0 0 15px rgba(0, 255, 0, 0.2);
+        transition: all 0.3s ease;
+        backdrop-filter: blur(5px);
+      }
+
+      .global-fab.tech-van-fab:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 20px rgba(0, 255, 0, 0.4);
+        background: rgba(0, 20, 0, 0.95);
+      }
+
+      .global-fab.tech-van-fab .fab-icon {
+        font-size: 1.2rem;
+      }
+
+      @media (max-width: 768px) {
+        .global-fab.tech-van-fab {
+          bottom: 20px;
+          right: 20px;
+          padding: 10px 16px;
+        }
+        .global-fab.tech-van-fab .fab-text {
+          font-size: 0.95rem;
+        }
       }
     `,
   ],
