@@ -1,4 +1,61 @@
+/* ── Google Fonts ─────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap');
+
+/* ── Sovereign Design Tokens (Hub v2.5) ──────────── */
+:root {
+  --sov-bg:        #020b12;
+  --sov-surface:   #0a1929;
+  --sov-green:     #00ff88;
+  --sov-green-dim: rgba(0,255,136,0.12);
+  --sov-blue:      #00bfff;
+  --sov-red:       #ff4a4a;
+  --sov-text:      #e8f4f8;
+  --sov-muted:     #6a98b0;
+  --sov-border:    rgba(0,255,136,0.2);
+  --font-mono:     'JetBrains Mono', monospace;
+  --font-sans:     'Inter', Arial, sans-serif;
+}
+
+/* Terminal-chic utility classes */
+.terminal-text {
+  font-family: var(--font-mono);
+  color: var(--sov-green);
+}
+.terminal-text::after {
+  content: '█';
+  animation: blink-cursor 1s step-end infinite;
+}
+@keyframes blink-cursor { 0%,100% { opacity: 1; } 50% { opacity: 0; } }
+
+.sov-card {
+  background: var(--sov-surface);
+  border: 1px solid var(--sov-border);
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  transition: border-color 0.2s, transform 0.2s;
+}
+.sov-card:hover {
+  border-color: var(--sov-green);
+  transform: translateY(-4px);
+}
+
 /* You can add global styles to this file, and also import other style files */
+
+/* ── Landing page: break out of Ionic ion-page scroll lock ── */
+/* Ionic applies overflow:hidden + contain:layout size style to all ion-page */
+/* wrappers. We override this for app-landing so the host element can scroll. */
+app-landing,
+app-privacy,
+app-terms,
+app-archive {
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  contain: none !important;
+  height: 100%;
+  display: block;
+}
+
+
 
 /* Simple Modal Styles */
 .cyberpunk-modal {

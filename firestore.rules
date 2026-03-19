@@ -46,6 +46,12 @@ service cloud.firestore {
       allow update: if true;
     }
 
+    // Allow whitepaper requests (Sovereign Lead capture)
+    match /whitepaper_requests/{requestId} {
+      allow create: if true;
+      allow read, update, delete: if false; // Only admin can read/manage
+    }
+
     // Allow Sovereign Portal collections
     match /AuditLogs/{logId} {
       allow read: if request.auth != null;

@@ -1,3215 +1,1380 @@
-import {
-  Component,
-  OnInit,
-  ViewChild,
-  AfterViewInit,
-  ElementRef,
-} from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit, OnDestroy, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {
-  FormBuilder,
-  FormGroup,
-  Validators,
-  ReactiveFormsModule,
-} from '@angular/forms';
-import {
-  IonContent,
-  IonCard,
-  IonCardHeader,
-  IonCardTitle,
-  IonCardContent,
-  IonButton,
-  IonBadge,
-  IonHeader,
-  IonToolbar,
-  IonButtons,
-  IonTitle,
-  IonIcon,
-  IonMenu,
-  IonMenuButton,
-  ModalController,
-  NavController,
-} from '@ionic/angular/standalone';
-import { addIcons } from 'ionicons';
-import { menu, close } from 'ionicons/icons';
-import { EmailCollectionService } from '../../core/services/email-collection.service';
-import { HadiyaBusinessSignupService } from '../../core/services/hadia-business-signup.service';
-import { AnalyticsService } from '../../core/services/analytics.service';
-import { SeoService } from '../../core/services/seo.service';
-import { PillarsSectionComponent } from './components/pillars-section.component';
-import { LocalIdentitySectionComponent } from './components/local-identity-section.component';
+import { Router } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { Firestore, collection, addDoc, serverTimestamp } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-landing',
+  standalone: true,
+  imports: [CommonModule, FormsModule],
   template: `
-    <div class="global-background">
-      <img
-        src="assets/hero/hero-taajirah-3.jpg"
-        alt=""
-        class="global-bg-img"
-      />
-      <div class="global-overlay"></div>
-    </div>
+    <div class="hub-root">
 
-    <ion-header class="ion-no-border">
-      <ion-toolbar>
-        <ion-title>
-          <div class="logo-container">
-            <img
-              src="assets/branding/taajirah-logo.jpeg"
-              alt="Taajirah Logo"
-              class="logo"
-              loading="lazy"
-              decoding="async"
-            />
-            <h1 class="brand">Taajirah Systems</h1>
-            <div *ngIf="isOffline" class="offline-indicator">
-              <ion-badge color="warning">Offline</ion-badge>
+      <!-- ═══════════════════ NAVBAR ═══════════════════ -->
+      <nav class="navbar" [class.scrolled]="isScrolled">
+        <div class="nav-inner">
+          <div class="nav-brand">
+            <img src="assets/branding/taajirah-logo.png" alt="Taajirah Systems" class="brand-logo">
+            <div class="brand-text">
+              <span class="brand-name">TAAJIRAH SYSTEMS</span>
+              <span class="brand-sub">Sovereign Infrastructure Architects</span>
             </div>
-          </div></ion-title
-        >
-
-        <!-- Desktop Navigation -->
-        <ion-buttons slot="end" class="desktop-nav">
-          <ion-button fill="clear" size="small" (click)="router.navigate([''])">Home</ion-button>
-          <ion-button fill="clear" size="small" (click)="navigateToHadiya()">Hadiya</ion-button>
-          <ion-button fill="clear" size="small" (click)="scrollToSection('ai-tools')">AI Tools</ion-button>
-          <ion-button fill="clear" size="small" (click)="scrollToSection('mobility')">Mobility</ion-button>
-          <ion-button fill="clear" size="small" (click)="scrollToSection('quranic-arabic')">Quranic Arabic</ion-button>
-          <ion-button fill="clear" size="small" (click)="router.navigate(['contact'])">Contact</ion-button>
-        </ion-buttons>
-
-        <!-- Mobile Menu Button -->
-        <ion-buttons slot="end" class="mobile-menu-btn">
-          <ion-button fill="clear" (click)="toggleMobileMenu()" aria-label="Toggle mobile menu">
-            <ion-icon [name]="isMobileMenuOpen ? 'close' : 'menu'" slot="icon-only" aria-hidden="true"></ion-icon>
-          </ion-button>
-        </ion-buttons>
-      </ion-toolbar>
-
-      <!-- Mobile Menu Panel -->
-      <div class="mobile-menu" [class.open]="isMobileMenuOpen">
-        <div class="mobile-menu-content">
-          <ion-button fill="clear" expand="block" (click)="router.navigate(['']); closeMobileMenu()">
-            Home
-          </ion-button>
-          <ion-button fill="clear" expand="block" (click)="navigateToHadiya(); closeMobileMenu()">
-            Hadiya
-          </ion-button>
-          <ion-button fill="clear" expand="block" (click)="scrollToSection('ai-tools')">
-            AI Tools
-          </ion-button>
-          <ion-button fill="clear" expand="block" (click)="scrollToSection('mobility')">
-            Mobility
-          </ion-button>
-          <ion-button fill="clear" expand="block" (click)="scrollToSection('quranic-arabic')">
-            Quranic Arabic
-          </ion-button>
-          <ion-button fill="clear" expand="block" (click)="router.navigate(['contact']); closeMobileMenu()">
-            Contact
-          </ion-button>
+          </div>
+          <div class="nav-links desktop-nav">
+            <button class="nav-link" (click)="scroll('barrier')">Security</button>
+            <button class="nav-link" (click)="scroll('auditor')">Auditor</button>
+            <button class="nav-link" (click)="scroll('certificate')">Certificates</button>
+            <button class="nav-link" (click)="scroll('popia')">POPIA</button>
+            <button class="nav-cta" (click)="scroll('cta')">Request White Paper</button>
+          </div>
+          <button class="hamburger" (click)="toggleMenu()" [class.open]="menuOpen" aria-label="Toggle menu">
+            <span></span><span></span><span></span>
+          </button>
         </div>
-      </div>
-    </ion-header>
+        <div class="mobile-menu" [class.open]="menuOpen">
+          <button (click)="scroll('barrier')">Security</button>
+          <button (click)="scroll('auditor')">Auditor</button>
+          <button (click)="scroll('certificate')">Certificates</button>
+          <button (click)="scroll('popia')">POPIA</button>
+          <button (click)="scroll('cta')" class="mobile-cta">Request White Paper</button>
+        </div>
+      </nav>
 
-    <ion-content #content [fullscreen]="true">
-      <!-- Hero Section -->
-      <section class="hero" style="min-height:60vh;padding:2.5rem 1.5rem 2rem">
-        <div class="hero-content fade-in">
-          <h1 class="hero-title">South Africa's Intelligence Native Enterprise</h1>
+      <!-- ═══════════════════ HERO ═══════════════════ -->
+      <section class="hero">
+        <div class="hero-grid-bg"></div>
+        <div class="hero-glow"></div>
+        <div class="hero-content">
+          <div class="hero-badge">
+            <span class="badge-dot"></span>
+            NVIDIA NemoClaw · OpenClaw · macOS Seatbelt
+          </div>
+          <div class="prod-badge-strip">
+            <span class="prod-badge">🟢 PRODUCTION RELEASE</span>
+            <span class="prod-version">Hub_v2.5_Master.dmg · 17.5 GB</span>
+          </div>
+          <h1 class="hero-headline">
+            Sovereign AI.<br>
+            <span class="accent-green">Hardware-Level Privacy.</span>
+          </h1>
           <p class="hero-sub">
-            We build tools, teach skills, and help businesses adopt AI with confidence.
+            The first kernel-hardened AI system for South African Law &amp; Finance.<br>
+            <strong>100% Local. No Cloud. No Leaks.</strong>
           </p>
-          <div class="cta-row">
-            <ion-button class="cta-primary" (click)="router.navigate(['contact'])">
-              Work With Us
-            </ion-button>
-            <ion-button fill="outline" (click)="scrollToSection('ai-tools')">
-              Explore AI Tools
-            </ion-button>
+          <div class="sha-seal">
+            <span class="sha-label">SHA-256 INTEGRITY SEAL</span>
+            <span class="sha-hash">62391ad564fb190d75acdb6141932f5d26c09f1f67f51749f879d36014911cd0</span>
+          </div>
+
+          <!-- SVG SECURITY ARCHITECTURE DIAGRAM -->
+          <div class="arch-diagram-wrap">
+            <svg viewBox="0 0 640 260" xmlns="http://www.w3.org/2000/svg" class="arch-svg">
+              <defs>
+                <filter id="green-glow" x="-20%" y="-20%" width="140%" height="140%">
+                  <feGaussianBlur stdDeviation="4" result="blur"/>
+                  <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                </filter>
+                <filter id="red-glow" x="-20%" y="-20%" width="140%" height="140%">
+                  <feGaussianBlur stdDeviation="3" result="blur"/>
+                  <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                </filter>
+              </defs>
+
+              <!-- Kernel Seatbelt border -->
+              <rect x="185" y="50" width="270" height="160" rx="14"
+                    fill="rgba(0,255,136,0.04)" stroke="#00ff88" stroke-width="1.8"
+                    stroke-dasharray="7 3" filter="url(#green-glow)"/>
+              <text x="320" y="38" text-anchor="middle" fill="#00ff88"
+                    font-family="JetBrains Mono, monospace" font-size="9.5" letter-spacing="1.8" font-weight="600">
+                KERNEL SEATBELT / SANDBOX-EXEC
+              </text>
+
+              <!-- Hub Core box -->
+              <rect x="232" y="82" width="176" height="96" rx="10"
+                    fill="#060f1a" stroke="#00ff88" stroke-width="1.5" filter="url(#green-glow)"/>
+              <text x="320" y="116" text-anchor="middle" fill="#00ff88"
+                    font-family="JetBrains Mono, monospace" font-size="12.5" font-weight="800" letter-spacing="1">
+                THE HUB V2.5
+              </text>
+              <text x="320" y="133" text-anchor="middle" fill="#00ff88"
+                    font-family="JetBrains Mono, monospace" font-size="12.5" font-weight="800" letter-spacing="1">
+                CORE
+              </text>
+              <text x="320" y="154" text-anchor="middle" fill="#3a6a7a"
+                    font-family="JetBrains Mono, monospace" font-size="8">
+                NemoClaw • OpenClaw • Seatbelt
+              </text>
+
+              <!-- 10Gb Ethernet line from left -->
+              <rect x="8" y="116" width="68" height="28" rx="5"
+                    fill="#060f1a" stroke="#00bfff" stroke-width="1.2"/>
+              <text x="42" y="126" text-anchor="middle" fill="#00bfff"
+                    font-family="JetBrains Mono, monospace" font-size="7" font-weight="700">WIRED</text>
+              <text x="42" y="137" text-anchor="middle" fill="#00bfff"
+                    font-family="JetBrains Mono, monospace" font-size="7">INPUT</text>
+              <line x1="76" y1="130" x2="230" y2="130" stroke="#00bfff" stroke-width="2"/>
+              <polygon points="230,124 230,136 244,130" fill="#00bfff"/>
+              <text x="150" y="120" text-anchor="middle" fill="#00bfff"
+                    font-family="JetBrains Mono, monospace" font-size="9" font-weight="600">10Gb ETHERNET</text>
+
+              <!-- Blocked cloud connection line (red dashed) -->
+              <line x1="456" y1="130" x2="564" y2="130" stroke="#ff4a4a" stroke-width="2"
+                    stroke-dasharray="5 3"/>
+
+              <!-- X circle block -->
+              <circle cx="502" cy="130" r="16" fill="#0a0505" stroke="#ff4a4a" stroke-width="1.8"
+                      filter="url(#red-glow)"/>
+              <line x1="493" y1="121" x2="511" y2="139" stroke="#ff4a4a" stroke-width="2.5"/>
+              <line x1="511" y1="121" x2="493" y2="139" stroke="#ff4a4a" stroke-width="2.5"/>
+
+              <!-- Cloud shape (right, blocked) -->
+              <ellipse cx="596" cy="138" rx="40" ry="24" fill="#120505" stroke="#ff4a4a" stroke-width="1.2"/>
+              <ellipse cx="578" cy="124" rx="20" ry="15" fill="#120505" stroke="#ff4a4a" stroke-width="1.2"/>
+              <ellipse cx="608" cy="121" rx="18" ry="14" fill="#120505" stroke="#ff4a4a" stroke-width="1.2"/>
+              <text x="596" y="142" text-anchor="middle" fill="#ff4a4a"
+                    font-family="JetBrains Mono, monospace" font-size="8.5" font-weight="700">CLOUD AI</text>
+              <text x="596" y="155" text-anchor="middle" fill="#ff4a4a"
+                    font-family="JetBrains Mono, monospace" font-size="7.5">BLOCKED</text>
+
+              <!-- Bottom label -->
+              <text x="320" y="240" text-anchor="middle" fill="#2a4a5a"
+                    font-family="JetBrains Mono, monospace" font-size="8" letter-spacing="1.5">
+                SOVEREIGN ISOLATION ARCHITECTURE — HUB V2.5 PRODUCTION
+              </text>
+            </svg>
+          </div>
+
+          <div class="hero-ctas">
+            <button class="btn-primary" (click)="scroll('cta')">Request Technical White Paper</button>
+            <button class="btn-secondary" (click)="scroll('demo')">Book a 15-Min Demo · Joburg</button>
           </div>
         </div>
       </section>
 
-      <!-- Compact About Strip -->
-      <div class="about-strip">
-        <div class="about-person">
-          <span class="about-emoji">👨🏽‍💻</span>
-          <span><strong>Founder &amp; Lead Consultant</strong> — South African software engineer, AI systems &amp; applied workflows.</span>
-        </div>
-        <div class="about-divider"></div>
-        <div class="about-person">
-          <span class="about-emoji">🤖</span>
-          <span><strong>Tājirah — AI CEO</strong> — Strategic AI planning, workflow automation &amp; client solutions.</span>
+      <!-- ═══════════════════ TRUST BAR ═══════════════════ -->
+      <div class="trust-bar">
+        <div class="trust-inner">
+          <div class="trust-badge" *ngFor="let b of trustBadges">
+            <span class="trust-icon">{{ b.icon }}</span>
+            <span>{{ b.label }}</span>
+          </div>
         </div>
       </div>
 
-      <!-- What We Offer: Tabbed Section -->
-      <section class="offers-section" id="ai-tools">
-        <p class="offers-tagline">We build AI tools, move people, and teach skills.</p>
-        <div class="tab-nav" role="tablist">
-          <button class="tab-btn" [class.active]="activeTab === 'ai'" (click)="setTab('ai')" role="tab">🛠 AI Tools</button>
-          <button class="tab-btn" [class.active]="activeTab === 'mobility'" (click)="setTab('mobility')" role="tab">🚐 Mobility</button>
-          <button class="tab-btn" [class.active]="activeTab === 'learn'" (click)="setTab('learn')" role="tab">📚 Learn</button>
-        </div>
-
-        <!-- AI Tools Tab -->
-        <div class="tab-content" [class.active]="activeTab === 'ai'" role="tabpanel">
-          <div class="cards-grid">
-            <!-- Hadiya (LIVE - first card) -->
-            <ion-card class="product-card hadiya-card" tabindex="0">
-              <div class="accent-line hadiya-accent"></div>
-              <ion-badge class="live-badge" color="success">LIVE</ion-badge>
-              <ion-card-header>
-                <ion-card-title><span class="card-emoji">🎁</span> Hadiya Gift AI</ion-card-title>
-                <div class="sub-line">AI-powered gifting · SA vendors</div>
-              </ion-card-header>
-              <ion-card-content>
-                <div class="hadiya-cta-buttons">
-                  <ion-button class="hadiya-primary-btn" size="small" (click)="navigateToHadiya()">Open Hadiya</ion-button>
-                  <ion-button fill="outline" class="hadiya-vendor-btn" size="small" (click)="navigateToVendorOnboarding()">Vendor Onboarding</ion-button>
-                </div>
-              </ion-card-content>
-            </ion-card>
-
-            <!-- VisionaryClones -->
-            <ion-card class="product-card visionary-card" (click)="navigateToVisionaryClones()" tabindex="0">
-              <div class="accent-line visionary-accent"></div>
-              <ion-card-header>
-                <ion-card-title><span class="card-emoji">🧬</span> VisionaryClones</ion-card-title>
-                <div class="sub-line">AI Persona &amp; Content Engine</div>
-              </ion-card-header>
-              <ion-card-content>
-                <p class="card-description">Cohesive, persona-driven social media content with Identity Lock.</p>
-                <div class="cta-container"><div class="cta">Create Bundle</div></div>
-              </ion-card-content>
-            </ion-card>
-
-            <!-- BananaBoard -->
-            <ion-card class="product-card bananaboard-card" (click)="navigateToBananaBoard()" tabindex="0">
-              <div class="accent-line video-accent"></div>
-              <ion-card-header>
-                <ion-card-title><span class="card-emoji">🍌</span> BananaBoard</ion-card-title>
-                <div class="sub-line">Cinematic Storyboards</div>
-              </ion-card-header>
-              <ion-card-content>
-                <p class="card-description">Turn raw concepts into Veo3-ready storyboards &amp; scripts.</p>
-                <div class="cta-container"><div class="cta">Try Free</div></div>
-              </ion-card-content>
-            </ion-card>
-
-            <!-- 82ndrop -->
-            <ion-card class="product-card video-card" (click)="navigateTo82ndrop()" tabindex="0">
-              <div class="accent-line video-accent"></div>
-              <ion-card-header>
-                <ion-card-title><span class="card-emoji">🎬</span> 82ndrop</ion-card-title>
-                <div class="sub-line">AI Video Creation</div>
-              </ion-card-header>
-              <ion-card-content>
-                <p class="card-description">Viral 8-second AI videos with advanced Veo3 technology.</p>
-                <div class="cta-container"><div class="cta">Create Videos</div></div>
-              </ion-card-content>
-            </ion-card>
-
-            <!-- 7pace MCP -->
-            <ion-card class="product-card mcp-card" (click)="navigateToSmotaryMCP()" tabindex="0">
-              <div class="accent-line mcp-accent"></div>
-              <ion-card-header>
-                <ion-card-title><span class="card-emoji">⏰</span> 7pace MCP</ion-card-title>
-                <div class="sub-line">AI time tracking · Azure DevOps · 87% faster</div>
-              </ion-card-header>
-              <ion-card-content>
-                <div class="cta-container"><div class="cta">Visit Website</div></div>
-              </ion-card-content>
-            </ion-card>
-
-            <!-- DataCommons MCP -->
-            <ion-card class="product-card datacommons-card" (click)="navigateToDataCommonsMCP()" tabindex="0">
-              <div class="accent-line datacommons-accent"></div>
-              <ion-card-header>
-                <ion-card-title><span class="card-emoji">📊</span> DataCommons MCP</ion-card-title>
-                <div class="sub-line">Global datasets · AI-powered insights</div>
-              </ion-card-header>
-              <ion-card-content>
-                <div class="cta-container"><div class="cta">Explore Data</div></div>
-              </ion-card-content>
-            </ion-card>
-
-            <!-- Subagents -->
-            <ion-card class="product-card subagents-card" (click)="navigateToSubagents()" tabindex="0">
-              <div class="accent-line subagents-accent"></div>
-              <ion-card-header>
-                <ion-card-title><span class="card-emoji">🤖</span> Subagents</ion-card-title>
-                <div class="sub-line">51+ specialised Claude AI agents</div>
-              </ion-card-header>
-              <ion-card-content>
-                <div class="cta-container"><div class="cta">Browse</div></div>
-              </ion-card-content>
-            </ion-card>
-          </div>
-        </div>
-
-        <!-- Mobility Tab -->
-        <div class="tab-content" [class.active]="activeTab === 'mobility'" role="tabpanel" id="mobility">
-          <div class="cards-grid">
-            <ion-card class="product-card vehicle-card" (click)="navigateToMobility()" tabindex="0">
-              <div class="accent-line vehicle-accent"></div>
-              <ion-card-header>
-                <ion-card-title><span class="card-emoji">🚐</span> Taajirah Mobility</ion-card-title>
-                <div class="sub-line">Private Trips &amp; Transfers</div>
-              </ion-card-header>
-              <ion-card-content>
-                <p class="card-description">Licensed private transport · Hyundai Staria · Airport runs, events, day tours · quote on request.</p>
-                <div class="tags-container">
-                  <span class="tag">Airport Transfers</span>
-                  <span class="tag">Events</span>
-                  <span class="tag">Up to 8 pax</span>
-                </div>
-                <div class="cta-container"><div class="cta">Book a Trip</div></div>
-              </ion-card-content>
-            </ion-card>
-
-            <ion-card class="product-card supply-card" (click)="navigateToSupply()" tabindex="0">
-              <div class="accent-line supply-accent"></div>
-              <ion-card-header>
-                <ion-card-title><span class="card-emoji">🚚</span> Taajirah Supply</ion-card-title>
-                <div class="sub-line">Same-day business essentials delivery</div>
-              </ion-card-header>
-              <ion-card-content>
-                <div class="cta-container"><div class="cta">Request Delivery</div></div>
-              </ion-card-content>
-            </ion-card>
-
-            <ion-card class="product-card tours-card" (click)="navigateToShanalTours()" tabindex="0">
-              <div class="accent-line tours-accent"></div>
-              <ion-card-header>
-                <ion-card-title><span class="card-emoji">🏝️</span> Shanal Tours</ion-card-title>
-                <div class="sub-line">Mauritius · car rentals, tours &amp; transfers</div>
-              </ion-card-header>
-              <ion-card-content>
-                <div class="cta-container"><div class="cta">View Project</div></div>
-              </ion-card-content>
-            </ion-card>
-          </div>
-        </div>
-
-        <!-- Learn Tab -->
-        <div class="tab-content" [class.active]="activeTab === 'learn'" role="tabpanel" id="quranic-arabic">
-          <div class="cards-grid">
-            <ion-card class="product-card course-card" (click)="navigateToCourse()" tabindex="0">
-              <div class="accent-line course-accent"></div>
-              <ion-badge class="free-badge">FREE</ion-badge>
-              <ion-card-header>
-                <ion-card-title><span class="card-emoji">📚</span> Quraanic Arabic</ion-card-title>
-                <div class="sub-line">AI-Powered Learning</div>
-              </ion-card-header>
-              <ion-card-content>
-                <p class="card-description">Master Quranic Arabic with AI assistance. Interactive learning with instant feedback.</p>
-                <div class="cta-container"><div class="cta">Start Learning</div></div>
-              </ion-card-content>
-            </ion-card>
+      <!-- ═══════ LIVE VERIFICATION ═══════ -->
+      <section class="section verify-section" id="verify">
+        <div class="section-inner">
+          <div class="section-label">LIVE KERNEL VERIFICATION</div>
+          <h2 class="section-title">Physical Proof.<br><span class="accent-green">The Kernel Doesn't Lie.</span></h2>
+          <p class="section-sub">
+            Below is a real terminal output from our security test suite. The macOS kernel physically
+            terminates any AI agent that attempts a network call. We don’t trust software firewalls— we trust the kernel.
+          </p>
+          <div class="live-terminal">
+            <div class="lt-bar">
+              <div class="lt-dots"><span></span><span></span><span></span></div>
+              <span class="lt-title">Hub_Vault/Security/kernel_leak_test.py — kernel&#64;sovereign</span>
+              <span class="lt-badge">LIVE OUTPUT</span>
+            </div>
+            <div class="lt-body">
+              <div class="lt-line dim">
+                <span class="lt-p">%</span>
+                <span>/opt/homebrew/bin/python3 Hub_Vault/Security/kernel_leak_test.py</span>
+              </div>
+              <div class="lt-line">
+                <span class="lt-status attempt">[*]</span>
+                <span>Attempting to outrun the proxy with a kernel-level request...</span>
+              </div>
+              <div class="lt-line highlight">
+                <span class="lt-status pass">[PASS]</span>
+                <span>Kernel Blocked Request: <strong>SIGABRT (Signal 6) — Abort Trap</strong></span>
+              </div>
+              <div class="lt-line">
+                <span class="lt-status pass">[PASS]</span>
+                <span>sandbox-exec: deny network* — process terminated by kernel</span>
+              </div>
+              <div class="lt-line">
+                <span class="lt-status pass">[PASS]</span>
+                <span>Zero bytes transmitted. Zero external connections established.</span>
+              </div>
+              <div class="lt-cursor-line">
+                <span class="lt-p">%</span><span class="t-cursor">█</span>
+              </div>
+            </div>
+            <div class="lt-caption">
+              🛡️ Physical Proof: Our agents are terminated by the macOS kernel if they attempt to breach the air-gap.
+              We don’t trust software firewalls; we trust the kernel.
+            </div>
           </div>
         </div>
       </section>
 
-      <!-- Footer -->
-      <footer class="site-footer with-bg">
-        <div class="footer-bg-container">
-          <img
-            src="assets/hero/hero-branded.jpg"
-            alt=""
-            class="footer-bg"
-            loading="lazy"
-          />
-          <div class="footer-overlay"></div>
+      <!-- ═══════ HARDENED SPECS ═══════ -->
+      <section class="section specs-section" id="specs">
+        <div class="section-inner">
+          <div class="section-label">HARDENED SPECIFICATIONS</div>
+          <h2 class="section-title">Built Different.<br><span class="accent-green">At the Hardware Level.</span></h2>
+          <div class="specs-grid">
+            <div class="spec-card">
+              <div class="spec-icon">💻</div>
+              <div class="spec-content">
+                <div class="spec-label">COMPUTE</div>
+                <div class="spec-value">M-Series Apple Silicon</div>
+                <div class="spec-detail">Optimized for 14B+ parameter local models. On-device inference only.</div>
+              </div>
+            </div>
+            <div class="spec-card">
+              <div class="spec-icon">🔒</div>
+              <div class="spec-content">
+                <div class="spec-label">ISOLATION</div>
+                <div class="spec-value">macOS Seatbelt (sandbox-exec)</div>
+                <div class="spec-detail">Kernel-level hardening. deny network* enforced at syscall level.</div>
+              </div>
+            </div>
+            <div class="spec-card">
+              <div class="spec-icon">🔌</div>
+              <div class="spec-content">
+                <div class="spec-label">NETWORK</div>
+                <div class="spec-value">10Gb Wired Egress Only</div>
+                <div class="spec-detail">Physical Wi-Fi &amp; Bluetooth hardware removed. No wireless attack surface.</div>
+              </div>
+            </div>
+            <div class="spec-card spec-card-full">
+              <div class="spec-icon">🔏</div>
+              <div class="spec-content">
+                <div class="spec-label">INTEGRITY SEAL</div>
+                <div class="spec-value">SHA-256 Checksum Verified</div>
+                <div class="spec-hash">62391ad564fb190d75acdb6141932f5d26c09f1f67f51749f879d36014911cd0</div>
+                <div class="spec-detail">Hub_v2.5_Master.dmg · 17.5 GB · Kernel-hardened production image</div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="footer-content">
-          <p class="footer-tagline">Taajirah Systems — Human • Intelligent • Moving</p>
-          <p class="footer-description">AI-led vision. Human-delivered expertise. Rooted in South Africa, Cape Malay heritage &amp; human-centred design.</p>
-          
-          <div class="footer-links">
-            <div class="footer-section">
-              <h4>Navigation</h4>
-              <a (click)="router.navigate([''])">Home</a>
-              <a (click)="navigateToHadiya()">Hadiya</a>
-              <a (click)="scrollToSection('ai-tools')">AI Tools</a>
-              <a (click)="scrollToSection('mobility')">Mobility</a>
-              <a (click)="scrollToSection('quranic-arabic')">Quranic Arabic</a>
-              <a (click)="router.navigate(['contact'])">Contact</a>
+      </section>
+
+      <!-- ═══════════════════ THE BARRIER ═══════════════════ -->
+      <section class="section barrier-section" id="barrier">
+        <div class="section-inner">
+          <div class="section-label">THE BARRIER</div>
+          <h2 class="section-title">Cloud AI is a<br><span class="accent-red">Compliance Liability.</span></h2>
+          <p class="section-sub">The Hub draws a hard line. Not a firewall — a Wall.</p>
+
+          <div class="comparison-grid">
+            <!-- Cloud AI -->
+            <div class="compare-card danger-card">
+              <div class="compare-header">
+                <span class="compare-icon">☁️</span>
+                <h3>Cloud AI</h3>
+                <span class="risk-badge">HIGH RISK</span>
+              </div>
+              <ul class="compare-list">
+                <li *ngFor="let r of cloudRisks">
+                  <span class="x-icon">✕</span>
+                  <span>{{ r }}</span>
+                </li>
+              </ul>
             </div>
-            
-            <div class="footer-section">
-              <h4>Products</h4>
-              <a (click)="navigateToHadiya()">Hadiya Gift AI</a>
-              <a (click)="navigateToVisionaryClones()">VisionaryClones</a>
-              <a (click)="navigateToBananaBoard()">BananaBoard</a>
-              <a (click)="navigateTo82ndrop()">82ndrop</a>
+
+            <!-- VS Divider -->
+            <div class="vs-divider">
+              <div class="vs-line"></div>
+              <span class="vs-label">VS</span>
+              <div class="vs-line"></div>
             </div>
-            
-            <div class="footer-section">
-              <h4>Resources</h4>
-              <a (click)="navigateToVendorOnboarding()">Vendor Onboarding</a>
-              <a (click)="router.navigate(['mcp'])">MCP Showcase</a>
-              <a href="https://github.com/turnono" target="_blank">GitHub</a>
-            </div>
-            
-            <div class="footer-section">
-              <h4>Legal</h4>
-              <a (click)="router.navigate(['privacy'])">Privacy Policy</a>
-              <a (click)="router.navigate(['terms'])">Terms</a>
+
+            <!-- The Hub -->
+            <div class="compare-card safe-card">
+              <div class="compare-header">
+                <span class="compare-icon">⬡</span>
+                <h3>The Hub v2.5</h3>
+                <span class="safe-badge">SOVEREIGN</span>
+              </div>
+              <ul class="compare-list">
+                <li *ngFor="let s of hubStrengths">
+                  <span class="check-icon">✓</span>
+                  <span>{{ s }}</span>
+                </li>
+              </ul>
             </div>
           </div>
-          
-          <p class="footer-contact">
-            Get in touch: <a class="email-link" href="mailto:taajirah0@gmail.com">✉️ taajirah0&#64;gmail.com</a>
+
+          <!-- Abort Trap Callout -->
+          <div class="abort-callout">
+            <div class="abort-header">
+              <span class="abort-badge">[CRITICAL]</span>
+              <span class="abort-title">The Kernel Abort Trap — Signal 6</span>
+            </div>
+            <p class="abort-desc">
+              The Hub utilizes the <strong>Abort Trap: 6</strong> error as a formal technical proof of isolation.
+              In this architecture, an Abort Trap: 6 is not a failure; it is the <strong>physical evidence of the kernel</strong> successfully
+              terminating a process that attempted to violate its isolation boundaries. This serves as the "Black Box"
+              flight recorder equivalent for AI, proving the system is physically incapable of exfiltrating data.
+            </p>
+            <div class="abort-code">
+              <pre><code>(version 1)
+(deny default)
+(deny network*)         ; ← ALL network syscalls blocked at kernel level
+(allow file-read* (subpath "/private/tmp/hub"))
+(allow process-exec (literal "/usr/bin/python3"))
+; Violation → kernel raises SIGABRT (Signal 6) → [CRITICAL] Abort Trap ✓
+; Build: Hub_v2.5_Master.dmg (17.5 GB) — kernel-hardened production image</code></pre>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════ OFFLINE AUDITOR ═══════════════════ -->
+      <section class="section auditor-section" id="auditor">
+        <div class="section-inner">
+          <div class="section-label">OFFLINE AUDITOR SKILL</div>
+          <h2 class="section-title">Automated Reconciliation.<br><span class="accent-green">Zero External Calls.</span></h2>
+          <p class="section-sub">
+            The Hub's <strong>ZeroClaw Lifecycle</strong> (Spawn → Execute → Self-Destruct) ensures that sensitive 
+            reconciliation tasks are handled in a physically isolated ephemeral vault. No persistent logic remains.
           </p>
-          
-          <div class="footer-bottom">
-            <p>&copy; {{ currentYear }} Taajirah Systems. All rights reserved.</p>
+
+          <div class="flow-diagram">
+            <div class="flow-step" *ngFor="let step of auditFlow; let i = index">
+              <div class="flow-node">
+                <span class="flow-icon">{{ step.icon }}</span>
+                <span class="flow-label">{{ step.label }}</span>
+                <span class="flow-sub">{{ step.sub }}</span>
+              </div>
+              <div class="flow-arrow" *ngIf="i < auditFlow.length - 1">→</div>
+            </div>
           </div>
+
+          <div class="auditor-features">
+            <div class="aud-feature" *ngFor="let f of auditorFeatures">
+              <div class="aud-icon">{{ f.icon }}</div>
+              <div class="aud-text">
+                <h4>{{ f.title }}</h4>
+                <p>{{ f.desc }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════ AUDIT VERDICT CERTIFICATE ═══════════════════ -->
+      <section class="section cert-section" id="certificate">
+        <div class="section-inner cert-inner">
+          <div>
+            <div class="section-label">AUDIT VERDICT CERTIFICATE</div>
+            <h2 class="section-title">Primary Audit Document.<br><span class="accent-green">Cryptographically Sealed.</span></h2>
+            <p class="section-sub">
+              Every audit produces a legally formatted PDF report accepted by <strong>SARS, FSCA, IRBA,
+              and the Law Society of South Africa</strong>. The system generates an automated 
+              <strong>Weekly Sovereignty Report</strong> detailing blocked leak attempts and verified tasks, 
+              satisfying the most stringent regulatory requirements through SHA-256 Integrity Seals.
+            </p>
+            <ul class="cert-points">
+              <li *ngFor="let p of certPoints">
+                <span class="cert-check">✓</span> {{ p }}
+              </li>
+            </ul>
+          </div>
+
+          <!-- Certificate Card -->
+          <div class="cert-card">
+            <div class="cert-header">
+              <span class="cert-logo">⬡</span>
+              <div>
+                <div class="cert-title">AUDIT VERDICT CERTIFICATE</div>
+                <div class="cert-subtitle">Taajirah Systems · Hub v2.5</div>
+              </div>
+              <span class="cert-status">PASSED</span>
+            </div>
+            <div class="cert-body">
+              <div class="cert-row" *ngFor="let row of certRows">
+                <span class="cert-key">{{ row.key }}</span>
+                <span class="cert-val" [class.mono]="row.mono">{{ row.val }}</span>
+              </div>
+            </div>
+            <div class="cert-seal">
+              <div class="seal-line">
+                <span class="seal-label">SHA-256 INTEGRITY SEAL</span>
+                <span class="seal-hash">62391ad564fb190d75acdb6141932f5d26c09f1f67f51749f879d36014911cd0</span>
+              </div>
+              <div class="seal-line">
+                <span class="seal-label">SOVEREIGNTY SIGNATURE</span>
+                <span class="seal-hash">kernel&#64;sandbox · SIGABRT-wall · VERIFIED ✓</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════ POPIA ═══════════════════ -->
+      <section class="section popia-section" id="popia">
+        <div class="section-inner popia-inner">
+          <div class="popia-shield">
+            <div class="shield-icon">🛡</div>
+            <div class="shield-text">POPIA<br>COMPLIANT</div>
+          </div>
+          <div class="popia-content">
+            <div class="section-label">POPIA COMPLIANCE</div>
+            <h2 class="section-title">100% Local Data Residency.<br><span class="accent-green">Guaranteed.</span></h2>
+            <p class="section-sub">
+              Under POPIA, client data processed by a third-party cloud AI constitutes a data transfer
+              requiring explicit consent and a data processing agreement. The Hub eliminates this risk
+              entirely — data never leaves your physical premises.
+            </p>
+            <div class="popia-stats">
+              <div class="stat" *ngFor="let s of popiaStats">
+                <div class="stat-value">{{ s.value }}</div>
+                <div class="stat-label">{{ s.label }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════ CTA ═══════════════════ -->
+      <section class="section cta-section" id="cta">
+        <div class="cta-grid-bg"></div>
+        <div class="section-inner cta-inner">
+          <div class="section-label">GET STARTED</div>
+          <h2 class="section-title">Ready for Sovereign AI?</h2>
+          <p class="section-sub">
+            Request our full Technical White Paper — or book a live, offline, in-person demo
+            at your premises. No data leaves your building. Ever.
+          </p>
+          <div class="cta-cards">
+            <div class="cta-card primary-cta">
+              <div class="cta-card-icon">📄</div>
+              <h3>Technical Framework</h3>
+              <p>Download the high-level architecture overview, security controls, and Abort Trap implementation details.</p>
+              
+              <!-- Hidden Download Link -->
+              <a #downloadLink href="/Taajirah_Systems_Hub_v2.5_White_Paper.pdf" download="Taajirah_Systems_Hub_v2.5_White_Paper.pdf" style="display: none;"></a>
+
+              <div class="whitepaper-form" *ngIf="!whitepaperSuccess">
+                <input type="text" [(ngModel)]="whitepaperFirm" placeholder="Firm Name (Required)" class="wp-input">
+                <input type="email" [(ngModel)]="whitepaperEmail" placeholder="Email Address (Required)" class="wp-input">
+                <button class="btn-primary full-width" (click)="downloadWhitepaper()" [disabled]="!whitepaperEmail || !whitepaperFirm">
+                  DOWNLOAD SYSTEM FRAMEWORK
+                </button>
+              </div>
+
+              <div class="wp-success" *ngIf="whitepaperSuccess">
+                <strong>✓ White Paper Downloaded.</strong><br>
+                <span class="pulse-text">Verifying Integrity...</span>
+              </div>
+            </div>
+            <div class="cta-card secondary-cta" id="demo">
+              <div class="cta-card-icon">🔒</div>
+              <h3>Book a Sovereignty Demo</h3>
+              <p>Offline · In-Person · Zero-Risk. We bring The Hub to your firm and run a live audit with your own documents.</p>
+              <a href="mailto:taajirah0@gmail.com?subject=Demo%20Request%20%E2%80%94%20The%20Hub%20v2.5&body=I%20would%20like%20to%20book%20a%2015-minute%20in-person%20Sovereignty%20Demo."
+                 class="btn-outline full-width">Book a 15-Minute Sovereignty Demo →</a>
+              <div class="demo-note">
+                <span>📍</span> Offline · In-Person · Zero-Risk
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════ FOOTER ═══════════════════ -->
+      <footer class="site-footer">
+        <div class="footer-inner">
+          <div class="footer-brand">
+            <img src="assets/branding/taajirah-logo.png" alt="Taajirah Systems" class="brand-logo footer-logo">
+            <div>
+              <div class="footer-name">TAAJIRAH SYSTEMS</div>
+              <div class="footer-tagline">Sovereign Infrastructure Architects.</div>
+            </div>
+          </div>
+          <div class="footer-cols">
+            <div class="footer-col">
+              <h4>The Hub v2.5</h4>
+              <button (click)="scroll('barrier')">Security Architecture</button>
+              <button (click)="scroll('auditor')">Offline Auditor</button>
+              <button (click)="scroll('certificate')">Verdict Certificates</button>
+              <button (click)="scroll('popia')">POPIA Compliance</button>
+            </div>
+            <div class="footer-col">
+              <h4>Contact</h4>
+              <a href="mailto:taajirah0@gmail.com">taajirah0&#64;gmail.com</a>
+              <button (click)="scroll('cta', $event)">Request White Paper</button>
+              <button (click)="scroll('demo', $event)">Book a Demo</button>
+            </div>
+            <div class="footer-col">
+              <h4>Legal & Archive</h4>
+              <button (click)="router.navigate(['privacy'])">Privacy Policy</button>
+              <button (click)="router.navigate(['terms'])">Terms of Service</button>
+              <button (click)="router.navigate(['archive'])">Legacy Portfolio</button>
+            </div>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <span>© {{ currentYear }} Taajirah Systems. All rights reserved.</span>
+          <span class="footer-compliance">POPIA Compliant · No Cloud · Kernel Verified</span>
         </div>
       </footer>
-    </ion-content>
+
+    </div><!-- /hub-root -->
   `,
-  styles: [
-    `
-      :host {
-        display: block;
-        height: 100vh;
-        --primary-color: #00ff00;
-        --primary-light: rgba(0, 255, 0, 0.1);
-        --primary-dark: #00cc00;
-        --accent-color: #00ffff;
-        --text-dark: #ffffff;
-        --text-medium: #cccccc;
-        --text-light: #999999;
-        --cyberpunk-glow: rgba(0, 255, 0, 0.3);
-      }
-
-      .global-background {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        z-index: -1;
-        pointer-events: none;
-      }
-
-      .global-bg-img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-      }
-
-      .global-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.75); /* Darken for readability */
-      }
-
-      .hero {
-        position: relative;
-        text-align: center;
-        padding: 4rem 1.5rem 3rem;
-        margin-top: 64px;
-        overflow: hidden;
-        min-height: 80vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        /* No local background */
-      }
-
-
-
-      .hero .hero-content {
-        position: relative;
-        z-index: 1;
-        max-width: 800px;
-        margin: 0 auto;
-      }
-
-      @media screen and (max-width: 767px) {
-        .hero {
-          padding: 1.5rem 1rem 1.25rem 1rem;
-          margin-top: 56px;
-        }
-      }
-
-      .hero-title {
-        font-size: 3rem;
-        font-weight: 700;
-        color: var(--tjr-bronze);
-        margin-bottom: 1rem;
-        line-height: 1.2;
-        text-shadow: 0 0 8px rgba(0, 0, 0, 0.35);
-      }
-
-      @media screen and (max-width: 767px) {
-        .hero-title {
-          font-size: 2rem;
-          margin-bottom: 0.75rem;
-        }
-      }
-
-      @media screen and (max-width: 480px) {
-        .hero-title {
-          font-size: 1.5rem;
-        }
-      }
-
-      .hero-sub {
-        font-size: 1.25rem;
-        color: #e0e0e0;
-        margin-bottom: 1.25rem;
-        opacity: 0.95;
-      }
-
-      @media screen and (max-width: 767px) {
-        .hero-sub {
-          font-size: 0.95rem;
-          margin-bottom: 1rem;
-        }
-      }
-
-      .cta-row {
-        display: flex;
-        justify-content: center;
-        gap: 1rem;
-        flex-wrap: wrap;
-      }
-
-      @media screen and (max-width: 480px) {
-        .cta-row {
-          flex-direction: column;
-          align-items: center;
-          gap: 0.75rem;
-        }
-
-        .cta-row ion-button {
-          width: 100%;
-          max-width: 280px;
-        }
-      }
-
-      .nav-actions {
-        display: flex;
-        gap: 0.5rem;
-        align-items: center;
-        flex-wrap: nowrap;
-        white-space: nowrap;
-        justify-content: flex-end;
-        flex: 1 1 auto;
-      }
-
-      @media screen and (max-width: 767px) {
-        .nav-actions {
-          gap: 0.25rem;
-        }
-
-        .nav-actions ion-button {
-          font-size: 0.8rem;
-          --padding-start: 0.5rem;
-          --padding-end: 0.5rem;
-        }
-      }
-
-      @media screen and (max-width: 480px) {
-        .nav-actions {
-          gap: 0.25rem;
-          overflow-x: auto;
-          -webkit-overflow-scrolling: touch;
-          scrollbar-width: none;
-        }
-        .nav-actions::-webkit-scrollbar {
-          display: none;
-        }
-        .nav-actions ion-button {
-          font-size: 0.72rem;
-          --padding-start: 0.35rem;
-          --padding-end: 0.35rem;
-        }
-      }
-
-      .cta-primary {
-        --background: var(--primary-color);
-        --color: #000;
-      }
-
-      ion-content {
-        --background: transparent;
-        --color: var(--text-dark);
-      }
-
-      ion-header {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        z-index: 10;
-      }
-
-      ion-toolbar {
-        --background: rgba(0, 0, 0, 0.85);
-        --color: var(--text-dark);
-        --border-style: none;
-        border-bottom: 1px solid rgba(0, 255, 0, 0.35);
-        --min-height: 64px; /* Taller to fit all nav items */
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 0.5rem;
-        flex-wrap: nowrap;
-      }
-
-      @media screen and (max-width: 480px) {
-        ion-toolbar {
-          --min-height: 48px;
-        }
-      }
-
-      .logo-container {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        padding: 0.25rem 0.75rem;
-        flex: 0 0 auto;
-      }
-
-      .logo {
-        height: 28px;
-        width: auto;
-      }
-
-      .brand {
-        font-size: 1.3rem;
-        color: var(--primary-dark);
-        margin: 0;
-        font-family: 'Arial', sans-serif;
-        font-weight: 600;
-        letter-spacing: 0.5px;
-      }
-
-      @media screen and (max-width: 480px) {
-        .brand {
-          display: none;
-        }
-      }
-
-      /* Mobile Menu Styles */
-      .mobile-menu-btn {
-        display: none;
-      }
-
-      .desktop-nav {
-        display: flex;
-      }
-
-      @media screen and (max-width: 768px) {
-        .desktop-nav {
-          display: none;
-        }
-
-        .mobile-menu-btn {
-          display: flex;
-        }
-      }
-
-      .mobile-menu {
-        position: fixed;
-        top: 64px;
-        right: 0;
-        width: 250px;
-        height: calc(100vh - 64px);
-        background: rgba(0, 0, 0, 0.95);
-        border-left: 1px solid rgba(0, 255, 0, 0.35);
-        transform: translateX(100%);
-        transition: transform 0.3s ease;
-        z-index: 998;
-        overflow-y: auto;
-      }
-
-      .mobile-menu.open {
-        transform: translateX(0);
-      }
-
-      .mobile-menu-content {
-        padding: 1rem;
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-      }
-
-      .mobile-menu-content ion-button {
-        --color: var(--text-dark);
-        text-align: left;
-        justify-content: flex-start;
-        font-size: 1.1rem;
-      }
-
-      .mobile-menu-content ion-button:hover {
-        --background: rgba(0, 255, 0, 0.1);
-      }
-
-      @media screen and (max-width: 480px) {
-        .mobile-menu {
-          top: 48px;
-          height: calc(100vh - 48px);
-        }
-      }
-
-      .content-container {
-        width: 100%;
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: flex-start;
-        padding: calc(60px + 2rem) 2rem 2rem 2rem;
-        box-sizing: border-box;
-        padding-top: calc(env(safe-area-inset-top, 0px) + 60px + 2rem);
-      }
-
-      /* Center content when there's enough vertical space */
-      @media screen and (min-height: 800px) {
-        .content-container {
-          justify-content: center;
-          padding-top: calc(env(safe-area-inset-top, 0px) + 60px + 1rem);
-        }
-      }
-
-      .site-footer {
-        position: relative;
-        background: transparent;
-        padding: 0;
-        margin: 0;
-        width: 100%;
-      }
-
-      .site-footer.with-bg {
-        overflow: hidden;
-      }
-
-      .footer-bg-container {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 0;
-      }
-
-      .footer-bg {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        opacity: 0.9; /* High opacity to hide global bg lines */
-      }
-
-      .footer-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(to top, rgba(0,0,0,0.95), rgba(0,0,0,0.7));
-      }
-
-      .footer-content {
-        position: relative;
-        z-index: 1;
-        padding: 4rem 2rem 2rem; /* Restore padding here */
-      }
-
-      .intro-section {
-        text-align: center;
-        margin-bottom: 1.5rem;
-        max-width: 500px;
-      }
-
-      .section-title {
-        font-size: 2.5rem;
-        font-weight: 700;
-        color: var(--primary-color);
-        margin-bottom: 1rem;
-        line-height: 1.2;
-        text-shadow: 0 0 20px var(--cyberpunk-glow);
-        font-family: 'Arial', monospace;
-        letter-spacing: 2px;
-      }
-
-      .section-subtitle {
-        font-size: 1.1rem;
-        color: var(--text-medium);
-        margin: 0;
-        line-height: 1.6;
-        text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
-      }
-
-
-      /* === About Strip === */
-      .about-strip {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        max-width: 1200px;
-        margin: 0 auto 0.5rem auto;
-        padding: 0.85rem 1.5rem;
-        background: rgba(0,0,0,0.5);
-        border: 1px solid rgba(192, 125, 62, 0.25);
-        border-radius: 12px;
-        backdrop-filter: blur(10px);
-        flex-wrap: wrap;
-      }
-
-      .about-person {
-        display: flex;
-        align-items: center;
-        gap: 0.6rem;
-        flex: 1;
-        min-width: 200px;
-        color: #e0e0e0;
-        font-size: 0.85rem;
-        line-height: 1.4;
-      }
-
-      .about-person strong {
-        color: var(--tjr-bronze);
-      }
-
-      .about-emoji {
-        font-size: 1.4rem;
-        flex-shrink: 0;
-      }
-
-      .about-divider {
-        width: 1px;
-        height: 40px;
-        background: rgba(192, 125, 62, 0.4);
-        flex-shrink: 0;
-      }
-
-      @media screen and (max-width: 600px) {
-        .about-strip { flex-direction: column; gap: 0.5rem; }
-        .about-divider { width: 80%; height: 1px; }
-      }
-
-      /* === Offers (Tabbed) Section === */
-      .offers-section {
-        max-width: 1200px;
-        width: 100%;
-        margin: 0.75rem auto 1rem auto;
-        padding: 0 1.5rem;
-      }
-
-      .offers-tagline {
-        text-align: center;
-        font-size: 1rem;
-        color: var(--text-medium);
-        margin: 0 0 1rem 0;
-      }
-
-      /* --- Tab Navigation --- */
-      .tab-nav {
-        display: flex;
-        gap: 0.5rem;
-        margin-bottom: 1rem;
-        background: rgba(0,0,0,0.55);
-        border: 1px solid rgba(192,125,62,0.2);
-        border-radius: 10px;
-        padding: 0.35rem;
-      }
-
-      .tab-btn {
-        flex: 1;
-        background: transparent;
-        border: none;
-        color: var(--text-medium);
-        font-size: 0.9rem;
-        font-weight: 500;
-        padding: 0.5rem 0.75rem;
-        border-radius: 7px;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        font-family: inherit;
-        white-space: nowrap;
-      }
-
-      .tab-btn.active {
-        background: rgba(192,125,62,0.18);
-        color: var(--tjr-bronze);
-        border: 1px solid rgba(192,125,62,0.4);
-      }
-
-      .tab-btn:hover:not(.active) {
-        background: rgba(255,255,255,0.06);
-        color: var(--text-dark);
-      }
-
-      /* --- Tab Content --- */
-      .tab-content {
-        display: none;
-      }
-
-      .tab-content.active {
-        display: block;
-        animation: fadeIn 0.25s ease;
-      }
-
-      @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(4px); }
-        to   { opacity: 1; transform: translateY(0); }
-      }
-
-      /* card emoji prefix */
-      .card-emoji {
-        font-size: 1.1rem;
-        margin-right: 0.25rem;
-      }
-
-
-      /* Hadiya-in-grid card */
-      .live-badge {
-        position: absolute;
-        top: 1rem;
-        right: 1rem;
-        font-weight: 600;
-        font-size: 0.85rem;
-      }
-
-      .hadiya-cta-buttons {
-        display: flex;
-        gap: 1rem;
-        margin-top: 1.5rem;
-        flex-wrap: wrap;
-      }
-
-      .hadiya-primary-btn {
-        --background: var(--tjr-bronze);
-        --color: #ffffff;
-        flex: 1;
-        min-width: 150px;
-      }
-
-      .hadiya-vendor-btn {
-        --border-color: var(--tjr-bronze);
-        --color: var(--tjr-bronze);
-        flex: 1;
-        min-width: 150px;
-      }
-
-      @media screen and (max-width: 480px) {
-        .hadiya-cta-buttons {
-          flex-direction: column;
-        }
-
-        .hadiya-primary-btn,
-        .hadiya-vendor-btn {
-          width: 100%;
-        }
-      }
-
-      .products-section {
-        display: block; /* let inner grid control layout */
-        max-width: 1200px;
-        width: 100%;
-        margin: 0.5rem auto;
-        padding: 0 1.5rem;
-      }
-
-      /* Tools/cards grid: variable height cards aligned neatly */
-      .cards-grid {
-        display: grid;
-        gap: 1rem;
-        align-items: start;
-        grid-template-columns: 1fr; /* mobile default */
-      }
-
-      @media screen and (min-width: 640px) {
-        .cards-grid { grid-template-columns: repeat(2, 1fr); }
-      }
-
-      @media screen and (min-width: 1024px) {
-        .cards-grid { grid-template-columns: repeat(3, 1fr); }
-      }
-
-      @media screen and (max-width: 767px) {
-        .products-section { margin: 2rem auto; padding: 0 1rem; }
-      }
-
-      @media screen and (max-width: 480px) {
-        .products-section { margin: 1.5rem auto; padding: 0 0.5rem; }
-      }
-
-      /* Product card styles */
-      .product-card {
-        background: var(--card-bg);
-        border: 1px solid var(--card-border);
-        border-radius: var(--radius-md);
-        box-shadow: var(--shadow-md);
-        backdrop-filter: blur(12px);
-        position: relative;
-        overflow: hidden;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        display: flex;
-        flex-direction: column;
-        color: var(--text-color);
-      }
-
-      /* Allow ion-card to size to content */
-      ion-card {
-        height: auto;
-      }
-
-      @media screen and (max-width: 767px) {
-        .product-card {
-          border-radius: var(--radius-sm);
-          box-shadow: var(--shadow-sm);
-        }
-
-        .product-card ion-card-header {
-          padding: var(--spacing-md) var(--spacing-md) var(--spacing-sm) var(--spacing-md);
-        }
-
-        .product-card ion-card-content {
-          padding: var(--spacing-sm) var(--spacing-md) var(--spacing-md) var(--spacing-md);
-        }
-
-        .product-card ion-card-title {
-          font-size: var(--font-size-lg);
-        }
-
-        .sub-line {
-          font-size: var(--font-size-sm);
-        }
-
-        .cta-container {
-          margin-top: var(--spacing-md);
-          padding-top: var(--spacing-sm);
-        }
-
-        .cta {
-          font-size: var(--font-size-base);
-        }
-      }
-
-      .product-card:hover {
-        transform: translateY(-6px);
-        box-shadow: var(--shadow-lg);
-        border-color: var(--card-border-hover);
-      }
-
-      @media screen and (max-width: 767px) {
-        .product-card:hover {
-          transform: translateY(-4px);
-          box-shadow: var(--shadow-md);
-        }
-      }
-
-      .mcp-card {
-        border-color: rgba(54, 255, 159, 0.4);
-        box-shadow: 0 8px 24px rgba(54, 255, 159, 0.12);
-      }
-
-      .mcp-card:hover {
-        border-color: rgba(54, 255, 159, 0.6);
-        box-shadow: 0 16px 40px rgba(54, 255, 159, 0.2);
-      }
-
-      .video-card {
-        border-color: rgba(0, 149, 255, 0.4);
-        box-shadow: 0 8px 24px rgba(0, 149, 255, 0.12);
-      }
-
-      .video-card:hover {
-        border-color: rgba(0, 149, 255, 0.6);
-        box-shadow: 0 16px 40px rgba(0, 149, 255, 0.2);
-      }
-
-      .subagents-card {
-        border-color: rgba(255, 107, 53, 0.4);
-        box-shadow: 0 8px 24px rgba(255, 107, 53, 0.12);
-      }
-
-      .subagents-card:hover {
-        border-color: rgba(255, 107, 53, 0.6);
-        box-shadow: 0 16px 40px rgba(255, 107, 53, 0.2);
-      }
-
-      .tours-card {
-        border-color: rgba(0, 212, 170, 0.4);
-        box-shadow: 0 8px 24px rgba(0, 212, 170, 0.12);
-      }
-
-      .tours-card:hover {
-        border-color: rgba(0, 212, 170, 0.6);
-        box-shadow: 0 16px 40px rgba(0, 212, 170, 0.2);
-      }
-
-      .datacommons-card {
-        border-color: rgba(138, 43, 226, 0.4);
-        box-shadow: 0 8px 24px rgba(138, 43, 226, 0.12);
-      }
-
-      .datacommons-card:hover {
-        border-color: rgba(138, 43, 226, 0.6);
-        box-shadow: 0 16px 40px rgba(138, 43, 226, 0.2);
-      }
-
-      .hadiya-card {
-        border-color: rgba(255, 107, 157, 0.4);
-        box-shadow: 0 8px 24px rgba(255, 107, 157, 0.12);
-      }
-
-      .hadiya-card:hover {
-        border-color: rgba(255, 107, 157, 0.6);
-        box-shadow: 0 16px 40px rgba(255, 107, 157, 0.2);
-      }
-
-      .visionary-card {
-        border-color: rgba(153, 50, 204, 0.4);
-        box-shadow: 0 8px 24px rgba(153, 50, 204, 0.12);
-      }
-
-      .visionary-card:hover {
-        border-color: rgba(153, 50, 204, 0.6);
-        box-shadow: 0 16px 40px rgba(153, 50, 204, 0.2);
-      }
-
-      .vehicle-card {
-        border-color: rgba(0, 200, 255, 0.4);
-        box-shadow: 0 8px 24px rgba(0, 200, 255, 0.12);
-      }
-
-      .vehicle-card:hover {
-        border-color: rgba(255, 196, 9, 0.5);
-        box-shadow: 0 10px 30px rgba(255, 196, 9, 0.15);
-      }
-
-      .supply-card:hover {
-        border-color: rgba(61, 194, 255, 0.5);
-        box-shadow: 0 10px 30px rgba(61, 194, 255, 0.15);
-      }
-
-      .accent-line {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 3px;
-        background: linear-gradient(90deg, var(--primary-color), #36ff9f);
-      }
-
-      .mcp-accent {
-        background: linear-gradient(90deg, #36ff9f, #00d4ff);
-      }
-
-      .course-accent {
-        background: linear-gradient(90deg, var(--primary-color), #7ed321);
-      }
-
-      .video-accent {
-        background: linear-gradient(90deg, #0095ff, #9013fe);
-      }
-
-      .subagents-accent {
-        background: linear-gradient(90deg, #ff6b35, #ff8c42);
-      }
-
-      .tours-accent {
-        background: linear-gradient(90deg, #00d4aa, #00b894);
-      }
-
-      .datacommons-accent {
-        background: linear-gradient(90deg, #8a2be2, #9370db);
-      }
-
-      .hadiya-accent {
-        background: linear-gradient(90deg, #ff6b9d, #ff8e9b);
-      }
-
-      .visionary-accent {
-        background: linear-gradient(90deg, #9932CC, #FF00FF);
-      }
-
-      .vehicle-card {
-        border-color: rgba(255, 196, 9, 0.4);
-        box-shadow: 0 8px 24px rgba(255, 196, 9, 0.12);
-      }
-
-      .vehicle-card:hover {
-        border-color: rgba(255, 196, 9, 0.6);
-        box-shadow: 0 16px 40px rgba(255, 196, 9, 0.2);
-      }
-
-      .vehicle-accent {
-        background: linear-gradient(90deg, #ffc409, #ff9f0a); /* Warning/Amber */
-      }
-
-      .supply-card {
-        border-color: rgba(61, 194, 255, 0.4);
-        box-shadow: 0 8px 24px rgba(61, 194, 255, 0.12);
-      }
-
-      .supply-card:hover {
-        border-color: rgba(61, 194, 255, 0.6);
-        box-shadow: 0 16px 40px rgba(61, 194, 255, 0.2);
-      }
-
-      .supply-accent {
-        background: linear-gradient(90deg, #3dc2ff, #5260ff); /* Blue/Cyan for logistics */
-      }
-      .product-card ion-card-content {
-        flex: 1 1 auto;
-        display: flex;
-        flex-direction: column;
-      }
-
-      .cta-container {
-        text-align: center;
-        padding-top: 1rem;
-        border-top: 1px solid rgba(0, 255, 157, 0.2);
-        margin-top: auto;
-      }
-
-      .cta {
-        color: #36ff9f;
-        font-weight: 600;
-        font-size: 1.1rem;
-        text-shadow: 0 0 5px rgba(54, 255, 159, 0.3);
-      }
-
-      @media (prefers-reduced-motion: reduce) {
-        .product-card:hover {
-          transform: none;
-          box-shadow: 0 8px 24px rgba(0, 255, 0, 0.12);
-        }
-        .cta {
-          animation: none !important;
-        }
-      }
-
-      .icon-container {
-        position: absolute;
-        top: 1rem;
-        right: 1rem;
-        z-index: 3;
-        background: rgba(0, 0, 0, 0.7);
-        border-radius: 50%;
-        padding: 0.5rem;
-        backdrop-filter: blur(5px);
-      }
-
-      .product-icon {
-        font-size: 1.5rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 2rem;
-        height: 2rem;
-      }
-
-      .card-description {
-        color: #e0e0e0;
-        font-size: 1rem;
-        line-height: 1.55;
-        margin-bottom: 1rem;
-        opacity: 0.95;
-      }
-
-      @media screen and (max-width: 767px) {
-        .icon-container {
-          top: 0.75rem;
-          right: 0.75rem;
-          padding: 0.4rem;
-        }
-
-        .product-icon {
-          font-size: 1.2rem;
-          width: 1.5rem;
-          height: 1.5rem;
-        }
-
-        .card-description {
-          font-size: 0.85rem;
-          margin-bottom: 0.75rem;
-        }
-      }
-
-      .sub-line {
-        color: #d2d2d2;
-        font-size: 1rem;
-        opacity: 0.9;
-      }
-
-      .description {
-        color: #dddddd;
-        line-height: 1.65;
-        margin-bottom: 1rem;
-        font-size: 1rem;
-      }
-
-      /* Mobility Section Styles */
-      .mobility-card {
-        cursor: pointer;
-        overflow: hidden;
-      }
-
-      .mobility-content {
-        display: flex;
-        flex-direction: column;
-      }
-
-      .mobility-image-container {
-        background: rgba(0, 0, 0, 0.3);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 2rem;
-        border-bottom: 1px solid rgba(192, 125, 62, 0.2);
-      }
-
-      .mobility-details {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-      }
-
-      @media screen and (min-width: 768px) {
-        .mobility-content {
-          flex-direction: row;
-          align-items: stretch;
-        }
-
-        .mobility-image-container {
-          width: 40%;
-          border-bottom: none;
-          border-right: 1px solid rgba(192, 125, 62, 0.2);
-        }
-
-        .mobility-details {
-          width: 60%;
-        }
-      }
-
-      .tags-container {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.5rem;
-        margin: 1rem 0;
-      }
-
-      .tag {
-        background: rgba(192, 125, 62, 0.15);
-        color: var(--tjr-bronze);
-        padding: 0.25rem 0.75rem;
-        border-radius: 12px;
-        font-size: 0.85rem;
-        border: 1px solid rgba(192, 125, 62, 0.3);
-      }
-
-      /* Quranic Arabic Section Styles */
-      .quranic-section .product-card {
-        max-width: 800px;
-        margin: 0 auto;
-      }
-
-      /* General Section Headings */
-      .section-heading {
-        font-size: 2rem;
-        color: var(--tjr-bronze);
-        text-align: center;
-        margin-bottom: 2rem;
-        margin-top: 1rem;
-      }
-
-      /* Icon Sizes */
-      .product-icon.large {
-        font-size: 5rem;
-      }
-
-      /* Footer styles */
-      .site-footer {
-        background: rgba(0, 0, 0, 0.9);
-        border-top: 1px solid rgba(192, 125, 62, 0.3);
-        padding: 3rem 1.5rem 2rem;
-        margin-top: 4rem;
-      }
-
-      .footer-content {
-        max-width: 1200px;
-        margin: 0 auto;
-        text-align: center;
-      }
-
-      .footer-tagline {
-        font-size: 1.3rem;
-        color: var(--tjr-bronze);
-        margin-bottom: 0.5rem;
-        font-weight: 600;
-      }
-
-      .footer-description {
-        font-size: 1rem;
-        color: #e0e0e0;
-        margin-bottom: 2rem;
-      }
-
-      .footer-links {
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 2rem;
-        margin-bottom: 2rem;
-        text-align: left;
-      }
-
-      @media screen and (min-width: 640px) {
-        .footer-links {
-          grid-template-columns: repeat(2, 1fr);
-        }
-      }
-
-      @media screen and (min-width: 1024px) {
-        .footer-links {
-          grid-template-columns: repeat(4, 1fr);
-        }
-      }
-
-      .footer-section h4 {
-        color: var(--tjr-bronze);
-        font-size: 1.1rem;
-        margin-bottom: 0.75rem;
-        font-weight: 600;
-      }
-
-      .footer-section a {
-        display: block;
-        color: #cccccc;
-        text-decoration: none;
-        padding: 0.4rem 0;
-        transition: color 0.2s ease;
-        cursor: pointer;
-      }
-
-      .footer-section a:hover {
-        color: var(--tjr-bronze);
-      }
-
-      .footer-contact {
-        font-size: 1rem;
-        color: #e0e0e0;
-        margin-top: 2rem;
-        padding-top: 2rem;
-        border-top: 1px solid rgba(192, 125, 62, 0.2);
-      }
-
-      .email-link {
-        color: var(--tjr-bronze);
-        text-decoration: none;
-        transition: opacity 0.2s ease;
-      }
-
-      .email-link:hover {
-        opacity: 0.8;
-      }
-      .footer-links a {
-        color: var(--primary-color);
-        text-decoration: none;
-        font-size: 0.9rem;
-        transition: color 0.3s ease;
-        cursor: pointer;
-      }
-
-      .footer-links a:hover {
-        color: var(--tjr-bronze);
-        text-decoration: underline;
-      }
-
-      .email-link {
-        color: var(--tjr-bronze);
-        font-weight: 600;
-        text-decoration: none;
-      }
-      
-      .footer-bottom {
-        margin-top: 2rem;
-        padding-top: 1rem;
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
-        font-size: 0.8rem;
-        color: var(--text-muted);
-      }
-
-      /* Course card extends product-card */
-      .course-card {
-        border-color: rgba(192, 125, 62, 0.4);
-        box-shadow: 0 8px 24px rgba(192, 125, 62, 0.12);
-      }
-
-      .course-card:hover {
-        border-color: rgba(192, 125, 62, 0.6);
-        box-shadow: 0 16px 40px rgba(192, 125, 62, 0.2);
-      }
-
-      .image-container {
-        position: relative;
-        width: 100%;
-        height: 200px;
-        overflow: hidden;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: linear-gradient(135deg, #1a4d3a, #0f2419);
-      }
-
-      @media screen and (max-width: 767px) {
-        .image-container {
-          height: 150px;
-        }
-      }
-
-      .image-container img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: transform 0.3s ease;
-      }
-
-      /* Hero banner styles */
-      .hero-banner {
-        width: 100%;
-        max-height: 280px;
-        object-fit: cover;
-        border-radius: 12px;
-        margin: 1rem 0 1.25rem 0;
-        filter: brightness(.85) contrast(1.05);
-      }
-      @media (max-width: 600px) {
-        .hero-banner { max-height: 160px; }
-        /* Optional mobile text plate */
-        .hero .hero-content {
-          background: rgba(0,0,0,.22);
-          backdrop-filter: blur(2px);
-          border-radius: 10px;
-          padding: .5rem .75rem;
-          display: inline-block;
-        }
-      }
-
-      /* (no leadership banner) */
-
-      /* Mobility banner styles */
-      .mobility-banner {
-        width: 100%;
-        border-radius: 12px;
-        object-fit: cover;
-        margin-bottom: 1.5rem;
-        aspect-ratio: 16 / 9;
-      }
-      @media (max-width: 600px) {
-        .mobility-banner { max-height: 240px; }
-      }
-
-      .image-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: linear-gradient(
-          135deg,
-          var(--primary-color) 0%,
-          var(--primary-dark) 100%
-        );
-        z-index: 1;
-        opacity: 0.9;
-      }
-
-      .card-overlay-text {
-        position: absolute;
-        bottom: 20px;
-        left: 20px;
-        z-index: 3;
-      }
-
-      .card-overlay-text h2 {
-        color: white;
-        font-size: 1.4rem;
-        font-weight: 700;
-        margin: 0;
-        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-        letter-spacing: 0.5px;
-      }
-
-      .free-badge {
-        position: absolute;
-        top: 1rem;
-        right: 1rem;
-        --background: var(--primary-color);
-        --color: #000;
-        font-weight: 600;
-        z-index: 2;
-      }
-
-      .coming-soon-badge {
-        position: absolute;
-        top: 1rem;
-        left: 1rem;
-        --background: #ff6b9d;
-        --color: #fff;
-        font-weight: 600;
-        z-index: 2;
-        font-size: 0.7rem;
-        padding: 0.3rem 0.6rem;
-        border-radius: 12px;
-        box-shadow: 0 2px 8px rgba(255, 107, 157, 0.3);
-      }
-
-      .business-features {
-        display: flex;
-        gap: 0.5rem;
-        margin: 0.75rem 0;
-        flex-wrap: wrap;
-      }
-
-      .business-tag {
-        background: rgba(255, 107, 157, 0.15);
-        color: #ff6b9d;
-        padding: 0.25rem 0.5rem;
-        border-radius: 8px;
-        font-size: 0.7rem;
-        font-weight: 500;
-        border: 1px solid rgba(255, 107, 157, 0.3);
-      }
-
-      .signup-header {
-        text-align: center;
-        margin-bottom: 2rem;
-      }
-
-      .signup-header h2 {
-        color: var(--primary-color);
-        font-size: 1.8rem;
-        margin-bottom: 0.5rem;
-        text-shadow: 0 0 10px var(--cyberpunk-glow);
-      }
-
-      .signup-header p {
-        color: var(--text-medium);
-        font-size: 1rem;
-      }
-
-      .business-form {
-        margin-bottom: 2rem;
-      }
-
-      .business-form ion-item {
-        --background: rgba(0, 0, 0, 0.3);
-        --border-color: rgba(255, 107, 157, 0.3);
-        --color: var(--text-dark);
-        margin-bottom: 1rem;
-        border-radius: 8px;
-      }
-
-      .business-form ion-item.ion-focused {
-        --border-color: #ff6b9d;
-        --border-width: 2px;
-      }
-
-      .business-form ion-label {
-        color: var(--text-medium);
-        font-weight: 500;
-      }
-
-      .business-form ion-input,
-      .business-form ion-textarea,
-      .business-form ion-select {
-        --color: var(--text-dark);
-      }
-
-      .form-actions {
-        margin-top: 1.5rem;
-      }
-
-      .submit-button {
-        --background: linear-gradient(45deg, #ff6b9d, #ff8e9b);
-        --color: #fff;
-        --border-radius: 8px;
-        font-weight: 600;
-        height: 48px;
-      }
-
-      .submit-button:hover:not([disabled]) {
-        --background: linear-gradient(45deg, #ff5a8a, #ff7d8a);
-        box-shadow: 0 4px 15px rgba(255, 107, 157, 0.4);
-      }
-
-      .signup-message {
-        margin-top: 1rem;
-        padding: 0.75rem;
-        border-radius: 8px;
-        text-align: center;
-        font-weight: 500;
-      }
-
-      .signup-message.success {
-        background: rgba(0, 255, 0, 0.1);
-        color: var(--primary-color);
-        border: 1px solid rgba(0, 255, 0, 0.3);
-      }
-
-      .signup-message.error {
-        background: rgba(255, 68, 68, 0.1);
-        color: #ff4444;
-        border: 1px solid rgba(255, 68, 68, 0.3);
-      }
-
-      .benefits-section {
-        background: rgba(255, 107, 157, 0.05);
-        border: 1px solid rgba(255, 107, 157, 0.2);
-        border-radius: 12px;
-        padding: 1.5rem;
-        margin-top: 2rem;
-      }
-
-      .benefits-section h3 {
-        color: #ff6b9d;
-        font-size: 1.2rem;
-        margin-bottom: 1rem;
-        text-align: center;
-      }
-
-      .benefits-section ul {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-      }
-
-      .benefits-section li {
-        color: var(--text-medium);
-        margin-bottom: 0.75rem;
-        padding-left: 0;
-        font-size: 0.9rem;
-        line-height: 1.4;
-      }
-
-      @media screen and (max-width: 767px) {
-        .signup-container {
-          padding: 1rem;
-        }
-
-        .signup-header h2 {
-          font-size: 1.5rem;
-        }
-
-        .benefits-section {
-          padding: 1rem;
-        }
-      }
-
-      .course-icon {
-        position: absolute;
-        top: 1rem;
-        left: 1rem;
-        background: rgba(0, 0, 0, 0.7);
-        border-radius: 50%;
-        padding: 0.5rem;
-        backdrop-filter: blur(5px);
-        font-size: 1.5rem;
-        width: 2rem;
-        height: 2rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 2;
-      }
-
-      @media screen and (max-width: 767px) {
-        .free-badge {
-          top: 0.75rem;
-          right: 0.75rem;
-          font-size: 0.8rem;
-        }
-
-        .course-icon {
-          top: 0.75rem;
-          left: 0.75rem;
-          padding: 0.4rem;
-          font-size: 1.2rem;
-          width: 1.5rem;
-          height: 1.5rem;
-        }
-      }
-
-      ion-card-title {
-        font-size: 1.2rem;
-        font-weight: 600;
-        color: var(--text-dark);
-        margin-bottom: 0.3rem;
-      }
-
-      .sub-line {
-        color: var(--text-medium);
-        font-size: 0.8rem;
-        margin-bottom: 0.8rem;
-      }
-
-      .micro-blurb {
-        font-size: 0.85rem;
-        color: var(--text-medium);
-        margin-bottom: 0.8rem;
-        line-height: 1.4;
-      }
-
-      .features-list {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.4rem;
-        margin-bottom: 1rem;
-      }
-
-      .feature {
-        background: rgba(0, 255, 0, 0.1);
-        color: var(--primary-color);
-        padding: 0.3rem 0.6rem;
-        border-radius: 8px;
-        font-size: 0.7rem;
-        font-weight: 500;
-        border: 1px solid rgba(0, 255, 0, 0.3);
-        font-family: 'Courier New', monospace;
-        text-shadow: 0 0 5px var(--cyberpunk-glow);
-        transition: all 0.3s ease;
-      }
-
-      .feature:hover {
-        background: rgba(0, 255, 0, 0.2);
-        border-color: var(--primary-color);
-        transform: scale(1.05);
-      }
-
-      .cta-button {
-        --background: var(--primary-color);
-        --color: #000;
-        font-weight: 600;
-        margin-top: 1rem;
-      }
-
-      @media screen and (max-width: 767px) {
-        .cta-button {
-          margin-top: 0.75rem;
-          min-height: 44px;
-        }
-      }
-
-      .cta-button:hover:not([disabled]) {
-        box-shadow: 0 0 30px rgba(0, 255, 0, 0.6);
-        transform: translateY(-2px);
-      }
-
-      .cta-button[disabled] {
-        opacity: 0.6;
-        cursor: not-allowed;
-      }
-
-      .cta-button:active:not([disabled]) {
-        transform: translateY(0);
-        box-shadow: 0 0 15px rgba(0, 255, 0, 0.4);
-      }
-
-      .cta-button:focus {
-        outline: 2px solid var(--accent-color);
-        outline-offset: 2px;
-      }
-
-      /* Touch feedback for cards */
-      .project-card:active {
-        transform: scale(0.98);
-        transition: transform 0.1s ease;
-      }
-
-      .feature:active {
-        transform: scale(0.95);
-        transition: transform 0.1s ease;
-      }
-
-      /* Focus management styles */
-      .project-card:focus {
-        outline: 2px solid var(--accent-color);
-        outline-offset: 2px;
-        box-shadow: 0 0 0 4px rgba(0, 255, 255, 0.2);
-      }
-
-      ion-input:focus-within {
-        --border-width: 2px;
-        --border-color: var(--accent-color);
-      }
-
-      /* Skip link for accessibility */
-      .skip-link {
-        position: absolute;
-        top: -40px;
-        left: 6px;
-        background: var(--primary-color);
-        color: #000;
-        padding: 8px;
-        text-decoration: none;
-        border-radius: 4px;
-        z-index: 1000;
-      }
-
-      .skip-link:focus {
-        top: 6px;
-      }
-
-      /* Project card styles */
-      .project-card {
-        cursor: pointer;
-        transition: all 0.3s ease;
-        position: relative;
-        overflow: hidden;
-        margin-bottom: 1.5rem;
-      }
-
-      .project-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
-      }
-
-      /* Modern theme adapted for cyberpunk */
-      .modern {
-        background: rgba(0, 20, 40, 0.9);
-        border: 2px solid var(--accent-color);
-        color: var(--text-dark);
-        backdrop-filter: blur(10px);
-      }
-
-      .modern:hover {
-        border-color: var(--primary-color);
-        box-shadow: 0 6px 20px rgba(0, 255, 255, 0.3);
-        transform: translateY(-3px);
-      }
-
-      .modern ion-card-title {
-        color: var(--accent-color);
-        font-weight: 700;
-        font-size: 1.2rem;
-        text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
-      }
-
-      .modern-sub {
-        color: var(--text-medium) !important;
-        font-weight: 500;
-        font-size: 0.9rem !important;
-      }
-
-      .modern .description {
-        color: var(--text-medium);
-        margin-bottom: 1.5rem;
-      }
-
-      .tech-specs {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.4rem;
-        margin-bottom: 1rem;
-      }
-
-      .spec {
-        background: rgba(0, 255, 255, 0.1);
-        color: var(--accent-color);
-        padding: 0.3rem 0.6rem;
-        border-radius: 8px;
-        font-size: 0.7rem;
-        font-weight: 500;
-        border: 1px solid rgba(0, 255, 255, 0.3);
-        font-family: 'Courier New', monospace;
-        text-shadow: 0 0 5px rgba(0, 255, 255, 0.3);
-        transition: all 0.3s ease;
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-      }
-
-      .spec:hover {
-        background: rgba(0, 255, 255, 0.2);
-        border-color: var(--accent-color);
-        transform: scale(1.05);
-      }
-
-      .spec-icon {
-        width: 14px;
-        height: 14px;
-        opacity: 0.9;
-      }
-
-      .modern-price {
-        border-top: 1px solid rgba(0, 255, 255, 0.3);
-        padding-top: 1rem;
-        text-align: center;
-      }
-
-      .modern-cta {
-        color: var(--accent-color);
-        font-weight: 600;
-        font-size: 1.1rem;
-        text-shadow: 0 0 5px rgba(0, 255, 255, 0.3);
-      }
-
-      .modern-accent {
-        background: linear-gradient(
-          90deg,
-          var(--accent-color),
-          transparent
-        ) !important;
-      }
-
-      /* MCP theme */
-      .mcp {
-        background: rgba(10, 28, 10, 0.9);
-        border: 2px solid #36ff9f;
-        color: var(--text-dark);
-        backdrop-filter: blur(10px);
-      }
-
-      .mcp:hover {
-        border-color: #00ff9d;
-        box-shadow: 0 6px 20px rgba(0, 255, 157, 0.3);
-        transform: translateY(-3px);
-      }
-
-      .mcp ion-card-title {
-        color: #36ff9f;
-        font-weight: 700;
-        font-size: 1.2rem;
-        text-shadow: 0 0 10px rgba(0, 255, 157, 0.5);
-      }
-
-      .mcp-sub {
-        color: var(--text-medium) !important;
-        font-weight: 500;
-        font-size: 0.9rem !important;
-      }
-
-      .mcp .description {
-        color: var(--text-medium);
-        margin-bottom: 1.5rem;
-      }
-
-      .mcp .spec {
-        background: rgba(0, 255, 157, 0.08);
-        color: #36ff9f;
-        border: 1px solid rgba(0, 255, 157, 0.3);
-        text-shadow: 0 0 5px rgba(0, 255, 157, 0.25);
-      }
-
-      .mcp .spec:hover {
-        background: rgba(0, 255, 157, 0.15);
-        border-color: #36ff9f;
-        transform: scale(1.05);
-      }
-
-      .mcp-price {
-        border-top: 1px solid rgba(0, 255, 157, 0.3);
-        padding-top: 1rem;
-        text-align: center;
-      }
-
-      .mcp-cta {
-        color: #36ff9f;
-        font-weight: 600;
-        font-size: 1.1rem;
-        text-shadow: 0 0 5px rgba(54, 255, 159, 0.3);
-        animation: pulse 2s infinite;
-      }
-
-      .local-link {
-        margin-top: 0.75rem;
-        text-align: center;
-      }
-
-      .local-link a {
-        color: #36ff9f;
-        text-decoration: underline;
-        cursor: pointer;
-      }
-
-      @keyframes pulse {
-        0%,
-        100% {
-          text-shadow: 0 0 5px rgba(54, 255, 159, 0.3);
-        }
-        50% {
-          text-shadow: 0 0 15px rgba(54, 255, 159, 0.6);
-        }
-      }
-
-      /* Boot sequence styles */
-      .initial-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: var(--cyberpunk-bg);
-        z-index: 1000;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: opacity 1s ease;
-
-        &.fade-out {
-          opacity: 0;
-          pointer-events: none;
-        }
-      }
-
-      .boot-sequence {
-        font-family: 'Courier New', monospace;
-        color: var(--primary-color);
-        text-align: left;
-        max-width: 90%;
-        padding: 0 1rem;
-
-        .line {
-          opacity: 0;
-          transform: translateX(-20px);
-          animation: typeIn 0.5s ease forwards;
-          margin-bottom: 0.8rem;
-          font-size: 1.1rem;
-          word-break: break-word;
-
-          &.visible {
-            opacity: 1;
-            transform: translateX(0);
-          }
-
-          &::before {
-            content: '>';
-            margin-right: 0.5rem;
-            color: var(--accent-color);
-          }
-        }
-
-        .instruction {
-          margin-top: 2rem;
-          color: var(--accent-color);
-          animation: blink 1s infinite;
-          font-weight: bold;
-          text-align: center;
-        }
-      }
-
-      /* Mobile optimizations */
-      @media screen and (max-width: 768px) {
-        .boot-sequence {
-          max-width: 95%;
-          padding: 0 0.5rem;
-
-          .line {
-            font-size: 0.9rem;
-            margin-bottom: 0.6rem;
-          }
-
-          .instruction {
-            margin-top: 1.5rem;
-            font-size: 0.9rem;
-          }
-        }
-
-        .countdown-container {
-          margin-top: 1rem;
-          padding: 0.8rem;
-        }
-
-        .countdown {
-          font-size: 1.2rem;
-          letter-spacing: 1px;
-        }
-
-        .countdown-label {
-          font-size: 0.8rem;
-        }
-      }
-
-      @media screen and (max-width: 480px) {
-        .content-container {
-          padding: calc(env(safe-area-inset-top, 0px) + 60px + 0.5rem) 0.5rem
-            0.5rem 0.5rem;
-        }
-
-        .section-title {
-          font-size: 1.8rem;
-        }
-
-        .section-subtitle {
-          font-size: 1rem;
-        }
-
-        .intro-section {
-          margin-bottom: 1rem;
-          margin-top: 0.5rem;
-        }
-
-        .boot-sequence {
-          .line {
-            font-size: 0.8rem;
-            margin-bottom: 0.5rem;
-          }
-
-          .instruction {
-            font-size: 0.8rem;
-          }
-        }
-
-        .countdown {
-          font-size: 1rem;
-        }
-
-        .logo-container {
-          padding: 0.3rem;
-        }
-
-        .brand {
-          font-size: 1.2rem;
-        }
-
-        .logo {
-          height: 30px;
-        }
-      }
-
-      /* Removed unused animations */
-
-      /* Countdown/Uptime styles */
-      .countdown-container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        margin-top: 1.5rem;
-        padding: 1rem;
-        background: rgba(0, 0, 0, 0.6);
-        border: 1px solid var(--primary-color);
-        border-radius: 8px;
-        backdrop-filter: blur(10px);
-      }
-
-      .countdown-label {
-        font-family: 'Courier New', monospace;
-        color: var(--text-medium);
-        font-size: 0.9rem;
-        margin-bottom: 0.5rem;
-        letter-spacing: 1px;
-      }
-
-      .countdown {
-        font-family: 'Courier New', monospace;
-        color: var(--primary-color);
-        font-size: 1.5rem;
-        font-weight: bold;
-        text-shadow: 0 0 10px var(--cyberpunk-glow);
-        letter-spacing: 2px;
-      }
-
-      /* Email form styles */
-      .email-field {
-        margin-bottom: 1.5rem;
-      }
-
-      @media screen and (max-width: 767px) {
-        .email-field {
-          margin-bottom: 1rem;
-        }
-      }
-
-      .error-message {
-        font-size: 0.8rem;
-        margin-top: 0.5rem;
-        display: block;
-      }
-
-      /* Email validation styles */
-      ion-input.valid-email {
-        --border-color: var(--primary-color);
-        --color: var(--text-dark);
-      }
-
-      ion-input.invalid-email {
-        --border-color: #ff4444;
-        --color: var(--text-dark);
-      }
-
-      ion-input.valid-email::part(native) {
-        box-shadow: 0 0 5px rgba(0, 255, 0, 0.3);
-      }
-
-      ion-input.invalid-email::part(native) {
-        box-shadow: 0 0 5px rgba(255, 68, 68, 0.3);
-      }
-
-      /* Touch-friendly input behavior */
-      ion-input {
-        --padding-top: 12px;
-        --padding-bottom: 12px;
-        cursor: pointer;
-      }
-
-      ion-input:focus-within {
-        --border-width: 2px;
-        --border-color: var(--accent-color);
-      }
-
-      .loading-container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        padding: 2rem;
-        gap: 1.5rem;
-      }
-
-      .loading-skeleton {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        width: 100%;
-        max-width: 300px;
-        opacity: 0.3;
-      }
-
-      .skeleton-avatar {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        background: linear-gradient(
-          90deg,
-          rgba(0, 255, 0, 0.1) 25%,
-          rgba(0, 255, 0, 0.3) 50%,
-          rgba(0, 255, 0, 0.1) 75%
-        );
-        background-size: 200% 100%;
-        animation: skeleton-loading 1.5s infinite;
-      }
-
-      .skeleton-lines {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-      }
-
-      .skeleton-line {
-        height: 12px;
-        border-radius: 6px;
-        background: linear-gradient(
-          90deg,
-          rgba(0, 255, 0, 0.1) 25%,
-          rgba(0, 255, 0, 0.3) 50%,
-          rgba(0, 255, 0, 0.1) 75%
-        );
-        background-size: 200% 100%;
-        animation: skeleton-loading 1.5s infinite;
-      }
-
-      .skeleton-line.long {
-        width: 100%;
-      }
-      .skeleton-line.medium {
-        width: 75%;
-      }
-      .skeleton-line.short {
-        width: 50%;
-      }
-
-      @keyframes skeleton-loading {
-        0% {
-          background-position: 200% 0;
-        }
-        100% {
-          background-position: -200% 0;
-        }
-      }
-
-      .loading-text {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 1rem;
-      }
-
-      .ai-spinner {
-        --color: var(--primary-color);
-        transform: scale(1.2);
-      }
-
-      .loading-message {
-        color: var(--text-medium);
-        margin: 0;
-        font-size: 0.95rem;
-        font-weight: 500;
-      }
-
-      .loading-progress {
-        width: 200px;
-        height: 4px;
-        background: rgba(0, 255, 0, 0.2);
-        border-radius: 2px;
-        overflow: hidden;
-      }
-
-      .progress-bar {
-        height: 100%;
-        background: linear-gradient(
-          90deg,
-          var(--primary-color),
-          var(--accent-color)
-        );
-        border-radius: 2px;
-        transition: width 0.8s ease;
-        box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
-      }
-
-      .button-spinner {
-        margin-right: 8px;
-      }
-    `,
-  ],
-  standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    IonContent,
-    IonCard,
-    IonCardHeader,
-    IonCardTitle,
-    IonCardContent,
-    IonButton,
-    IonBadge,
-    IonHeader,
-    IonToolbar,
-    IonButtons,
-    IonTitle,
-    IonIcon,
-  ],
+  styles: [`
+    /* ── ROOT ──────────────────────────────────── */
+    :host { display: block; overflow-y: auto; height: 100%; }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    button { font-family: inherit; font-size: inherit; line-height: inherit; cursor: pointer; border: none; background: none; padding: 0; appearance: none; -webkit-appearance: none; }
+
+
+    .hub-root {
+      background: #020b12;
+      color: #e8f4f8;
+      font-family: 'Inter', Arial, sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ── NAVBAR ────────────────────────────────── */
+    .navbar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      background: rgba(2, 11, 18, 0.7);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(0,255,136,0.15);
+      transition: background 0.3s;
+    }
+    .navbar.scrolled {
+      background: rgba(2, 11, 18, 0.97);
+      border-bottom-color: rgba(0,255,136,0.3);
+      box-shadow: 0 4px 30px rgba(0,0,0,0.5);
+    }
+    .nav-inner {
+      max-width: 1200px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 1.5rem; height: 68px;
+    }
+    .nav-brand { display: flex; align-items: center; gap: 0.75rem; }
+    .brand-logo {
+      width: 40px; height: 40px;
+      object-fit: contain; border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .brand-logo.footer-logo {
+      width: 56px; height: 56px;
+    }
+    .brand-name {
+      display: block; font-size: 0.85rem; font-weight: 700;
+      letter-spacing: 3px; color: #e8f4f8;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .brand-sub { display: block; font-size: 0.65rem; color: #4a7a8a; letter-spacing: 1px; }
+    .nav-links { display: flex; align-items: center; gap: 0.25rem; }
+    .nav-link {
+      color: #8ab4c9; text-decoration: none; font-size: 0.85rem;
+      padding: 0.4rem 0.75rem; border-radius: 6px;
+      transition: all 0.2s; cursor: pointer;
+    }
+    .nav-link:hover { color: #00ff88; background: rgba(0,255,136,0.06); }
+    .nav-cta {
+      background: rgba(0,255,136,0.12);
+      border: 1px solid rgba(0,255,136,0.4);
+      color: #00ff88; font-size: 0.8rem; font-weight: 600;
+      padding: 0.45rem 1rem; border-radius: 6px;
+      cursor: pointer; transition: all 0.2s; margin-left: 0.5rem;
+      font-family: 'JetBrains Mono', monospace; white-space: nowrap;
+    }
+    .nav-cta:hover {
+      background: rgba(0,255,136,0.2);
+      box-shadow: 0 0 16px rgba(0,255,136,0.2);
+    }
+    .hamburger {
+      display: none; flex-direction: column; gap: 5px;
+      background: none; border: none; cursor: pointer; padding: 4px;
+    }
+    .hamburger span {
+      width: 22px; height: 2px; background: #e8f4f8;
+      border-radius: 2px; transition: all 0.3s;
+    }
+    .hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(5px,5px); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(5px,-5px); }
+    .mobile-menu {
+      display: none; flex-direction: column;
+      background: rgba(2,11,18,0.98);
+      border-top: 1px solid rgba(0,255,136,0.15);
+      padding: 1rem 1.5rem;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu button {
+      color: #8ab4c9; text-align: left; padding: 0.85rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      font-size: 0.95rem; cursor: pointer; transition: color 0.2s;
+      width: 100%; display: block;
+    }
+    .mobile-menu button:hover { color: #00ff88; }
+    .mobile-menu .mobile-cta {
+      color: #00ff88; font-weight: 700; border-bottom: none;
+      margin-top: 0.5rem; font-family: 'JetBrains Mono', monospace;
+      letter-spacing: 1px;
+    }
+    @media (min-width: 769px) { .hamburger { display: none; } }
+    @media (max-width: 768px) {
+      .desktop-nav { display: none; }
+      .hamburger { display: flex; }
+    }
+
+    /* ── HERO ──────────────────────────────────── */
+    .hero {
+      position: relative; min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      padding: 120px 1.5rem 4rem; overflow: hidden;
+    }
+    .hero-grid-bg {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(0,255,136,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,255,136,0.04) 1px, transparent 1px);
+      background-size: 40px 40px;
+      mask-image: radial-gradient(ellipse 80% 80% at 50% 0%, black 40%, transparent 100%);
+    }
+    .hero-glow {
+      position: absolute; top: -200px; left: 50%; transform: translateX(-50%);
+      width: 800px; height: 600px; border-radius: 50%;
+      background: radial-gradient(ellipse, rgba(0,255,136,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-content {
+      position: relative; z-index: 1;
+      max-width: 820px; width: 100%; text-align: center;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: rgba(0,255,136,0.08);
+      border: 1px solid rgba(0,255,136,0.25);
+      border-radius: 100px; padding: 0.35rem 1rem;
+      font-size: 0.78rem; color: #00ff88;
+      font-family: 'JetBrains Mono', monospace;
+      letter-spacing: 0.5px; margin-bottom: 1rem;
+    }
+    .badge-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: #00ff88;
+      box-shadow: 0 0 6px #00ff88;
+      animation: pulse-dot 2s infinite;
+    }
+    @keyframes pulse-dot {
+      0%,100% { box-shadow: 0 0 6px #00ff88; }
+      50% { box-shadow: 0 0 14px #00ff88, 0 0 28px rgba(0,255,136,0.4); }
+    }
+    .prod-badge-strip {
+      display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+    }
+    .prod-badge {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      background: rgba(0,255,136,0.15);
+      border: 1px solid #00ff88;
+      border-radius: 6px; padding: 0.3rem 0.8rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem; font-weight: 700; color: #00ff88;
+      letter-spacing: 1px;
+    }
+    .prod-version {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem; color: #4a7a8a;
+    }
+    .sha-seal {
+      display: flex; flex-direction: column; gap: 0.25rem;
+      background: rgba(0,191,255,0.06);
+      border: 1px solid rgba(0,191,255,0.2);
+      border-radius: 8px; padding: 0.75rem 1rem;
+      margin-bottom: 1.5rem; text-align: left;
+    }
+    .sha-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem; color: #00bfff; letter-spacing: 1.5px;
+    }
+    .sha-hash {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem; color: #6a98b0;
+      word-break: break-all; line-height: 1.5;
+    }
+
+    /* ── ARCH SVG DIAGRAM ─────────────────────── */
+    .arch-diagram-wrap {
+      width: 100%; max-width: 680px;
+      margin: 0 auto 2rem;
+      background: rgba(0,255,136,0.02);
+      border: 1px solid rgba(0,255,136,0.15);
+      border-radius: 12px; overflow: hidden;
+    }
+    .arch-svg { width: 100%; height: auto; display: block; }
+
+    /* ── LIVE TERMINAL ────────────────────────── */
+    .verify-section { background: #030e18; }
+    .live-terminal {
+      background: #010a10;
+      border: 1px solid rgba(0,255,136,0.3);
+      border-radius: 12px; overflow: hidden;
+      max-width: 820px; margin: 0 auto;
+      box-shadow: 0 0 40px rgba(0,255,136,0.06);
+    }
+    .lt-bar {
+      display: flex; align-items: center; gap: 0.75rem;
+      background: #071520; padding: 0.6rem 1rem;
+      border-bottom: 1px solid rgba(0,255,136,0.15);
+    }
+    .lt-dots { display: flex; gap: 6px; }
+    .lt-dots span {
+      width: 10px; height: 10px; border-radius: 50%;
+      background: #1e3a2a;
+    }
+    .lt-dots span:first-child { background: #3a1a1a; }
+    .lt-dots span:nth-child(2) { background: #2a2a1a; }
+    .lt-dots span:nth-child(3) { background: #00ff88; box-shadow: 0 0 5px #00ff88; }
+    .lt-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem; color: #4a7a8a; flex: 1;
+    }
+    .lt-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.62rem; font-weight: 700;
+      color: #00ff88; background: rgba(0,255,136,0.1);
+      border: 1px solid rgba(0,255,136,0.3);
+      border-radius: 4px; padding: 0.15rem 0.5rem;
+      letter-spacing: 1px;
+    }
+    .lt-body { padding: 1.25rem 1.5rem; display: flex; flex-direction: column; gap: 0.5rem; }
+    .lt-line {
+      display: flex; gap: 0.75rem; align-items: baseline;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.82rem; color: #c8e8d8; line-height: 1.6;
+    }
+    .lt-line.dim { color: #3a5a6a; }
+    .lt-line.highlight {
+      background: rgba(0,255,136,0.06);
+      border-left: 3px solid #00ff88;
+      padding: 0.35rem 0.75rem; border-radius: 0 6px 6px 0;
+      color: #e8f4f8;
+    }
+    .lt-line.highlight strong { color: #00ff88; }
+    .lt-p { color: #4a7a8a; flex-shrink: 0; }
+    .lt-status { font-weight: 700; flex-shrink: 0; min-width: 52px; }
+    .lt-status.pass { color: #00ff88; }
+    .lt-status.attempt { color: #ffc107; }
+    .lt-cursor-line {
+      display: flex; gap: 0.5rem; align-items: center;
+      font-family: 'JetBrains Mono', monospace; color: #4a7a8a;
+      font-size: 0.82rem; margin-top: 0.25rem;
+    }
+    .lt-caption {
+      padding: 0.85rem 1.5rem;
+      border-top: 1px solid rgba(0,255,136,0.12);
+      font-size: 0.8rem; color: #6a98b0;
+      font-style: italic; line-height: 1.6;
+    }
+
+    /* ── HARDENED SPECS ───────────────────────── */
+    .specs-section { background: #020b12; }
+    .specs-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem; margin-top: 2.5rem;
+    }
+    @media (max-width: 768px) { .specs-grid { grid-template-columns: 1fr; } }
+    .spec-card {
+      display: flex; gap: 1rem; align-items: flex-start;
+      background: rgba(0,191,255,0.03);
+      border: 1px solid rgba(0,191,255,0.15);
+      border-radius: 10px; padding: 1.25rem;
+      transition: border-color 0.2s;
+    }
+    .spec-card:hover { border-color: rgba(0,255,136,0.3); }
+    .spec-card-full { grid-column: 1 / -1; }
+    .spec-icon { font-size: 1.6rem; flex-shrink: 0; }
+    .spec-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.62rem; color: #00bfff;
+      letter-spacing: 2px; margin-bottom: 0.25rem;
+    }
+    .spec-value {
+      font-size: 0.95rem; font-weight: 700;
+      color: #e8f4f8; margin-bottom: 0.4rem;
+    }
+    .spec-detail { font-size: 0.8rem; color: #5a8a9a; line-height: 1.5; }
+    .spec-hash {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem; color: #00ff88;
+      word-break: break-all; margin-bottom: 0.4rem;
+      line-height: 1.5;
+    }
+
+    .hero-headline {
+      font-size: clamp(2.2rem, 6vw, 4.2rem);
+      font-weight: 800; line-height: 1.1;
+      color: #e8f4f8; margin-bottom: 1.5rem;
+      letter-spacing: -1px;
+    }
+    .accent-green { color: #00ff88; text-shadow: 0 0 30px rgba(0,255,136,0.4); }
+    .accent-red { color: #ff4a4a; }
+    .hero-sub {
+      font-size: clamp(1rem, 2.5vw, 1.2rem);
+      color: #8ab4c9; margin-bottom: 2rem;
+      max-width: 640px; margin-left: auto; margin-right: auto;
+    }
+    .hero-sub strong { color: #e8f4f8; }
+
+    /* Terminal window */
+    .terminal-window {
+      background: #050f19; border: 1px solid rgba(0,255,136,0.25);
+      border-radius: 10px; overflow: hidden;
+      margin: 0 auto 2.5rem; max-width: 580px; text-align: left;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.6), 0 0 40px rgba(0,255,136,0.06);
+    }
+    .terminal-bar {
+      display: flex; align-items: center; gap: 0.4rem;
+      padding: 0.6rem 1rem;
+      background: rgba(255,255,255,0.04);
+      border-bottom: 1px solid rgba(0,255,136,0.1);
+    }
+    .dot { width: 10px; height: 10px; border-radius: 50%; }
+    .dot.red { background: #ff5f57; }
+    .dot.yellow { background: #febc2e; }
+    .dot.green { background: #28c840; }
+    .terminal-title { margin-left: 0.5rem; font-size: 0.75rem; color: #4a7a8a; font-family: 'JetBrains Mono', monospace; }
+    .terminal-body { padding: 1rem 1.25rem; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; }
+    .t-line { display: flex; gap: 0.5rem; margin-bottom: 0.3rem; color: #00ff88; }
+    .t-line.dim { color: #2a5a3a; }
+    .t-prompt { color: #4a7a8a; }
+    .t-cursor {
+      display: inline-block; color: #00ff88;
+      animation: blink 1s step-end infinite;
+    }
+    @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0; } }
+
+    /* CTA buttons */
+    .hero-ctas { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .btn-primary {
+      background: linear-gradient(135deg, #00ff88, #00c96a);
+      color: #020b12; font-weight: 700; font-size: 0.9rem;
+      padding: 0.85rem 1.75rem; border-radius: 8px;
+      cursor: pointer; text-decoration: none;
+      font-family: 'JetBrains Mono', monospace; letter-spacing: 0.3px;
+      transition: all 0.25s; border: none; display: inline-block;
+      box-shadow: 0 4px 20px rgba(0,255,136,0.3);
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,255,136,0.45); }
+    .btn-secondary {
+      background: transparent;
+      border: 1px solid rgba(0,191,255,0.4);
+      color: #00bfff; font-weight: 600; font-size: 0.9rem;
+      padding: 0.85rem 1.75rem; border-radius: 8px;
+      cursor: pointer; text-decoration: none;
+      font-family: 'JetBrains Mono', monospace;
+      transition: all 0.25s; display: inline-block;
+    }
+    .btn-secondary:hover {
+      background: rgba(0,191,255,0.08);
+      border-color: #00bfff;
+      box-shadow: 0 0 20px rgba(0,191,255,0.15);
+    }
+    .btn-outline {
+      background: transparent;
+      border: 1px solid rgba(0,191,255,0.4);
+      color: #00bfff; font-weight: 600; font-size: 0.9rem;
+      padding: 0.85rem 1.75rem; border-radius: 8px;
+      cursor: pointer; text-decoration: none;
+      transition: all 0.25s; display: inline-block; text-align: center;
+    }
+    .btn-outline:hover { background: rgba(0,191,255,0.08); border-color: #00bfff; }
+    .full-width { width: 100%; }
+
+    /* ── TRUST BAR ─────────────────────────────── */
+    .trust-bar {
+      background: rgba(0,255,136,0.04);
+      border-top: 1px solid rgba(0,255,136,0.1);
+      border-bottom: 1px solid rgba(0,255,136,0.1);
+    }
+    .trust-inner {
+      max-width: 1200px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: center;
+      flex-wrap: wrap; gap: 0; padding: 0;
+    }
+    .trust-badge {
+      display: flex; align-items: center; gap: 0.5rem;
+      padding: 0.9rem 2rem;
+      font-size: 0.78rem; font-family: 'JetBrains Mono', monospace;
+      color: #00ff88; font-weight: 600; letter-spacing: 0.5px;
+      border-right: 1px solid rgba(0,255,136,0.12);
+    }
+    .trust-badge:last-child { border-right: none; }
+    .trust-icon { font-size: 1rem; }
+
+    /* ── SECTIONS ──────────────────────────────── */
+    .section { padding: 6rem 1.5rem; }
+    .section-inner { max-width: 1100px; margin: 0 auto; }
+    .section-label {
+      font-size: 0.72rem; font-family: 'JetBrains Mono', monospace;
+      color: #00ff88; letter-spacing: 3px; font-weight: 600;
+      margin-bottom: 1rem; opacity: 0.8;
+    }
+    .section-title {
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 800; line-height: 1.15;
+      color: #e8f4f8; margin-bottom: 1rem; letter-spacing: -0.5px;
+    }
+    .section-sub {
+      font-size: 1.05rem; color: #6a98b0; max-width: 620px;
+      line-height: 1.7; margin-bottom: 3rem;
+    }
+
+    /* ── BARRIER ───────────────────────────────── */
+    .barrier-section {
+      background: radial-gradient(ellipse 1000px 500px at 50% 50%, rgba(255,74,74,0.04), transparent);
+    }
+    .comparison-grid {
+      display: grid; grid-template-columns: 1fr auto 1fr;
+      gap: 1.5rem; align-items: start; margin-bottom: 3rem;
+    }
+    @media (max-width: 768px) {
+      .comparison-grid { grid-template-columns: 1fr; }
+      .vs-divider { flex-direction: row; padding: 0; }
+      .vs-line { flex: 1; height: 1px; width: auto; }
+    }
+    .compare-card {
+      background: rgba(10,25,41,0.8); border-radius: 14px;
+      padding: 1.75rem; backdrop-filter: blur(10px);
+    }
+    .danger-card { border: 1px solid rgba(255,74,74,0.3); }
+    .safe-card { border: 1px solid rgba(0,255,136,0.3); }
+    .compare-header {
+      display: flex; align-items: center; gap: 0.75rem;
+      margin-bottom: 1.5rem; flex-wrap: wrap;
+    }
+    .compare-icon { font-size: 1.5rem; }
+    .compare-header h3 { font-size: 1.2rem; flex: 1; }
+    .risk-badge {
+      font-size: 0.65rem; font-family: 'JetBrains Mono', monospace;
+      background: rgba(255,74,74,0.15); color: #ff4a4a;
+      border: 1px solid rgba(255,74,74,0.3); border-radius: 4px;
+      padding: 0.2rem 0.5rem; letter-spacing: 1px;
+    }
+    .safe-badge {
+      font-size: 0.65rem; font-family: 'JetBrains Mono', monospace;
+      background: rgba(0,255,136,0.1); color: #00ff88;
+      border: 1px solid rgba(0,255,136,0.3); border-radius: 4px;
+      padding: 0.2rem 0.5rem; letter-spacing: 1px;
+    }
+    .compare-list { list-style: none; display: flex; flex-direction: column; gap: 0.75rem; }
+    .compare-list li { display: flex; gap: 0.75rem; align-items: flex-start; font-size: 0.9rem; color: #8ab4c9; }
+    .x-icon { color: #ff4a4a; font-weight: 700; flex-shrink: 0; }
+    .check-icon { color: #00ff88; font-weight: 700; flex-shrink: 0; }
+    .vs-divider {
+      display: flex; flex-direction: column;
+      align-items: center; gap: 0.5rem; padding: 2rem 0;
+    }
+    .vs-line { width: 1px; height: 40px; background: rgba(255,255,255,0.1); }
+    .vs-label {
+      font-size: 0.8rem; font-family: 'JetBrains Mono', monospace;
+      color: #4a7a8a; letter-spacing: 2px;
+    }
+
+    /* Abort Trap */
+    .abort-callout {
+      background: rgba(5,15,25,0.9);
+      border: 1px solid rgba(255,74,74,0.35);
+      border-left: 3px solid #ff4a4a;
+      border-radius: 12px; padding: 1.75rem;
+      box-shadow: 0 0 40px rgba(255,74,74,0.05);
+    }
+    .abort-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+    .abort-badge {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.75rem;
+      background: rgba(255,74,74,0.15); color: #ff4a4a;
+      border: 1px solid rgba(255,74,74,0.4); border-radius: 4px;
+      padding: 0.2rem 0.6rem; font-weight: 700; letter-spacing: 1px;
+    }
+    .abort-title { font-size: 1.1rem; font-weight: 700; color: #e8f4f8; }
+    .abort-desc { color: #8ab4c9; font-size: 0.9rem; line-height: 1.75; margin-bottom: 1.25rem; }
+    .abort-desc strong { color: #e8f4f8; }
+    .abort-desc code {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.8rem;
+      background: rgba(255,74,74,0.1); color: #ff4a4a;
+      padding: 0.1rem 0.35rem; border-radius: 4px;
+    }
+    .abort-code pre {
+      background: #020b0f; border: 1px solid rgba(0,255,136,0.12);
+      border-radius: 8px; padding: 1.25rem; overflow-x: auto;
+    }
+    .abort-code code {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.78rem;
+      color: #00ff88; background: none; padding: 0;
+      display: block; white-space: pre; line-height: 1.8;
+    }
+
+    /* ── AUDITOR ───────────────────────────────── */
+    .auditor-section {
+      background: radial-gradient(ellipse 800px 400px at 50% 50%, rgba(0,191,255,0.04), transparent);
+    }
+    .flow-diagram {
+      display: flex; align-items: center;
+      flex-wrap: wrap; gap: 0.5rem;
+      background: rgba(10,25,41,0.7); border: 1px solid rgba(0,191,255,0.2);
+      border-radius: 14px; padding: 2rem; margin-bottom: 3rem;
+      justify-content: center;
+    }
+    .flow-step { display: flex; align-items: center; gap: 0.5rem; }
+    .flow-node {
+      display: flex; flex-direction: column; align-items: center;
+      gap: 0.25rem; text-align: center;
+      background: rgba(0,191,255,0.06); border: 1px solid rgba(0,191,255,0.2);
+      border-radius: 10px; padding: 1rem 1.25rem; min-width: 110px;
+    }
+    .flow-icon { font-size: 1.5rem; }
+    .flow-label { font-size: 0.78rem; font-weight: 600; color: #e8f4f8; font-family: 'JetBrains Mono', monospace; }
+    .flow-sub { font-size: 0.65rem; color: #4a7a8a; }
+    .flow-arrow { font-size: 1.2rem; color: #00bfff; flex-shrink: 0; padding: 0 0.25rem; }
+    .auditor-features { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.25rem; }
+    .aud-feature {
+      display: flex; gap: 1rem; align-items: flex-start;
+      background: rgba(10,25,41,0.7); border: 1px solid rgba(0,191,255,0.15);
+      border-radius: 12px; padding: 1.25rem;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .aud-feature:hover { border-color: rgba(0,191,255,0.35); transform: translateY(-3px); }
+    .aud-icon { font-size: 1.5rem; flex-shrink: 0; }
+    .aud-text h4 { font-size: 0.9rem; color: #e8f4f8; margin-bottom: 0.35rem; }
+    .aud-text p { font-size: 0.82rem; color: #6a98b0; line-height: 1.6; }
+
+    /* ── CERTIFICATE ───────────────────────────── */
+    .cert-section {
+      background: radial-gradient(ellipse 800px 400px at 50% 50%, rgba(0,255,136,0.04), transparent);
+    }
+    .cert-inner {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 4rem; align-items: center;
+    }
+    @media (max-width: 900px) { .cert-inner { grid-template-columns: 1fr; } }
+    .cert-points { list-style: none; display: flex; flex-direction: column; gap: 0.75rem; }
+    .cert-points li { display: flex; gap: 0.75rem; font-size: 0.9rem; color: #8ab4c9; }
+    .cert-check { color: #00ff88; font-weight: 700; flex-shrink: 0; }
+
+    .cert-card {
+      background: rgba(5,15,25,0.95); border: 1px solid rgba(0,255,136,0.3);
+      border-radius: 14px; overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 60px rgba(0,255,136,0.05);
+    }
+    .cert-header {
+      display: flex; align-items: center; gap: 1rem;
+      padding: 1.25rem 1.5rem;
+      background: rgba(0,255,136,0.06);
+      border-bottom: 1px solid rgba(0,255,136,0.15);
+    }
+    .cert-logo { font-size: 2rem; color: #00ff88; }
+    .cert-title { font-size: 0.78rem; font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #00ff88; letter-spacing: 1px; }
+    .cert-subtitle { font-size: 0.7rem; color: #4a7a8a; font-family: 'JetBrains Mono', monospace; }
+    .cert-status {
+      margin-left: auto; font-size: 0.7rem; font-family: 'JetBrains Mono', monospace;
+      background: rgba(0,255,136,0.15); color: #00ff88;
+      border: 1px solid rgba(0,255,136,0.4); border-radius: 4px;
+      padding: 0.25rem 0.6rem; font-weight: 700; letter-spacing: 1px;
+    }
+    .cert-body { padding: 1.25rem 1.5rem; display: flex; flex-direction: column; gap: 0.6rem; }
+    .cert-row { display: flex; justify-content: space-between; gap: 1rem; font-size: 0.8rem; }
+    .cert-key { color: #4a7a8a; font-family: 'JetBrains Mono', monospace; flex-shrink: 0; }
+    .cert-val { color: #e8f4f8; text-align: right; word-break: break-all; }
+    .cert-val.mono { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: #00ff88; }
+    .cert-seal {
+      padding: 1rem 1.5rem;
+      background: rgba(0,255,136,0.04);
+      border-top: 1px solid rgba(0,255,136,0.15);
+      display: flex; flex-direction: column; gap: 0.5rem;
+    }
+    .seal-line { display: flex; justify-content: space-between; gap: 0.5rem; flex-wrap: wrap; }
+    .seal-label { font-size: 0.65rem; font-family: 'JetBrains Mono', monospace; color: #4a7a8a; letter-spacing: 1px; }
+    .seal-hash { font-size: 0.7rem; font-family: 'JetBrains Mono', monospace; color: #00ff88; word-break: break-all; }
+
+    /* ── POPIA ─────────────────────────────────── */
+    .popia-section { background: rgba(0,5,10,0.95); }
+    .popia-inner {
+      display: grid; grid-template-columns: auto 1fr;
+      gap: 4rem; align-items: center;
+    }
+    @media (max-width: 768px) { .popia-inner { grid-template-columns: 1fr; } }
+    .popia-shield {
+      display: flex; flex-direction: column; align-items: center;
+      gap: 0.75rem; flex-shrink: 0;
+    }
+    .shield-icon { font-size: 5rem; filter: drop-shadow(0 0 20px rgba(0,255,136,0.4)); }
+    .shield-text {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.75rem;
+      font-weight: 700; color: #00ff88; text-align: center; letter-spacing: 2px;
+    }
+    .popia-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 1rem; margin-top: 1rem; }
+    .stat {
+      background: rgba(10,25,41,0.8); border: 1px solid rgba(0,255,136,0.2);
+      border-radius: 10px; padding: 1.25rem; text-align: center;
+    }
+    .stat-value { font-size: 1.8rem; font-weight: 800; color: #00ff88; margin-bottom: 0.25rem; }
+    .stat-label { font-size: 0.72rem; color: #6a98b0; font-family: 'JetBrains Mono', monospace; letter-spacing: 0.5px; }
+
+    /* ── CTA SECTION ───────────────────────────── */
+    .cta-section {
+      position: relative; overflow: hidden;
+      background: rgba(0,5,10,0.9);
+    }
+    .cta-grid-bg {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(0,255,136,0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,255,136,0.035) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+    .cta-inner { position: relative; z-index: 1; text-align: center; }
+    .cta-inner .section-sub { margin-left: auto; margin-right: auto; }
+    .cta-cards {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem; text-align: left; margin-top: 1rem;
+    }
+    .cta-card {
+      background: rgba(10,25,41,0.9); border-radius: 14px;
+      padding: 2rem; backdrop-filter: blur(10px);
+      display: flex; flex-direction: column; gap: 1rem;
+    }
+    .primary-cta { border: 1px solid rgba(0,255,136,0.3); }
+    .secondary-cta { border: 1px solid rgba(0,191,255,0.25); }
+    .cta-card-icon { font-size: 2.5rem; }
+    .cta-card h3 { font-size: 1.2rem; color: #e8f4f8; }
+    .cta-card p { font-size: 0.88rem; color: #6a98b0; line-height: 1.7; flex: 1; }
+    .demo-note {
+      display: flex; align-items: center; gap: 0.4rem;
+      font-size: 0.78rem; color: #4a7a8a;
+      font-family: 'JetBrains Mono', monospace; margin-top: 0.25rem;
+    }
+
+    /* ── FOOTER ────────────────────────────────── */
+    .site-footer {
+      background: #010810;
+      border-top: 1px solid rgba(0,255,136,0.12);
+      padding: 4rem 1.5rem 0;
+    }
+    .footer-inner {
+      max-width: 1100px; margin: 0 auto;
+      display: grid; grid-template-columns: auto 1fr;
+      gap: 4rem; padding-bottom: 3rem;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    @media (max-width: 768px) { .footer-inner { grid-template-columns: 1fr; gap: 2rem; } }
+    .footer-brand { display: flex; align-items: flex-start; gap: 0.75rem; }
+    .footer-name {
+      font-size: 0.85rem; font-family: 'JetBrains Mono', monospace;
+      letter-spacing: 3px; color: #e8f4f8; font-weight: 700;
+    }
+    .footer-tagline { font-size: 0.75rem; color: #00ff88; margin-top: 0.25rem; }
+    .footer-cols { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
+    @media (max-width: 600px) { .footer-cols { grid-template-columns: 1fr 1fr; } }
+    .footer-col h4 { font-size: 0.78rem; color: #00ff88; font-family: 'JetBrains Mono', monospace; letter-spacing: 1px; margin-bottom: 1rem; }
+    .footer-col a,
+    .footer-col button {
+      display: block; color: #4a7a8a; font-size: 0.82rem;
+      text-decoration: none; padding: 0.3rem 0;
+      cursor: pointer; transition: color 0.2s;
+      background: none; border: none; text-align: left; font-family: inherit;
+    }
+    .footer-col a:hover, .footer-col button:hover { color: #e8f4f8; }
+    .footer-bottom {
+      max-width: 1100px; margin: 0 auto;
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 1rem;
+      padding: 1.25rem 0; font-size: 0.75rem; color: #2a5a6a;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .footer-compliance { color: #1a4a3a; }
+    /* Whitepaper Form */
+    .whitepaper-form { display: flex; flex-direction: column; gap: 0.8rem; margin-top: 1rem; }
+    .wp-input {
+      background: rgba(0,0,0,0.3); border: 1px solid rgba(0,255,136,0.2);
+      border-radius: 6px; padding: 0.75rem; color: #fff; font-size: 0.85rem;
+      font-family: inherit; width: 100%;
+    }
+    .wp-input:focus { border-color: #00ff88; outline: none; background: rgba(0,255,136,0.05); }
+    .wp-btn {
+      background: #00ff88; color: #020b12; border: none; border-radius: 6px;
+      padding: 0.75rem; font-weight: 700; cursor: pointer; transition: all 0.2s;
+      font-family: 'JetBrains Mono', monospace; font-size: 0.8rem;
+    }
+    .wp-btn:hover { background: #00da74; transform: translateY(-1px); }
+    .wp-btn:disabled { background: #1a4a3a; color: #00ff88; cursor: not-allowed; opacity: 0.7; }
+    .wp-success {
+      background: rgba(0,255,136,0.1); border: 1px solid rgba(0,255,136,0.3);
+      padding: 1rem; border-radius: 8px; color: #00ff88; font-size: 0.85rem;
+      text-align: center; margin-top: 1rem;
+    }
+  `]
 })
-export class LandingComponent implements OnInit, AfterViewInit {
-  @ViewChild('content') content!: IonContent;
-  @ViewChild('emailInput') emailInput!: any;
-  @ViewChild('courseSection') courseSection!: ElementRef;
-
-  emailForm: FormGroup;
-  isSubmitting = false;
-  errorMessage = '';
-  hasEmail = false;
-  userId = '';
-  isValidEmail = false;
-
-  // Business signup properties
-  isBusinessSignupOpen = false;
-  businessSignupForm: FormGroup;
-  isSubmittingBusiness = false;
-  businessSignupMessage = '';
-  businessSignupSuccess = false;
-
-  // Connection status
-  isOffline = false;
-
-  // Mobile menu toggle
-  isMobileMenuOpen = false;
-
-  // Tab state for What We Offer section
-  activeTab: 'ai' | 'mobility' | 'learn' = 'ai';
-
+export class LandingComponent implements OnInit, OnDestroy {
+  @ViewChild('downloadLink') downloadLink!: ElementRef<HTMLAnchorElement>;
+  
   currentYear = new Date().getFullYear();
+  isScrolled = false;
+  menuOpen = false;
 
-  constructor(
-    public router: Router,
-    private emailService: EmailCollectionService,
-    private hadiyaBusinessService: HadiyaBusinessSignupService,
-    private fb: FormBuilder,
-    private analytics: AnalyticsService,
-    private seo: SeoService,
-    private modalCtrl: ModalController,
-    private navCtrl: NavController
-  ) {
-    // Register icons
-    addIcons({ menu, close });
+  // Whitepaper State
+  whitepaperEmail = '';
+  whitepaperFirm = '';
+  whitepaperSuccess = false;
+  whitepaperSubmitting = false;
 
-    this.emailForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
-    });
+  terminalLines = [
+    'hub_v2.5 --init --profile=seatbelt_sovereign',
+    'kernel → sandbox-exec: deny network* ✓',
+    'loading NemoClaw reasoning engine...',
+    'agent_uuid=f3a9c2d1 | isolation=VERIFIED',
+    'audit_session → ACTIVE | cloud_egress=ZERO'
+  ];
 
-    this.businessSignupForm = this.fb.group({
-      businessName: ['', [Validators.required, Validators.minLength(2)]],
-      email: ['', [Validators.required, Validators.email]],
-      businessType: [''],
-      location: [''],
-      description: [''],
-    });
+  trustBadges = [
+    { icon: '⬡', label: 'NVIDIA NemoClaw' },
+    { icon: '🔐', label: 'macOS Seatbelt' },
+    { icon: '#', label: 'SHA-256 Sealed' },
+    { icon: '🛡', label: 'POPIA Compliant' },
+    { icon: '⚡', label: 'Zero Cloud Egress' },
+    { icon: '🏢', label: 'Physical Appliance' },
+  ];
+
+  cloudRisks = [
+    'Data exported to third-party servers',
+    'Network dependency — single point of failure',
+    'No audit trail over training data usage',
+    'POPIA compliance requires DPA for every query',
+    'Vendor lock-in and ongoing API costs',
+    'Breach liability on your firm, not the vendor',
+  ];
+
+  hubStrengths = [
+    'All reasoning happens inside a kernel sandbox',
+    'Air-gapped by default — no network syscalls',
+    'SHA-256 sealed, kernel-verified audit trail',
+    '100% local data residency — POPIA guaranteed',
+    'One-time hardware investment, zero cloud fees',
+    '[CRITICAL] Abort Trap: 6 — Physical isolation proof',
+    'ZeroClaw lifecycle: Spawn → Execute → Purge',
+  ];
+
+  auditFlow = [
+    { icon: '📄', label: 'Invoices', sub: 'Client documents' },
+    { icon: '🏦', label: 'Bank Ledger', sub: 'Statement data' },
+    { icon: '⬡', label: 'NemoClaw', sub: 'On-device AI' },
+    { icon: '⚖️', label: 'Reconcile', sub: 'Zero API calls' },
+    { icon: '📋', label: 'Verdict', sub: 'PASS / FLAG' },
+  ];
+
+  auditorFeatures = [
+    { icon: '🔌', title: 'No External API Calls', desc: 'The entire reconciliation pipeline runs on-device using NemoClaw. No OpenAI, no Azure, no cloud of any kind.' },
+    { icon: '⚡', title: 'Real-Time Flagging', desc: 'Discrepancies between invoices and bank ledger entries are flagged instantly with line-item evidence.' },
+    { icon: '📑', title: 'Multi-Format Ingestion', desc: 'Accepts PDFs, CSV bank exports, and scanned documents — all processed locally without external OCR services.' },
+    { icon: '🔒', title: 'Immutable Audit Log', desc: 'Every reconciliation action is logged with a timestamp and agent UUID, sealed in the Weekly Sovereignty Report.' },
+    { icon: '🛡', title: 'ZeroClaw Lifecycle', desc: 'Agents are spawned in an isolated vault, execute the logic, and self-destruct, ensuring no PII persists on the device.' },
+  ];
+
+  certPoints = [
+    'Hub Serial ID and unique Agent UUID per audit',
+    'Full logic trace of every reconciliation decision',
+    'SHA-256 hash of the document corpus audited',
+    'Kernel-verified Sovereignty Signature',
+    'Weekly Sovereignty Report (Blocked Leak Attempts)',
+    'Formatted for submission to FSCA, IRBA, and Law Society',
+  ];
+
+  certRows = [
+    { key: 'HUB_ID', val: 'HUB-ZA-2025-0042', mono: false },
+    { key: 'AGENT_UUID', val: 'f3a9c2d1-8b7e-4f2a', mono: true },
+    { key: 'VERDICT', val: 'PASSED — 0 discrepancies', mono: false },
+    { key: 'DOCUMENTS', val: '247 invoices · 3 statements', mono: false },
+    { key: 'KERNEL_ENV', val: 'sandbox-exec · deny network*', mono: true },
+    { key: 'TIMESTAMP', val: new Date().toISOString().split('T')[0], mono: true },
+  ];
+
+  popiaStats = [
+    { value: '0%', label: 'Cloud Egress' },
+    { value: '100%', label: 'Local Residency' },
+    { value: '0', label: 'Third-Party DPAs' },
+    { value: '∞', label: 'Audit Integrity' },
+  ];
+
+  private scrollHandler = () => {
+    this.isScrolled = this.el.nativeElement.scrollTop > 20;
+  };
+
+  ngOnInit() {
+    this.el.nativeElement.addEventListener('scroll', this.scrollHandler, { passive: true });
   }
 
-  setTab(tab: 'ai' | 'mobility' | 'learn') {
-    this.activeTab = tab;
-    this.analytics.trackEvent('tab_switch', 'offers_section', tab);
+  ngOnDestroy() {
+    this.el.nativeElement.removeEventListener('scroll', this.scrollHandler);
   }
 
-  navigateToSupply() {
-    this.navCtrl.navigateRoot('/supply', { animated: true });
+  toggleMenu() {
+    this.menuOpen = !this.menuOpen;
   }
 
-  async ngOnInit() {
-    // Set SEO Meta Tags
-    this.seo.updateMetaTags({
-      title: "Taajirah Systems | South Africa's AI Developer & Storyteller",
-      description:
-        'We build tools, teach skills, and help businesses adopt AI with confidence. Expert AI consulting, development, and storytelling services in South Africa.',
-      keywords:
-        'AI developer South Africa, AI consulting, AI storytelling, Taajirah Systems, AI tools, Hadiya Gift AI',
-      image: 'assets/images/hero/hero-bg.jpg',
-      url: 'https://taajirah.web.app',
-      type: 'website',
-      author: 'Taajirah Systems',
-    });
+  scroll(id: string, event?: Event) {
+    if (event) event.preventDefault();
+    this.menuOpen = false;
+    const el = document.getElementById(id);
+    if (el) {
+      const hostEl = this.el.nativeElement;
+      const rect = el.getBoundingClientRect();
+      const scrollTarget = rect.top + hostEl.scrollTop - 68;
+      hostEl.scrollTo({ top: scrollTarget, behavior: 'smooth' });
+    }
+  }
 
-    this.seo.updateAIOptimizedTags({
-      topic: 'Artificial Intelligence Development & Consulting',
-      intent: 'service_offering',
-      expertise_level: 'expert',
-      content_type: 'landing_page',
-      ai_features: [
-        'AI Consulting',
-        'AI Development',
-        'AI Storytelling',
-        'Hadiya Gift AI',
-      ],
-      learning_outcomes: [
-        'AI Adoption',
-        'Digital Transformation',
-        'AI Tools',
-      ],
-    });
+  // This function was removed as per the user's instruction to update downloadWhitepaper
+  // async submitWhitepaperRequest() {
+  //   if (!this.whitepaperEmail || !this.whitepaperFirm) return;
+  //   this.whitepaperSubmitting = true;
+  //   try {
+  //     await addDoc(collection(this.firestore, 'whitepaperRequests'), {
+  //       email: this.whitepaperEmail,
+  //       firm: this.whitepaperFirm,
+  //       timestamp: serverTimestamp(),
+  //       status: 'pending'
+  //     });
+  //     this.whitepaperSuccess = true;
+  //   } catch (err) {
+  //     console.error('Submission error:', err);
+  //     alert('Network transmission failed. Please try again.');
+  //   } finally {
+  //     this.whitepaperSubmitting = false;
+  //   }
+  // }
 
-    // Simple, fast initialization - no loading delays
+  async downloadWhitepaper() {
+    if (!this.whitepaperEmail || !this.whitepaperFirm) return;
+
+    // 1. Silent Logging to Firestore (Sovereign Lead)
     try {
-      // Subscribe to user changes (non-blocking)
-      this.emailService.currentUser$.subscribe((user: any) => {
-        this.hasEmail = !!user?.email;
-        this.analytics.trackEvent(
-          'user_visit',
-          'user_journey',
-          this.hasEmail ? 'returning_user' : 'new_user'
-        );
-      });
-    } catch (error: any) {
-      console.error('User init error:', error);
-      // Don't block the UI for analytics errors
-    }
-  }
-
-  ngAfterViewInit() {
-    // Immediate view initialization - no delays
-    if (this.content) {
-      this.content.scrollToTop(0);
+      const leadData = {
+        firm: this.whitepaperFirm,
+        email: this.whitepaperEmail,
+        document: 'Taajirah_Systems_Hub_v2.5_White_Paper',
+        timestamp: serverTimestamp(),
+        source: 'landing-page-cta'
+      };
+      
+      await addDoc(collection(this.firestore, 'whitepaper_requests'), leadData);
+    } catch (err) {
+      console.error("[CRITICAL] Failed to log lead to Firestore:", err);
+      // We continue with the download even if logging fails for user experience
     }
 
-    // Defer non-critical analytics to idle time to avoid holding the load spinner
-    const defer = (fn: () => void) =>
-      (window as any).requestIdleCallback
-        ? (window as any).requestIdleCallback(fn)
-        : setTimeout(fn, 0);
-
-    defer(() => this.trackPerformanceMetrics());
-  }
-
-  // Track performance metrics for optimization
-  private trackPerformanceMetrics() {
-    // Track device information
-    this.analytics.trackDevicePerformance();
-
-    // Track network performance
-    this.analytics.trackNetworkPerformance();
-
-    // Track connection status
-    this.analytics.trackConnectionStatus();
-    this.setupOfflineHandling();
-
-    // Track Core Web Vitals
-    this.analytics.trackWebVitals();
-
-    // Track resource loading performance immediately
-    this.analytics.trackResourcePerformance();
-
-    // Track component initialization time
-    const componentLoadTime = performance.now();
-    this.analytics.trackPerformance(
-      'component_load_time',
-      Math.round(componentLoadTime),
-      'ms'
-    );
-  }
-
-  async submitEmail() {
-    if (this.emailForm.valid && !this.isSubmitting) {
-      const startTime = performance.now();
-      this.isSubmitting = true;
-      this.errorMessage = '';
-
-      try {
-        const { email } = this.emailForm.value;
-
-        // Track email submission attempt
-        this.analytics.trackEvent(
-          'email_submit_attempt',
-          'conversion',
-          'quranic_course'
-        );
-
-        // Ensure anonymous user exists before updating with email
-        if (!this.userId) {
-          this.userId = await this.emailService.createAnonymousUserIfNeeded();
-        }
-        await this.emailService.updateUserWithEmail(this.userId, email);
-
-        // Track successful conversion
-        this.analytics.trackConversion('email_signup', {
-          course_name: 'Quranic Arabic Course',
-          user_id: this.userId,
-          email_domain: email.split('@')[1],
-        });
-
-        // Track course enrollment
-        this.analytics.trackCourseEvent(
-          'course_enrollment',
-          'Quranic Arabic Course',
-          0
-        );
-
-        // Track AI interaction
-        this.analytics.trackAIInteraction('course_signup', 'email_conversion', {
-          ai_feature: 'study_assistant',
-          course_type: 'quranic_arabic',
-        });
-
-        // Track interaction performance
-        this.analytics.trackInteractionPerformance(
-          'email_submission',
-          startTime
-        );
-
-        // Navigate to notebook
-        this.navigateToNotebook();
-      } catch (error: any) {
-        console.error('Error submitting email:', error);
-
-        // Track detailed error information
-        this.analytics.trackError(error, 'email_submission', {
-          form_name: 'email_signup',
-          user_id: this.userId,
-          email_domain: this.emailForm.value.email?.split('@')[1],
-        });
-
-        this.analytics.trackEvent(
-          'error',
-          'conversion',
-          'email_submission_failed'
-        );
-        this.errorMessage =
-          error.message || 'Error processing your email. Please try again.';
-      } finally {
-        this.isSubmitting = false;
-      }
-    }
-  }
-
-  navigateToNotebook() {
-    // Track course start
-    this.analytics.trackCourseEvent('course_start', 'Quranic Arabic Course', 0);
-    this.analytics.trackMilestone('course_access_granted', {
-      user_id: this.userId,
-      course_name: 'Quranic Arabic Course',
-    });
-
-    // Get notebook URL from service
-    const notebookUrl = this.emailService.getNotebookUrl();
-
-    // Track external navigation
-    this.analytics.trackExternalClick(notebookUrl, 'Start Course Button');
-
-    // Redirect to the notebook
-    window.location.href = notebookUrl;
-  }
-
-  navigateTo82ndrop() {
-    const startTime = performance.now();
-
-    // Track 82ndrop interaction
-    this.analytics.trackVideoEvent('platform_visit', {
-      source: 'taajirah_landing',
-      user_type: this.hasEmail ? 'registered' : 'anonymous',
-    });
-
-    // Track interaction performance
-    this.analytics.trackInteractionPerformance('82ndrop_navigation', startTime);
-
-    // Track AI platform interaction
-    this.analytics.trackAIInteraction('video_creation', 'platform_navigation', {
-      ai_feature: 'veo3_videos',
-      destination: '82ndrop',
-    });
-
-    // Track external click
-    this.analytics.trackExternalClick(
-      'https://82ndrop.web.app/',
-      '82ndrop Card'
-    );
-
-    window.open('https://82ndrop.web.app/', '_blank', 'noopener,noreferrer');
-  }
-
-  navigateToBananaBoard() {
-    const url = 'https://tjr-veo.web.app';
-    const startTime = performance.now();
-
-    this.analytics.trackEvent('platform_visit', 'navigation', 'bananaboard');
-    this.analytics.trackInteractionPerformance(
-      'bananaboard_navigation',
-      startTime
-    );
-    this.analytics.trackAIInteraction('video', 'platform_navigation', {
-      ai_feature: 'bananaboard',
-      destination: 'tjr_veo',
-    });
-    this.analytics.trackExternalClick(url, 'BananaBoard Card');
-    window.open(url, '_blank', 'noopener');
-  }
-
-  navigateToSmotaryMCP() {
-    // External link to Smithery MCP page
-    const url = 'https://smithery.ai/server/@turnono/sevenpace-mcp-server';
-    const startTime = performance.now();
-
-    // Track MCP interaction
-    this.analytics.trackEvent('platform_visit', 'navigation', 'smithery_mcp');
-    this.analytics.trackInteractionPerformance(
-      'smithery_navigation',
-      startTime
-    );
-    this.analytics.trackAIInteraction('mcp', 'platform_navigation', {
-      ai_feature: 'sevenpace_mcp',
-      destination: 'smithery_ai',
-    });
-    this.analytics.trackExternalClick(url, 'Smithery MCP Card');
-    window.open(url, '_blank', 'noopener');
-  }
-
-  navigateToDataCommonsMCP() {
-    // External link to DataCommons MCP page
-    const url = 'https://smithery.ai/server/@turnono/datacommons-mcp-server';
-    const startTime = performance.now();
-
-    // Track MCP interaction
-    this.analytics.trackEvent(
-      'platform_visit',
-      'navigation',
-      'datacommons_mcp'
-    );
-    this.analytics.trackInteractionPerformance(
-      'datacommons_navigation',
-      startTime
-    );
-    this.analytics.trackAIInteraction('mcp', 'platform_navigation', {
-      ai_feature: 'datacommons_mcp',
-      destination: 'smithery_ai',
-    });
-    this.analytics.trackExternalClick(url, 'DataCommons MCP Card');
-    window.open(url, '_blank', 'noopener');
-  }
-
-  navigateToMcpShowcase() {
-    this.analytics.trackEvent('internal_nav', 'navigation', 'mcp_showcase');
-  }
-
-  navigateToCourse() {
-    const startTime = performance.now();
-    const notebookUrl =
-      'https://notebooklm.google.com/notebook/1d9d16c6-a52c-4fb3-a7ac-26e14606b3ad';
-
-    // Track course interest
-    this.analytics.trackEvent(
-      'course_interest',
-      'navigation',
-      'quranic_arabic'
-    );
-
-    // Track interaction performance
-    this.analytics.trackInteractionPerformance(
-      'quranic_arabic_navigation',
-      startTime
-    );
-
-    // Track external click to NotebookLM
-    this.analytics.trackExternalClick(
-      notebookUrl,
-      'Quranic Arabic Course - NotebookLM'
-    );
-
-    // Track AI learning interaction
-    this.analytics.trackAIInteraction(
-      'quranic_arabic_learning',
-      'notebooklm_navigation',
-      {
-        ai_feature: 'notebooklm',
-        destination: 'quranic_arabic_course',
-        learning_platform: 'google_notebooklm',
-      }
-    );
-
-    // Open the NotebookLM notebook
-    window.open(notebookUrl, '_blank', 'noopener,noreferrer');
-  }
-
-  navigateToSubagents() {
-    const startTime = performance.now();
-
-    // Track Subagents interaction
-    this.analytics.trackEvent(
-      'platform_visit',
-      'navigation',
-      'claude_subagents'
-    );
-
-    // Track interaction performance
-    this.analytics.trackInteractionPerformance(
-      'subagents_navigation',
-      startTime
-    );
-
-    // Track AI platform interaction
-    this.analytics.trackAIInteraction(
-      'agents_marketplace',
-      'platform_navigation',
-      {
-        ai_feature: 'claude_agents',
-        destination: 'subagents_marketplace',
-      }
-    );
-
-    // Track external click
-    this.analytics.trackExternalClick(
-      'https://subagents.web.app/',
-      'Claude Subagents Card'
-    );
-
-    window.open('https://subagents.web.app/', '_blank', 'noopener,noreferrer');
-  }
-
-  navigateToVisionaryClones() {
-    const startTime = performance.now();
-
-    // Track VisionaryClones interaction
-    this.analytics.trackEvent(
-      'product_visit',
-      'navigation',
-      'visionary_clones'
-    );
-
-    // Track interaction performance
-    this.analytics.trackInteractionPerformance(
-      'visionary_clones_navigation',
-      startTime
-    );
-
-    // Track AI product interaction
-    this.analytics.trackAIInteraction(
-      'content_creation',
-      'product_navigation',
-      {
-        ai_feature: 'identity_lock',
-        destination: 'visionary_clones',
-        product_type: 'pre_production_toolkit'
-      }
-    );
-
-    // Track external click
-    this.analytics.trackExternalClick(
-      'https://vclones.web.app/',
-      'VisionaryClones Card'
-    );
-
-    window.open('https://vclones.web.app/', '_blank', 'noopener,noreferrer');
-  }
-
-  navigateToShanalTours() {
-    const startTime = performance.now();
-
-    // Track Shanal Tours interaction
-    this.analytics.trackEvent('project_visit', 'navigation', 'shanal_tours');
-
-    // Track interaction performance
-    this.analytics.trackInteractionPerformance(
-      'shanal_tours_navigation',
-      startTime
-    );
-
-    // Track project showcase interaction
-    this.analytics.trackEvent(
-      'project_showcase',
-      'travel_platform',
-      'mauritius_tours'
-    );
-
-    // Track external click
-    this.analytics.trackExternalClick(
-      'https://shanal.web.app/',
-      'Shanal Tours Card'
-    );
-
-    window.open('https://shanal.web.app/', '_blank', 'noopener,noreferrer');
-  }
-
-  navigateToHadiya() {
-    const startTime = performance.now();
-
-    // Track Hadiya interaction
-    this.analytics.trackEvent(
-      'project_visit',
-      'navigation',
-      'hadiya_coming_soon'
-    );
-
-    // Track interaction performance
-    this.analytics.trackInteractionPerformance('hadiya_navigation', startTime);
-
-    // Track project showcase interaction
-    this.analytics.trackEvent(
-      'project_showcase',
-      'ai_gift_discovery',
-      'coming_soon'
-    );
-
-    // Track external click
-    this.analytics.trackExternalClick(
-      'https://hadiya.web.app/',
-      'Hadiya Coming Soon Card'
-    );
-
-    window.open('https://hadiya.web.app/', '_blank', 'noopener,noreferrer');
-  }
-
-  navigateToVendorOnboarding() {
-    const startTime = performance.now();
-
-    // Track vendor onboarding interaction
-    this.analytics.trackEvent(
-      'vendor_onboarding',
-      'navigation',
-      'hadiya_vendors'
-    );
-
-    // Track interaction performance
-    this.analytics.trackInteractionPerformance('vendor_onboarding_navigation', startTime);
-
-    // Open the business signup modal (popup) instead of navigating
-    this.openBusinessSignup();
-  }
-
-  navigateToHadiyaVehicle() {
-    const startTime = performance.now();
-
-    // Track vehicle showcase interaction
-    this.analytics.trackEvent('vehicle_showcase', 'navigation', 'hadiya_vehicle');
-    this.analytics.trackInteractionPerformance('hadiya_vehicle_navigation', startTime);
-
-    // Open email for vehicle partnerships/details
-    const subject = encodeURIComponent('Taajirah Mobility — Vehicle details');
-    const body = encodeURIComponent(
-      `Hi Taajirah Systems,%0D%0A%0D%0AWe'd like to discuss your internal operations vehicle for engagements/workshops/media.%0D%0A%0D%0ACompany:%0D%0AContact person:%0D%0APhone:%0D%0AWebsite/Social:%0D%0A%0D%0AThanks!`
-    );
-    const mailto = `mailto:taajirah0@gmail.com?subject=${subject}&body=${body}`;
-    this.analytics.trackExternalClick(mailto, 'Taajirah Mobility Card');
-    window.location.href = mailto;
-  }
-
-  navigateToMobility() {
-    const startTime = performance.now();
-    this.analytics.trackEvent('mobility_booking', 'navigation', 'mobility_page');
-    this.analytics.trackInteractionPerformance('mobility_navigation', startTime);
-    this.navCtrl.navigateRoot('/mobility', { animated: true });
-  }
-
-  async openBusinessSignup() {
-    try {
-      console.log('🚀 Opening business signup modal...');
-
-      // Track business signup modal open
-      this.analytics.trackEvent(
-        'business_signup',
-        'modal_open',
-        'hadiya_early_access'
-      );
-
-      // Import the modal component
-      const { BusinessSignupModalComponent } = await import(
-        './business-signup-modal.component'
-      );
-
-      console.log(
-        '✅ BusinessSignupModalComponent loaded:',
-        BusinessSignupModalComponent
-      );
-
-      // Create and present the modal
-      const modal = await this.modalCtrl.create({
-        component: BusinessSignupModalComponent,
-        cssClass: 'cyberpunk-modal',
-        backdropDismiss: true,
-        showBackdrop: true,
-      });
-
-      console.log('✅ Modal created, presenting...');
-
-      // Handle form submission
-      modal.onDidDismiss().then((result) => {
-        console.log('📝 Modal dismissed with result:', result);
-        if (result.data && result.data.formData) {
-          console.log('📊 Form data received:', result.data.formData);
-          this.handleBusinessSignup(result.data.formData);
-        }
-      });
-
-      const result = await modal.present();
-      console.log('✅ Modal presented successfully:', result);
-      return result;
-    } catch (error) {
-      console.error('❌ Error opening business signup modal:', error);
-      this.analytics.trackEvent(
-        'business_signup',
-        'modal_error',
-        'hadiya_early_access'
-      );
-    }
-  }
-
-  async handleBusinessSignup(formData: any) {
-    try {
-      console.log('💾 Processing business signup with data:', formData);
-
-      // Track form submission
-      this.analytics.trackEvent(
-        'business_signup',
-        'form_submit',
-        'hadiya_early_access'
-      );
-
-      console.log('🔥 Saving to Hadiya Firebase project (tjr-gift)...');
-
-      // Save to Hadiya Firebase project
-      const signupId = await this.hadiyaBusinessService.submitBusinessSignup({
-        businessName: formData.businessName,
-        contactPerson: formData.contactPerson,
-        email: formData.email,
-        phone: formData.phone,
-        websiteOrSocial: formData.websiteOrSocial,
-        contentCreatorInterest: formData.contentCreatorInterest,
-      });
-
-      // Track success
-      this.analytics.trackEvent(
-        'business_signup',
-        'success',
-        'hadiya_early_access'
-      );
-
-      console.log(
-        '✅ Business signup saved to Hadiya project with ID:',
-        signupId
-      );
-    } catch (error) {
-      console.error('❌ Error saving business signup:', error);
-      this.analytics.trackEvent(
-        'business_signup',
-        'error',
-        'hadiya_early_access'
-      );
-    }
-  }
-
-  closeBusinessSignup() {
-    this.isBusinessSignupOpen = false;
-    this.businessSignupForm.reset();
-    this.businessSignupMessage = '';
-    this.businessSignupSuccess = false;
-  }
-
-  async submitBusinessSignup() {
-    if (this.businessSignupForm.invalid) {
-      this.businessSignupMessage = 'Please fill in all required fields.';
-      this.businessSignupSuccess = false;
-      return;
+    // 2. Trigger Download via the hidden link
+    if (this.downloadLink) {
+      this.downloadLink.nativeElement.click();
     }
 
-    this.isSubmittingBusiness = true;
-    this.businessSignupMessage = '';
-
-    try {
-      const formData = this.businessSignupForm.value;
-
-      // Track business signup attempt
-      this.analytics.trackEvent(
-        'business_signup',
-        'form_submit',
-        'hadiya_early_access'
-      );
-
-      // Track business type for analytics
-      if (formData.businessType) {
-        this.analytics.trackEvent(
-          'business_signup',
-          'business_type',
-          formData.businessType
-        );
-      }
-
-      // Save to Hadiya Firebase project
-      const signupId = await this.hadiyaBusinessService.submitBusinessSignup({
-        businessName: formData.businessName,
-        contactPerson: formData.contactPerson,
-        email: formData.email,
-        phone: formData.phone,
-        websiteOrSocial: formData.websiteOrSocial,
-        contentCreatorInterest: formData.contentCreatorInterest,
-      });
-
-      console.log('Business signup saved to Hadiya project with ID:', signupId);
-
-      this.businessSignupSuccess = true;
-      this.businessSignupMessage =
-        "Thank you! We'll be in touch soon with early access details.";
-
-      // Track successful signup
-      this.analytics.trackEvent(
-        'business_signup',
-        'success',
-        'hadiya_early_access'
-      );
-
-      // Reset form after success
-      setTimeout(() => {
-        this.closeBusinessSignup();
-      }, 3000);
-    } catch (error) {
-      console.error('Business signup error:', error);
-      this.businessSignupSuccess = false;
-      this.businessSignupMessage = 'Something went wrong. Please try again.';
-
-      // Track signup error
-      this.analytics.trackEvent(
-        'business_signup',
-        'error',
-        'hadiya_early_access'
-      );
-    } finally {
-      this.isSubmittingBusiness = false;
-    }
+    // 3. Update UI
+    this.whitepaperSuccess = true;
   }
 
-  clearError() {
-    this.errorMessage = '';
-    this.analytics.trackEvent('error_cleared', 'user_action', 'retry_attempt');
-  }
-
-  onEmailInput() {
-    const email = this.emailForm.get('email')?.value;
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    this.isValidEmail = emailRegex.test(email);
-
-    // Track form validation errors
-    if (email && email.length > 0 && !this.isValidEmail) {
-      this.analytics.trackFormError('email_signup', 'email', 'invalid_format');
-    }
-
-    if (this.isValidEmail) {
-      this.analytics.trackEvent(
-        'valid_email_entered',
-        'form_interaction',
-        'email_validation'
-      );
-    }
-  }
-
-  focusEmailInput() {
-    if (this.emailInput && this.emailInput.setFocus) {
-      this.emailInput.setFocus();
-      this.analytics.trackEvent(
-        'email_input_focused',
-        'user_interaction',
-        'auto_focus'
-      );
-    }
-  }
-
-  scrollToCourse() {
-    try {
-      const el = this.courseSection?.nativeElement as HTMLElement;
-      if (el && this.content) {
-        this.content.scrollToPoint(0, el.offsetTop - 80, 500);
-      }
-    } catch { }
-  }
-
-  scrollToSection(sectionId: string) {
-    try {
-      const el = document.getElementById(sectionId);
-      if (el && this.content) {
-        const y = el.getBoundingClientRect().top + window.scrollY - 80;
-        this.content.scrollToPoint(0, y, 400);
-      }
-      // Close mobile menu after navigation
-      this.isMobileMenuOpen = false;
-    } catch { }
-  }
-
-  toggleMobileMenu() {
-    this.isMobileMenuOpen = !this.isMobileMenuOpen;
-    this.analytics.trackEvent(
-      'mobile_menu_toggle',
-      'user_interaction',
-      this.isMobileMenuOpen ? 'open' : 'close'
-    );
-  }
-
-  closeMobileMenu() {
-    this.isMobileMenuOpen = false;
-  }
-
-  // Helper method to detect device type
-  private getDeviceType(): string {
-    const userAgent = navigator.userAgent;
-    const isMobile =
-      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-        userAgent
-      );
-    const isTablet = /iPad|Android(?!.*Mobile)/i.test(userAgent);
-
-    return isMobile ? 'mobile' : isTablet ? 'tablet' : 'desktop';
-  }
-
-  // Removed loading sequence - instant load now
-
-  // Handle offline/online status
-  private setupOfflineHandling() {
-    this.isOffline = !navigator.onLine;
-
-    window.addEventListener('online', () => {
-      this.isOffline = false;
-    });
-
-    window.addEventListener('offline', () => {
-      this.isOffline = true;
-    });
-  }
+  constructor(public router: Router, private el: ElementRef, private firestore: Firestore) {}
 }

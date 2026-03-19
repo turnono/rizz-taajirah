@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './features/portal/guards/auth.guard';
 
+
 export const routes: Routes = [
   {
     path: '',
@@ -37,14 +38,13 @@ export const routes: Routes = [
   },
   {
     path: 'supply',
-    loadComponent: () =>
-      import('./features/supply/supply.component').then((m) => m.SupplyComponent),
+    redirectTo: 'archive',
   },
   {
     path: 'mobility',
-    loadComponent: () =>
-      import('./features/mobility/mobility.component').then((m) => m.MobilityComponent),
+    redirectTo: 'archive',
   },
+
   {
     path: 'portal/login',
     loadComponent: () =>
@@ -57,7 +57,13 @@ export const routes: Routes = [
       import('./features/portal/portal-dashboard/portal-dashboard.component').then((m) => m.PortalDashboardComponent),
   },
   {
+    path: 'archive',
+    loadComponent: () =>
+      import('./features/archive/archive.component').then((m) => m.ArchiveComponent),
+  },
+  {
     path: '**',
     redirectTo: '',
   },
 ];
+
