@@ -13,12 +13,12 @@ import { DiscoveryDialogComponent } from '../discovery/discovery-dialog.componen
   selector: 'app-landing',
   standalone: true,
   imports: [
-    CommonModule, 
+    CommonModule,
     NgOptimizedImage,
-    MatButtonModule, 
-    MatCardModule, 
-    MatGridListModule, 
-    MatListModule, 
+    MatButtonModule,
+    MatCardModule,
+    MatGridListModule,
+    MatListModule,
     MatIconModule,
     MatDialogModule,
     SovereignDiagramComponent
@@ -36,7 +36,7 @@ import { DiscoveryDialogComponent } from '../discovery/discovery-dialog.componen
             Hire a Senior Architect with 8 years of engineering experience to deploy a 
             <strong>Local AI Sandbox</strong> on your hardware. 100% Private. 100% POPIA-Safe.
           </p>
-          <div class="hero-cta">
+          <div class="hero-cta" style="margin: -15px;">
             <button mat-flat-button color="primary" class="cta-btn" (click)="openDiscovery()">
               Book Your On-Site Strategy & Deployment (R2,500)
             </button>
@@ -77,7 +77,7 @@ import { DiscoveryDialogComponent } from '../discovery/discovery-dialog.componen
           @defer (on viewport) {
             <div class="architect-visual">
               <mat-card class="image-card">
-                <img ngSrc="assets/images/founder.png" width="900" height="1600" alt="The Senior Architect" priority>
+                <img ngSrc="assets/images/founder.jpg" width="720" height="1280" alt="The Senior Architect" priority>
               </mat-card>
             </div>
             
@@ -242,11 +242,10 @@ import { DiscoveryDialogComponent } from '../discovery/discovery-dialog.componen
     }
 
     .video-section {
-      padding: 4rem 0;
+      padding: 2rem 0;
     }
 
     .architect-section {
-      padding: 8rem 0;
       background: radial-gradient(circle at 10% 50%, rgba(118, 185, 0, 0.05) 0%, transparent 50%);
     }
 
@@ -338,7 +337,6 @@ import { DiscoveryDialogComponent } from '../discovery/discovery-dialog.componen
     }
 
     .conduit-section {
-      padding: 8rem 0;
       text-align: center;
     }
 
@@ -376,7 +374,7 @@ import { DiscoveryDialogComponent } from '../discovery/discovery-dialog.componen
 
     /* ── Pricing Section (Final Bulletproof Fix) ── */
     .pricing-section {
-      padding: 10rem 2rem;
+      padding: 0 2rem;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -506,20 +504,65 @@ import { DiscoveryDialogComponent } from '../discovery/discovery-dialog.componen
     }
 
     @media (max-width: 768px) {
-      .hero-headline { font-size: 2.5rem; }
-      .architect-overlay {
-        position: relative;
-        bottom: 0;
-        right: 0;
-        margin-top: 1rem;
-        max-width: 100%;
+      .hero-section {
+        padding: 6rem 1rem 4rem;
+      }
+      .hero-headline { 
+        font-size: 2.5rem; 
+        margin-bottom: 1.5rem;
+      }
+      .hero-subheadline {
+        font-size: 1.1rem;
+        margin-bottom: 2.5rem;
+      }
+      .architect-grid {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+      }
+      .image-card img {
+        aspect-ratio: 16/9;
+        height: 300px;
+      }
+      .info-card {
+        padding: 1.5rem !important;
+        mat-card-title { font-size: 1.8rem; }
+        .stats-row { 
+          flex-direction: column; 
+          gap: 1.5rem; 
+        }
+      }
+      .pricing-section {
+        padding: 4rem 1rem;
+      }
+      .pricing-card-sovereign {
+        padding: 3rem 1.5rem;
+        border-radius: 24px;
+      }
+      .pricing-title {
+        font-size: 1.8rem;
+        margin-bottom: 1.5rem;
+      }
+      .pricing-price-box .price {
+        font-size: 3.5rem;
+      }
+      .pricing-feature-list {
+        padding: 1rem;
+        margin-bottom: 2rem;
+      }
+      .feature-row {
+        font-size: 1rem;
+        gap: 1rem;
+      }
+      .sovereign-action-btn {
+        height: 64px;
+        font-size: 1.1rem;
       }
     }
   `]
 })
 export class LandingComponent {
   private dialog = inject(MatDialog);
-  
+
   conduitCards = [
     {
       icon: '🧠',

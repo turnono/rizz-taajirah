@@ -208,12 +208,24 @@ import { LeadService } from '../../core/services/lead.service';
       align-items: center;
       gap: 0.5rem;
       margin: 0 auto;
-    }
-
-    .done-btn { color: #90A4AE; border-color: rgba(144, 164, 174, 0.3); border-radius: 12px; }
-
     .fade-in { animation: fadeIn 0.8s ease-out; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    @media (max-width: 600px) {
+        .dialog-container {
+          padding: 1.5rem;
+        }
+        .header h2 {
+          font-size: 1.5rem;
+        }
+        .success-state {
+          padding: 1rem 0;
+          h2 { font-size: 1.8rem; }
+        }
+        .wa-btn {
+          padding: 0.8rem 1.5rem;
+          font-size: 0.9rem;
+        }
+      }
   `]
 })
 export class DiscoveryDialogComponent {

@@ -162,9 +162,22 @@ import { CommonModule } from '@angular/common';
     }
 
     @media (max-width: 900px) {
-      .diagram-container { flex-direction: column; gap: 3rem; }
+      .diagram-container { 
+        flex-direction: column; 
+        gap: 2.5rem; 
+        padding-bottom: 4rem;
+      }
       .connector { transform: rotate(90deg); width: 40px; }
       .lock { transform: rotate(-90deg) translateY(-10px); }
+      .architecture-label {
+        position: relative;
+        bottom: auto;
+        left: auto;
+        transform: none;
+        margin-top: 3rem;
+        text-align: center;
+        width: 100%;
+      }
     }
   `]
 })
