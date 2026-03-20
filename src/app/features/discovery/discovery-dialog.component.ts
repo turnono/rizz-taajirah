@@ -208,6 +208,7 @@ import { LeadService } from '../../core/services/lead.service';
       align-items: center;
       gap: 0.5rem;
       margin: 0 auto;
+    }
     .fade-in { animation: fadeIn 0.8s ease-out; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     @media (max-width: 600px) {
