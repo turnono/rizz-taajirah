@@ -1,283 +1,103 @@
 /* ── Google Fonts ─────────────────────────────────── */
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap');
 
-/* ── Sovereign Design Tokens (Hub v2.5) ──────────── */
+/* ── Digital Business Card Tokens ────────────────── */
 :root {
-  --sov-bg:        #020b12;
-  --sov-surface:   #0a1929;
-  --sov-green:     #00ff88;
-  --sov-green-dim: rgba(0,255,136,0.12);
-  --sov-blue:      #00bfff;
-  --sov-red:       #ff4a4a;
-  --sov-text:      #e8f4f8;
-  --sov-muted:     #6a98b0;
-  --sov-border:    rgba(0,255,136,0.2);
+  --vault-bg:      #0f172a; /* Slate 900 */
+  --vault-surface: #1e293b; /* Slate 800 */
+  --vault-accent:  #10b981; /* Emerald 500 */
+  --vault-glow:    rgba(16, 185, 129, 0.15);
+  --vault-text:    #f8fafc; /* Slate 50 */
+  --vault-muted:   #94a3b8; /* Slate 400 */
+  --vault-border:  rgba(16, 185, 129, 0.2);
+  
   --font-mono:     'JetBrains Mono', monospace;
-  --font-sans:     'Inter', Arial, sans-serif;
+  --font-sans:     'Inter', sans-serif;
 }
 
-/* Terminal-chic utility classes */
-.terminal-text {
-  font-family: var(--font-mono);
-  color: var(--sov-green);
-}
-.terminal-text::after {
-  content: '█';
-  animation: blink-cursor 1s step-end infinite;
-}
-@keyframes blink-cursor { 0%,100% { opacity: 1; } 50% { opacity: 0; } }
-
-.sov-card {
-  background: var(--sov-surface);
-  border: 1px solid var(--sov-border);
-  border-radius: 12px;
-  backdrop-filter: blur(10px);
-  transition: border-color 0.2s, transform 0.2s;
-}
-.sov-card:hover {
-  border-color: var(--sov-green);
-  transform: translateY(-4px);
-}
-
-/* You can add global styles to this file, and also import other style files */
-
-/* ── Landing page: break out of Ionic ion-page scroll lock ── */
-/* Ionic applies overflow:hidden + contain:layout size style to all ion-page */
-/* wrappers. We override this for app-landing so the host element can scroll. */
-app-landing,
-app-privacy,
-app-terms,
-app-archive {
-  overflow-y: auto !important;
-  overflow-x: hidden !important;
-  contain: none !important;
+html, body {
   height: 100%;
-  display: block;
-}
-
-
-
-/* Simple Modal Styles */
-.cyberpunk-modal {
-  --width: 90%;
-  --height: 95%;
-  --max-height: 95vh;
-  --border-radius: 15px;
-  --backdrop-opacity: 0.8;
-}
-
-@media (min-width: 768px) {
-  .cyberpunk-modal {
-    --width: 500px;
-    --max-width: 500px;
-    --max-height: 80vh;
-  }
-}
-
-/* ========================================
-   TAAJIRAH BRAND IDENTITY SYSTEM
-   ======================================== */
-
-/* Color Palette */
-:root {
-  /* Primary Colors */
-  --tjr-sand: #f4efe6;
-  --tjr-bronze: #c07d3e;
-  --tjr-charcoal: #333333;
-  --tjr-deep-teal: #0d4f4a;
-
-  /* Extended Palette */
-  --tjr-bronze-light: #d99a5f;
-  --tjr-bronze-dark: #a06830;
-  --tjr-sand-dark: #e5dcc8;
-  --tjr-charcoal-light: #4a4a4a;
-  --tjr-charcoal-dark: #1a1a1a;
-  --tjr-teal-light: #0f6660;
-  
-  /* Accent Colors */
-  --tjr-success: #00ff00;
-  --tjr-warning: #ffa500;
-  --tjr-error: #ff4444;
-  
-  /* Semantic Colors */
-  --background-color: var(--tjr-charcoal);
-  --text-color: #ffffff;
-  --text-secondary: #e0e0e0;
-  --text-muted: #999999;
-  --accent-warm: var(--tjr-bronze);
-  --accent-deep: var(--tjr-deep-teal);
-  
-  /* Component Colors */
-  --card-bg: rgba(0, 0, 0, 0.6);
-  --card-border: rgba(192, 125, 62, 0.3);
-  --card-border-hover: rgba(192, 125, 62, 0.6);
-  
-  /* Spacing System */
-  --spacing-xs: 0.25rem;
-  --spacing-sm: 0.5rem;
-  --spacing-md: 1rem;
-  --spacing-lg: 1.5rem;
-  --spacing-xl: 2rem;
-  --spacing-xxl: 3rem;
-  
-  /* Border Radius */
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
-  
-  /* Shadows */
-  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
-  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.2);
-  --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.3);
-  
-  /* Typography */
-  --font-family-primary: 'Arial', sans-serif;
-  --font-family-heading: 'Arial', sans-serif;
-  
-  --font-size-xs: 0.75rem;
-  --font-size-sm: 0.875rem;
-  --font-size-base: 1rem;
-  --font-size-lg: 1.125rem;
-  --font-size-xl: 1.25rem;
-  --font-size-2xl: 1.5rem;
-  --font-size-3xl: 2rem;
-  --font-size-4xl: 2.5rem;
-  
-  --font-weight-normal: 400;
-  --font-weight-medium: 500;
-  --font-weight-semibold: 600;
-  --font-weight-bold: 700;
-  
-  --line-height-tight: 1.2;
-  --line-height-normal: 1.5;
-  --line-height-relaxed: 1.6;
-}
-
-body {
-  background: radial-gradient(1200px 800px at 50% 0%, rgba(13,79,74,0.25), transparent) var(--tjr-charcoal);
-  color: var(--text-color);
-  font-family: var(--font-family-primary);
-  font-size: var(--font-size-base);
-  line-height: var(--line-height-normal);
-}
-
-/* Typography Utilities */
-h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-family-heading);
-  font-weight: var(--font-weight-semibold);
-  line-height: var(--line-height-tight);
   margin: 0;
+  background-color: var(--vault-bg);
+  color: var(--vault-text);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
 }
 
-h1 { font-size: var(--font-size-4xl); }
-h2 { font-size: var(--font-size-3xl); }
-h3 { font-size: var(--font-size-2xl); }
-h4 { font-size: var(--font-size-xl); }
-h5 { font-size: var(--font-size-lg); }
-h6 { font-size: var(--font-size-base); }
+/* Base Scrollbar */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--vault-bg); }
+::-webkit-scrollbar-thumb { background: var(--vault-surface); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--vault-accent); }
 
-/* Standardized Button Styles */
-.tjr-btn {
-  font-family: var(--font-family-primary);
-  font-weight: var(--font-weight-medium);
-  border-radius: var(--radius-sm);
-  transition: all 0.2s ease;
+/* Typography */
+h1, h2, h3, h4 {
+  font-family: var(--font-sans);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.mono {
+  font-family: var(--font-mono);
+}
+
+/* Premium Utilities */
+.vault-gradient-text {
+  background: linear-gradient(135deg, #f8fafc 0%, #10b981 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.glass {
+  background: rgba(30, 41, 59, 0.7);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--vault-border);
+}
+
+/* Override standard button resets */
+button {
   cursor: pointer;
-}
-
-.tjr-btn-primary {
-  background: var(--tjr-bronze);
-  color: #ffffff;
   border: none;
+  background: none;
+  font-family: inherit;
 }
 
-.tjr-btn-primary:hover {
-  background: var(--tjr-bronze-dark);
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
+/* Tech Decorations */
+.tech-line {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--vault-accent), transparent);
+  margin: 2rem 0;
+  opacity: 0.3;
 }
 
-.tjr-btn-outline {
-  background: transparent;
-  color: var(--tjr-bronze);
-  border: 1px solid var(--tjr-bronze);
+.glitch-text:hover {
+  text-shadow: 
+    2px 0 var(--vault-accent), 
+    -2px 0 #ff00ff;
+  animation: glitch 0.3s infinite;
 }
 
-.tjr-btn-outline:hover {
-  background: rgba(192, 125, 62, 0.1);
-  border-color: var(--tjr-bronze-light);
+@keyframes glitch {
+  0% { transform: translate(0); }
+  20% { transform: translate(-2px, 2px); }
+  40% { transform: translate(-2px, -2px); }
+  60% { transform: translate(2px, 2px); }
+  80% { transform: translate(2px, -2px); }
+  100% { transform: translate(0); }
 }
 
-/* Standardized Card Styles */
-.tjr-card {
-  background: var(--card-bg);
-  border: 1px solid var(--card-border);
-  border-radius: var(--radius-md);
-  padding: var(--spacing-lg);
-  backdrop-filter: blur(8px);
-  transition: all 0.2s ease;
-}
-
-.tjr-card:hover {
-  border-color: var(--card-border-hover);
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-lg);
-}
-
-.tjr-card-header {
-  margin-bottom: var(--spacing-md);
-}
-
-.tjr-card-title {
-  color: var(--tjr-bronze);
-  font-size: var(--font-size-xl);
-  font-weight: var(--font-weight-semibold);
-  margin-bottom: var(--spacing-sm);
-}
-
-.tjr-card-subtitle {
-  color: var(--text-secondary);
-  font-size: var(--font-size-sm);
-}
-
-.tjr-card-content {
-  color: var(--text-secondary);
-  line-height: var(--line-height-relaxed);
-}
-
-/* Subtle animations */
-.fade-in {
-  opacity: 0;
-  transform: translateY(10px);
-  animation: fadeInUp .6s ease forwards;
-}
-
-.hover-grow {
-  transition: transform .2s ease;
-}
-.hover-grow:hover {
-  transform: translateY(-4px) scale(1.01);
-}
-
-.parallax-bg {
-  background-attachment: fixed;
-  background-size: cover;
-  background-position: center;
-}
-
-/* On mobile, disable fixed attachment to ensure background is visible */
-@media (max-width: 767px) {
-  .parallax-bg {
-    background-attachment: scroll;
-  }
-  
-  /* Adjust font sizes for mobile */
-  h1 { font-size: var(--font-size-3xl); }
-  h2 { font-size: var(--font-size-2xl); }
-  h3 { font-size: var(--font-size-xl); }
-}
-
-@keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(12px); }
+@keyframes fabFadeIn {
+  from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+.fab-fade {
+  animation: fabFadeIn 0.5s ease-out 1s forwards;
+  opacity: 0;
+}
+
+::selection {
+  background: var(--vault-accent);
+  color: var(--vault-bg);
 }
