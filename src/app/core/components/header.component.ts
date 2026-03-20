@@ -1,109 +1,116 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card'; // Added for MatCard
+import { MatListModule } from '@angular/material/list'; // Added for MatList
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, MatToolbarModule, MatButtonModule, MatCardModule, MatListModule], // Updated imports
   template: `
-    <header class="glass fade-in">
-      <div class="content-wrapper">
-        <div class="brand">
+    <div class="header-container">
+      <mat-toolbar>
+        <a class="logo-container" href="/">
           <img src="assets/branding/taajirah-logo.png" alt="Taajirah Systems" class="logo">
-          <div class="brand-text">
-            <span class="brand-name mono">TAAJIRAH SYSTEMS</span>
-            <span class="brand-tagline mono">AI ARCHITECTS</span>
-          </div>
-        </div>
+          <span class="brand-name mono">TAAJIRAH SYSTEMS</span>
+        </a>
         
-        <nav class="desktop-nav mono">
-          <a href="#hero">OVERVIEW</a>
-          <a href="#why">BENEFITS</a>
-          <a href="#pricing">PRICING</a>
+        <span class="spacer"></span>
+
+        <nav class="nav-links mono">
+          <a mat-button href="#strategy" class="nav-link">STRATEGY</a>
+          <a mat-button href="#architecture" class="nav-link">ARCHITECTURE</a>
+          <a mat-button href="#pricing" class="nav-link">PRICING</a>
+          <a mat-button href="#architect" class="nav-link">THE ARCHITECT</a>
         </nav>
+ 
+        <span class="spacer"></span>
 
         <div class="actions">
-          <a href="https://wa.me/27827583593?text=I%20would%20like%20to%20book%20an%20on-site%20demo%20for%20NVIDIA%20NemoClaw." class="btn-sm mono">DEMO</a>
+          <a mat-raised-button color="primary" href="https://wa.me/27827583593?text=I%20would%20like%20to%20book%20an%20on-site%20demo%20for%20NVIDIA%20NemoClaw." class="mono cta-btn">
+            WhatsApp Demo
+          </a>
         </div>
-      </div>
-    </header>
+      </mat-toolbar>
+    </div>
   `,
   styles: [`
-    header {
+    .header-container {
       position: relative;
-      margin: 1rem auto 0;
-      max-width: 1100px;
-      padding: 0.75rem 1.5rem;
-      border-radius: 1.25rem;
+      padding: 2rem 0;
       display: flex;
       justify-content: center;
+      background: rgba(10, 10, 10, 0.4);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     }
 
-    .content-wrapper {
-      width: 100%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+    mat-toolbar {
+      pointer-events: auto; /* Re-enable clicks for items in the toolbar */
+      max-width: 1200px;
+      border-radius: 2rem;
+      background: rgba(10, 10, 10, 0.8) !important;
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 0.5rem 2rem;
+      height: auto;
+      min-height: 64px;
     }
 
-    .brand {
+    .logo-container {
       display: flex;
       align-items: center;
-      gap: 0.75rem;
+      gap: 1rem;
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
     }
 
     .logo {
-      height: 32px;
+      height: 40px;
       width: auto;
     }
 
-    .brand-text {
-      display: flex;
-      flex-direction: column;
-    }
-
     .brand-name {
-      font-weight: 700;
-      font-size: 0.875rem;
-      letter-spacing: 0.1em;
+      font-weight: 800;
+      letter-spacing: 2px;
+      font-size: 1.2rem;
+      color: #fff;
     }
 
-    .brand-tagline {
-      font-size: 0.6rem;
-      color: var(--vault-accent);
-      letter-spacing: 0.2em;
-    }
-
-    .desktop-nav {
+    .nav-links {
       display: flex;
-      gap: 2rem;
+      gap: 1rem;
+      margin: 0 2rem;
     }
 
-    .desktop-nav a {
-      text-decoration: none;
-      color: var(--vault-muted);
-      font-size: 0.75rem;
-      letter-spacing: 0.1em;
-      transition: color 0.2s ease;
+    .nav-link {
+      color: var(--steel);
+      font-weight: 500;
+      text-transform: uppercase;
+      font-size: 0.85rem;
+      letter-spacing: 1px;
+      transition: color 0.3s ease;
+
+      &:hover {
+        color: var(--nvidia);
+      }
     }
 
-    .desktop-nav a:hover {
-      color: var(--vault-accent);
-    }
-
-    .btn-sm {
-      background: var(--vault-accent);
-      color: var(--vault-bg);
-      padding: 0.4rem 1rem;
-      border-radius: 0.5rem;
-      text-decoration: none;
-      font-size: 0.7rem;
+    .cta-btn {
       font-weight: 700;
-      letter-spacing: 0.1em;
+      letter-spacing: 0.5px;
+      border-radius: 2rem;
+      box-shadow: 0 4px 15px rgba(118, 185, 0, 0.3);
     }
 
-    @media (max-width: 768px) {
-      .desktop-nav { display: none; }
+    .spacer {
+      flex: 1 1 auto;
+    }
+
+    @media (max-width: 900px) {
+      .nav-links { display: none; }
     }
   `]
 })

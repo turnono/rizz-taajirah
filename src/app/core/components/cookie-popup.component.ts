@@ -24,12 +24,15 @@ import { CommonModule } from '@angular/common';
       bottom: 2rem;
       left: 50%;
       transform: translateX(-50%);
-      width: 90%;
-      max-width: 700px;
-      padding: 1.25rem 2rem;
-      border-radius: 1rem;
+      width: 95%;
+      max-width: 800px;
+      padding: 1.5rem 2.5rem;
+      border-radius: 20px;
       z-index: 9999;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+      background: rgba(15, 15, 15, 0.95);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(118, 185, 0, 0.3);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.8);
     }
 
     .cookie-content {
@@ -39,11 +42,20 @@ import { CommonModule } from '@angular/common';
       gap: 2rem;
     }
 
-    .text-side { flex: 1; }
-
-    p { font-size: 0.75rem; margin: 0; color: var(--vault-muted); letter-spacing: 0.05em; line-height: 1.4; }
+    p { 
+      font-size: 0.85rem; 
+      margin: 0; 
+      color: var(--steel); 
+      letter-spacing: 1px; 
+      line-height: 1.5; 
+      font-weight: 500;
+    }
     
-    .accent-link { color: var(--vault-accent); text-decoration: underline; }
+    .accent-link { 
+      color: var(--nvidia); 
+      text-decoration: underline; 
+      font-weight: 700;
+    }
 
     .button-side {
       display: flex;
@@ -52,25 +64,38 @@ import { CommonModule } from '@angular/common';
     }
 
     button {
-      border-radius: 0.4rem;
-      padding: 0.6rem 1.25rem;
-      font-size: 0.75rem;
-      font-weight: 700;
-      transition: all 0.2s ease;
+      border-radius: 12px;
+      padding: 0.75rem 1.5rem;
+      font-size: 0.8rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 1px;
     }
 
     .btn-accept {
-      background: var(--vault-accent);
-      color: var(--vault-bg);
+      background: var(--nvidia) !important;
+      color: #000 !important;
+      border: none;
+      box-shadow: 0 4px 15px rgba(118, 185, 0, 0.3);
     }
 
     .btn-outline-sm {
-      border: 1px solid var(--vault-border);
-      color: var(--vault-muted);
+      background: transparent;
+      border: 1px solid var(--steel);
+      color: #fff !important;
     }
 
-    .btn-accept:hover { transform: translateY(-2px); box-shadow: 0 4px 15px var(--vault-glow); }
-    .btn-outline-sm:hover { border-color: var(--vault-accent); color: var(--vault-accent); }
+    .btn-accept:hover { 
+      transform: translateY(-2px); 
+      box-shadow: 0 8px 25px rgba(118, 185, 0, 0.5); 
+    }
+    
+    .btn-outline-sm:hover { 
+      border-color: #fff;
+      background: rgba(255, 255, 255, 0.05);
+    }
 
     .fade-up {
       animation: fadeInUp 0.5s ease-out forwards;

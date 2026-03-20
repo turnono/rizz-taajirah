@@ -1,314 +1,554 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, inject, signal } from '@angular/core';
+import { CommonModule, NgOptimizedImage } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatListModule } from '@angular/material/list';
+import { MatIconModule } from '@angular/material/icon';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { SovereignDiagramComponent } from '../../core/components/sovereign-diagram.component';
+import { DiscoveryDialogComponent } from '../discovery/discovery-dialog.component';
 
 @Component({
   selector: 'app-landing',
   standalone: true,
-  imports: [CommonModule, SovereignDiagramComponent],
+  imports: [
+    CommonModule, 
+    NgOptimizedImage,
+    MatButtonModule, 
+    MatCardModule, 
+    MatGridListModule, 
+    MatListModule, 
+    MatIconModule,
+    MatDialogModule,
+    SovereignDiagramComponent
+  ],
   template: `
-    <div class="landing-container">
+    <div class="landing-page">
       <!-- ════ HERO SECTION ════ -->
-      <section id="hero" class="hero fade-in">
-        <div class="hero-content">
-          <div class="tags-row">
-            <span class="tech-tag mono">● NVIDIA NemoClaw • OpenShell • POPIA-Ready</span>
-          </div>
-
-          <div class="status-badge">
-            <span class="status-dot"></span>
-            <span class="mono label">ACTIVE IMPLEMENTATION</span>
-            <span class="v-details mono">Nemotron-3 • Sovereign AI</span>
-          </div>
-
-          <h1 class="hero-title">
-            Enterprise AI Deployment.<br>
-            <span class="vault-gradient-text glow">Hardened by NemoClaw.</span>
+      <section id="strategy" class="hero-section">
+        <div class="container">
+          <h1 class="hero-headline vault-gradient-text">
+            Stop Paying for AI.<br>
+            Start Owning Your Infrastructure.
           </h1>
-          
-          <p class="hero-subtitle italic">
-            We bridge the gap between high-level reasoning and corporate data safety.
+          <p class="hero-subheadline">
+            Hire a Senior Architect with 8 years of engineering experience to deploy a 
+            <strong>Local AI Sandbox</strong> on your hardware. 100% Private. 100% POPIA-Safe.
           </p>
-
-          <div class="cta-row">
-            <a [href]="whatsappLink" class="btn-primary-pill mono">
-              Book On-Site Demo
-            </a>
+          <div class="hero-cta">
+            <button mat-flat-button color="primary" class="cta-btn" (click)="openDiscovery()">
+              Book Your On-Site Strategy & Deployment (R2,500)
+            </button>
           </div>
         </div>
       </section>
 
-      <!-- ════ THE SOVEREIGN CONDUIT (OVERVIEW) ════ -->
-      <section id="overview" class="section overview-section fade-in">
-        <div class="overview-content glass">
-          <h2 class="mono accent-emerald">THE SOVEREIGN CONDUIT</h2>
-          <p class="description">
-            We implement the NVIDIA NemoClaw stack on your local hardware. 
-            High-intelligence inference with an encrypted, POPIA-ready privacy router.
-          </p>
-          
-          <!-- Architecture Diagram with Defer -->
+      <!-- ════ SOVEREIGN LAPTOP SUPERCHARGE (VIDEO) ════ -->
+      <section id="supercharge" class="video-section">
+        <div class="container">
+          <mat-card class="video-card glass">
+            <div class="video-wrapper">
+              <iframe 
+                src="https://www.youtube.com/embed/u9vgqyXlhyE" 
+                title="The Sovereign Laptop Supercharge" 
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                allowfullscreen>
+              </iframe>
+            </div>
+            <mat-card-header>
+              <mat-card-title class="mono">The Sovereign Laptop Supercharge</mat-card-title>
+              <mat-card-subtitle>Escaping the Cloud AI Trap with Local Intelligence</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+              <p>
+                Watch how we transform standard hardware into a high-performance, private AI workstation. 
+                No data logging. No subscription traps. Just pure, sovereign architecture.
+              </p>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </section>
+
+      <!-- ════ THE ARCHITECT SECTION (VERTICAL 9:16 LAYOUT) ════ -->
+      <section id="architect" class="architect-section">
+        <div class="container architect-grid">
           @defer (on viewport) {
-            <app-sovereign-diagram></app-sovereign-diagram>
+            <div class="architect-visual">
+              <mat-card class="image-card">
+                <img ngSrc="assets/images/founder.png" width="900" height="1600" alt="The Senior Architect" priority>
+              </mat-card>
+            </div>
+            
+            <div class="architect-content">
+              <mat-card class="info-card glass">
+                <mat-card-header>
+                  <mat-card-title class="nvidia-text">8 Years Senior Engineering Experience</mat-card-title>
+                  <mat-card-subtitle class="mono">Daily AI Implementation & Strategy</mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content>
+                  <p class="quote">
+                    "I architect AI for production-grade reliability. My R2,500 session is a specialized 
+                    strategy window focused on your specific business bottlenecks."
+                  </p>
+                  <div class="stats-row">
+                    <div class="stat">
+                      <span class="label">Expertise</span>
+                      <span class="value">Local LLM Architecture</span>
+                    </div>
+                    <div class="stat">
+                      <span class="label">Sovereignty</span>
+                      <span class="value">100% POPIA Hardening</span>
+                    </div>
+                  </div>
+                </mat-card-content>
+                <mat-card-actions>
+                  <button mat-flat-button color="primary" (click)="openDiscovery()">
+                    START DISCOVERY
+                  </button>
+                </mat-card-actions>
+              </mat-card>
+            </div>
           } @placeholder {
-            <div class="diagram-placeholder mono">LOADING SECURE ARCHITECTURE...</div>
+            <div class="loader-placeholder">LOADING ARCHITECT PROFILE...</div>
           }
         </div>
       </section>
 
-      <!-- ════ HIGHLIGHTS (BENEFITS) ════ -->
-      <section id="why" class="section">
-        <div class="grid">
-          <div class="card glass hover-grow" *ngFor="let benefit of benefits">
-            <div class="icon">{{ benefit.icon }}</div>
-            <h3 class="mono highlight-title">{{ benefit.title }}</h3>
-            <p class="highlight-desc">{{ benefit.description }}</p>
+      <!-- ════ THE SOVEREIGN CONDUIT (ARCHITECTURE) ════ -->
+      <section id="architecture" class="conduit-section">
+        <div class="container">
+          <h2 class="section-title mono">THE SOVEREIGN CONDUIT</h2>
+          <p class="section-subtitle">Bridging the gap between AI hype and real-world utility.</p>
+          
+          <div class="architecture-graphics">
+             @defer (on viewport) {
+               <app-sovereign-diagram></app-sovereign-diagram>
+             } @placeholder {
+               <div class="loader-placeholder">LOADING ARCHITECTURE DIAGRAM...</div>
+             }
+          </div>
+
+          <div class="conduit-grid">
+            <mat-card class="conduit-card glass" *ngFor="let card of conduitCards">
+              <mat-card-header>
+                <div mat-card-avatar class="conduit-icon">{{ card.icon }}</div>
+                <mat-card-title>{{ card.title }}</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <p>{{ card.description }}</p>
+              </mat-card-content>
+            </mat-card>
           </div>
         </div>
       </section>
 
-      <!-- ════ PRICING SECTION ════ -->
-      <section id="pricing" class="section pricing-section">
-        <div class="pricing-card glass">
-          <div class="section-label mono">FLAT-RATE IMPLEMENTATION</div>
-          <h2 class="pricing-fee vault-gradient-text">R2,500</h2>
-          <div class="pricing-label mono">Audit • Launch • Briefing</div>
-          <ul class="pricing-list">
-            <li *ngFor="let item of inclusions">
-              <span class="check">✓</span> {{ item }}
-            </li>
-          </ul>
-          <a [href]="whatsappLink" class="btn-primary-pill mono">
-            Secure Implementation
-          </a>
+      <!-- ════ PRICING SECTION (BULLETPROOF) ════ -->
+      <section id="pricing" class="pricing-section">
+        <div class="pricing-card-sovereign">
+        <h3 class="pricing-title mono">STRATEGY SESSION</h3>
+        <div class="pricing-price-box">
+          <div class="price mono">R2,500</div>
+          <div class="price-label mono">PER SESSION</div>
         </div>
-      </section>
+        
+        <div class="pricing-feature-list">
+          <div class="feature-row">
+            <span class="check-mark">✓</span>
+            <span>60-Minute Local AI Audit</span>
+          </div>
+          <div class="feature-row">
+            <span class="check-mark">✓</span>
+            <span>Hardware Optimization Plan</span>
+          </div>
+          <div class="feature-row">
+            <span class="check-mark">✓</span>
+            <span>Data Privacy Guardrail Design</span>
+          </div>
+          <div class="feature-row">
+            <span class="check-mark">✓</span>
+            <span>Custom LLM Deployment Map</span>
+          </div>
+        </div>
 
-      <!-- Mobile FAB -->
-      <a [href]="whatsappLink" class="mobile-fab glass fab-fade mono">
-        BOOK DEMO
-      </a>
+        <button class="sovereign-action-btn mono" (click)="openDiscovery()">BOOK YOUR SESSION</button>
+      </div>
+      </section>
     </div>
   `,
   styles: [`
-    .landing-container {
+    .container {
       max-width: 1200px;
       margin: 0 auto;
-      padding: 0 1.5rem;
+      padding: 0 2rem;
     }
 
-    section { padding: 6rem 0; }
-
-    .hero {
-      padding: 6rem 1rem 4rem;
+    .hero-section {
       text-align: center;
+      padding: 10rem 0 6rem;
     }
 
-    .hero-content {
-      max-width: 1000px;
-      margin: 0 auto;
-    }
-
-    .tech-tag {
-      display: inline-block;
-      border: 1px solid rgba(16, 185, 129, 0.3);
-      padding: 0.4rem 1.2rem;
-      border-radius: 2rem;
-      font-size: 0.7rem;
-      color: var(--vault-accent);
-      background: rgba(16, 185, 129, 0.05);
-      margin-bottom: 1.5rem;
-    }
-
-    .status-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.75rem;
-      border: 1px solid var(--vault-accent);
-      padding: 0.4rem 1.25rem;
-      border-radius: 0.75rem;
-      margin-bottom: 2.5rem;
-      background: rgba(16, 185, 129, 0.05);
-    }
-
-    .status-dot {
-      width: 8px;
-      height: 8px;
-      background: var(--vault-accent);
-      border-radius: 50%;
-      box-shadow: 0 0 10px var(--vault-accent);
-    }
-
-    .hero-title {
+    .hero-headline {
       font-size: clamp(2.5rem, 8vw, 5rem);
-      line-height: 1;
       margin-bottom: 2rem;
-      font-weight: 800;
+      line-height: 1.1;
     }
 
-    .glow {
-      text-shadow: 0 0 30px rgba(16, 185, 129, 0.4);
-    }
-
-    .hero-subtitle {
-      font-size: 1.4rem;
-      color: var(--vault-muted);
-      margin: 0 auto 3rem;
+    .hero-subheadline {
+      font-size: 1.5rem;
+      color: var(--steel);
       max-width: 800px;
+      margin: 0 auto 3rem;
       line-height: 1.6;
     }
 
-    .overview-content {
-      padding: 4rem 2rem;
-      border-radius: 2rem;
+    .cta-btn {
+      padding: 1.5rem 3rem;
+      font-size: 1.1rem;
+      font-weight: 800;
+      border-radius: 4rem;
+    }
+
+    .video-wrapper {
+      position: relative;
+      padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+      height: 0;
+      overflow: hidden;
+      border-radius: 1.5rem 1.5rem 0 0;
+    }
+
+    .video-wrapper iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    .video-card {
+      max-width: 900px;
+      margin: 0 auto;
+      border-radius: 1.5rem !important;
+      overflow: hidden;
+      border: 1px solid rgba(118, 185, 0, 0.2) !important;
+    }
+
+    .video-card mat-card-title {
+      padding-top: 1.5rem;
+      font-weight: 800;
+      color: var(--nvidia);
+    }
+
+    .video-section {
+      padding: 4rem 0;
+    }
+
+    .architect-section {
+      padding: 8rem 0;
+      background: radial-gradient(circle at 10% 50%, rgba(118, 185, 0, 0.05) 0%, transparent 50%);
+    }
+
+    .architect-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 4rem;
+      align-items: center;
+    }
+
+    .image-card {
+      border-radius: 28px !important;
+      overflow: hidden;
+      border: 1px solid rgba(118, 185, 0, 0.2) !important;
+      box-shadow: 0 30px 60px rgba(0,0,0,0.6);
+      
+      img {
+        display: block;
+        width: 100%;
+        height: auto;
+        aspect-ratio: 9/16;
+        object-fit: cover;
+      }
+    }
+
+    .info-card {
+      padding: 2.5rem !important;
+      border-radius: 28px !important;
+      border: 1px solid rgba(255, 255, 255, 0.05) !important;
+
+      mat-card-title {
+        font-size: 2.5rem;
+        line-height: 1.1;
+        margin-bottom: 1rem;
+        font-weight: 800;
+      }
+
+      mat-card-subtitle {
+        font-size: 1.1rem;
+        color: var(--steel);
+        margin-bottom: 2rem;
+      }
+
+      .quote {
+        font-size: 1.25rem;
+        line-height: 1.7;
+        font-style: italic;
+        color: rgba(255,255,255,0.9);
+        margin-bottom: 3rem;
+      }
+
+      .stats-row {
+        display: flex;
+        gap: 3rem;
+        margin-bottom: 3rem;
+
+        .stat {
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
+
+          .label {
+            color: var(--steel);
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 2px;
+          }
+
+          .value {
+            color: var(--nvidia);
+            font-weight: 700;
+            font-size: 1.1rem;
+          }
+        }
+      }
+    }
+
+    @media (max-width: 900px) {
+      .architect-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+      .image-card img {
+        height: 500px;
+      }
+      .info-card mat-card-title {
+        font-size: 2rem;
+      }
+    }
+
+    .conduit-section {
+      padding: 8rem 0;
       text-align: center;
     }
 
-    .overview-content h2 {
-      font-size: 1.5rem;
-      letter-spacing: 0.3em;
-      margin-bottom: 2rem;
-    }
-
-    .overview-content .description {
-      font-size: 1.25rem;
-      max-width: 800px;
-      margin: 0 auto 2rem;
-      color: var(--vault-muted);
-      line-height: 1.6;
-    }
-
-    .diagram-placeholder {
-      padding: 6rem;
-      color: var(--vault-muted);
-      font-size: 0.8rem;
-      letter-spacing: 0.2em;
-    }
-
-    .highlight-title {
-      font-size: 1.25rem;
-      color: white;
+    .section-title {
+      font-size: 2.5rem;
       margin-bottom: 1rem;
+      letter-spacing: 0.1em;
     }
 
-    .highlight-desc {
-      color: var(--vault-muted);
-      line-height: 1.6;
-      font-size: 1rem;
+    .section-subtitle {
+      color: var(--steel);
+      font-size: 1.2rem;
+      margin-bottom: 4rem;
     }
 
-    .cta-row { margin-top: 2rem; }
-
-    .btn-primary-pill {
-      background: var(--vault-accent);
-      color: var(--vault-bg);
-      padding: 1.1rem 3rem;
-      border-radius: 6rem;
-      text-decoration: none;
-      font-weight: 800;
-      font-size: 0.9rem;
-      transition: all 0.2s ease;
-      box-shadow: 0 5px 20px rgba(16, 185, 129, 0.3);
-      display: inline-block;
-    }
-
-    .btn-primary-pill:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(16, 185, 129, 0.5); }
-
-    .grid {
+    .conduit-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
       gap: 2rem;
+      margin-top: 4rem;
     }
 
-    .card { padding: 3rem; border-radius: 1.5rem; }
-    .icon { font-size: 2.5rem; margin-bottom: 1.5rem; }
-
-    .pricing-card {
-      max-width: 550px;
-      width: 100%;
-      padding: 5rem 2rem;
-      border-radius: 2rem;
-      margin: 0 auto;
-      text-align: center;
-    }
-
-    .pricing-fee { font-size: 6rem; margin-bottom: 0.5rem; }
-    .pricing-label { color: var(--vault-muted); font-size: 0.9rem; margin-bottom: 3rem; letter-spacing: 0.1em; }
-    
-    .pricing-list {
-      list-style: none;
-      padding: 0;
-      margin: 0 0 4rem;
+    .conduit-card {
+      padding: 2rem;
+      border-radius: 1.5rem !important;
       text-align: left;
-      display: inline-block;
     }
 
-    .pricing-list li {
-      margin-bottom: 1.25rem;
-      font-size: 1.1rem;
+    .conduit-icon {
+      font-size: 2rem;
       display: flex;
-      gap: 1rem;
+      align-items: center;
+      justify-content: center;
     }
 
-    .check { color: var(--vault-accent); font-weight: 900; }
+    /* ── Pricing Section (Final Bulletproof Fix) ── */
+    .pricing-section {
+      padding: 10rem 2rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: radial-gradient(circle at center, rgba(118, 185, 0, 0.08) 0%, transparent 70%);
+    }
 
-    /* Mobile FAB */
-    .mobile-fab {
-      display: none;
-      position: fixed;
-      bottom: 2rem;
-      right: 1.5rem;
-      padding: 1rem 1.5rem;
-      border-radius: 5rem;
-      background: var(--vault-accent);
-      color: var(--vault-bg);
+    .pricing-card-sovereign {
+      background: #0A0A0A;
+      border: 1px solid rgba(118, 185, 0, 0.5);
+      border-radius: 40px;
+      padding: 5rem 3.5rem;
+      width: 100%;
+      max-width: 650px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      box-shadow: 0 50px 120px rgba(0,0,0,0.95);
+      position: relative;
+    }
+
+    .pricing-card-sovereign::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, #76B900, transparent);
+    }
+
+    .pricing-title {
+      font-size: 2.8rem;
+      font-weight: 800;
+      color: #fff;
+      margin: 0 0 2.5rem 0;
+      line-height: 1.1;
+      letter-spacing: -1px;
+    }
+
+    .pricing-price-box {
+      margin-bottom: 4rem;
+    }
+
+    .pricing-price-box .price {
+      font-size: 5rem;
       font-weight: 900;
-      font-size: 0.8rem;
-      text-decoration: none;
-      box-shadow: 0 10px 30px rgba(16, 185, 129, 0.4);
-      z-index: 1001;
-      border: 1px solid rgba(255,255,255,0.2);
+      color: #76B900;
+      line-height: 1;
+      margin-bottom: 0.5rem;
+      text-shadow: 0 0 30px rgba(118, 185, 0, 0.4);
     }
 
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
+    .pricing-price-box .price-label {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--steel);
+      letter-spacing: 3px;
+      text-transform: uppercase;
     }
 
-    .fade-in { animation: fadeInUp 1s ease-out forwards; }
+    .pricing-feature-list {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 24px;
+      padding: 2rem;
+      margin-bottom: 4rem;
+    }
+
+    .feature-row {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 1.5rem;
+      padding: 1rem 0;
+      color: #fff;
+      font-size: 1.2rem;
+      font-weight: 500;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .feature-row:last-child {
+      border-bottom: none;
+    }
+
+    .feature-row .check-mark {
+      color: #76B900;
+      font-size: 1.5rem;
+      font-weight: 900;
+    }
+
+    .sovereign-action-btn {
+      width: 100%;
+      max-width: 480px;
+      height: 80px;
+      background-color: #76B900 !important;
+      color: #000 !important;
+      border: none;
+      border-radius: 40px;
+      font-size: 1.4rem;
+      font-weight: 900;
+      letter-spacing: 2px;
+      cursor: pointer;
+      text-transform: uppercase;
+      box-shadow: 0 15px 40px rgba(118, 185, 0, 0.4);
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .sovereign-action-btn:hover {
+      transform: translateY(-6px) scale(1.03);
+      box-shadow: 0 25px 60px rgba(118, 185, 0, 0.6);
+      background-color: #89D910 !important;
+    }
+
+    .sovereign-action-btn:active {
+      transform: translateY(0) scale(0.97);
+    }
+
+    .loader-placeholder {
+      height: 600px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-surface);
+      border-radius: 28px;
+      color: var(--steel);
+      font-family: var(--font-mono);
+    }
 
     @media (max-width: 768px) {
-      .mobile-fab { display: block; }
-      .hero-title { font-size: 2.5rem; }
-      .pricing-fee { font-size: 4rem; }
-      .hero { padding-top: 4rem; }
+      .hero-headline { font-size: 2.5rem; }
+      .architect-overlay {
+        position: relative;
+        bottom: 0;
+        right: 0;
+        margin-top: 1rem;
+        max-width: 100%;
+      }
     }
   `]
 })
 export class LandingComponent {
-  whatsappLink = 'https://wa.me/27827583593?text=I%20would%20like%20to%20book%20an%20on-site%20demo%20for%20NVIDIA%20NemoClaw.';
-
-  benefits = [
+  private dialog = inject(MatDialog);
+  
+  conduitCards = [
     {
       icon: '🧠',
       title: '1M Token Context',
-      description: 'Analyze years of complex legal or financial records instantly.'
+      description: 'Audit years of complex records instantly with massive reasoning windows.'
     },
     {
       icon: '🛡️',
-      title: 'OpenShell Sandbox',
-      description: 'Your enterprise data remains "caged" and isolated on local silicon.'
+      title: 'Local Sandbox',
+      description: "Your data is 'caged' via OpenShell on local silicon. Zero external exposure."
     },
     {
-      icon: '⚡',
-      title: 'Active Execution',
-      description: 'Agents that perform verifiable work across local infrastructure.'
+      icon: '💡',
+      title: 'Expert Advisory',
+      description: 'Senior strategic guidance to solve your most expensive manual bottlenecks.'
     }
   ];
 
-  inclusions = [
-    'Complete Site Audit',
-    'NemoClaw Environment Launch',
-    'Enterprise Staff Briefing'
+  serviceList = [
+    'Workflow Audit (30-min deep-dive)',
+    'NemoClaw Environment Launch (Hardened)',
+    'The "First Task" Completion',
+    'Enterprise Privacy Briefing (POPIA)'
   ];
+
+  openDiscovery() {
+    this.dialog.open(DiscoveryDialogComponent, {
+      width: '500px',
+      maxWidth: '95vw'
+    });
+  }
 }

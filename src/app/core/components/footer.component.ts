@@ -14,6 +14,7 @@ import { CommonModule } from '@angular/common';
             <span class="brand-name mono">TAAJIRAH SYSTEMS</span>
           </div>
           <p class="slogan mono">Engineered in South Africa.</p>
+          <p class="region mono">Serving Roodepoort, JHB, and Sandton corridors.</p>
           <p class="partner-note mono">NVIDIA NemoClaw Implementation Partner (Independent)</p>
           
           <div class="legal-links">
