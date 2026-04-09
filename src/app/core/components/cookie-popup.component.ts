@@ -9,11 +9,11 @@ import { CommonModule } from '@angular/common';
     <div *ngIf="!accepted" class="cookie-popup glass fade-up">
       <div class="cookie-content">
         <div class="text-side">
-          <p class="mono">WE USE ESSENTIAL COOKIES FOR SOVEREIGN PERFORMANCE. <a href="/privacy" class="accent-link">LEARN MORE</a></p>
+          <p class="mono">WE USE ESSENTIAL COOKIES TO ENSURE POPIA-COMPLIANT PERFORMANCE. <a href="/privacy" class="accent-link">LEARN MORE</a></p>
         </div>
         <div class="button-side">
-          <button (click)="accept('necessary')" class="btn-outline-sm mono">NECESSARY ONLY</button>
-          <button (click)="accept('all')" class="btn-accept mono">ACCEPT ALL</button>
+          <button (click)="accept('necessary')" class="btn-outline-sm mono">ESSENTIAL ONLY</button>
+          <button (click)="accept('all')" class="btn-accept mono">I ACCEPT</button>
         </div>
       </div>
     </div>
@@ -24,76 +24,77 @@ import { CommonModule } from '@angular/common';
       bottom: 2rem;
       left: 50%;
       transform: translateX(-50%);
-      width: 95%;
-      max-width: 800px;
-      padding: 1.5rem 2.5rem;
-      border-radius: 20px;
+      width: 90%;
+      max-width: 1400px;
+      padding: 2.5rem 4rem;
+      border-radius: 12px;
       z-index: 9999;
-      background: rgba(15, 15, 15, 0.95);
-      backdrop-filter: blur(20px);
-      border: 1px solid rgba(118, 185, 0, 0.3);
-      box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+      background: rgba(10, 12, 16, 0.95);
+      backdrop-filter: blur(24px);
+      border: 1px solid var(--vault-border);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
     }
 
-    .cookie-content {
+    .cookie-container {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 2rem;
+      gap: 3rem;
     }
 
     p { 
-      font-size: 0.85rem; 
+      font-size: 0.75rem; 
       margin: 0; 
       color: var(--steel); 
-      letter-spacing: 1px; 
+      letter-spacing: 0.05em; 
       line-height: 1.5; 
       font-weight: 500;
     }
     
     .accent-link { 
-      color: var(--nvidia); 
-      text-decoration: underline; 
-      font-weight: 700;
+      color: var(--sentinel-blue); 
+      text-decoration: none; 
+      font-weight: 600;
+      border-bottom: 1px solid rgba(59, 130, 246, 0.3);
     }
 
     .button-side {
       display: flex;
-      gap: 1rem;
+      gap: 0.75rem;
       white-space: nowrap;
     }
 
     button {
-      border-radius: 12px;
-      padding: 0.75rem 1.5rem;
-      font-size: 0.8rem;
-      font-weight: 800;
+      border-radius: 6px;
+      padding: 0.6rem 1.25rem;
+      font-size: 0.7rem;
+      font-weight: 700;
       cursor: pointer;
       transition: all 0.3s ease;
       text-transform: uppercase;
-      letter-spacing: 1px;
+      letter-spacing: 0.1em;
     }
 
     .btn-accept {
-      background: var(--nvidia) !important;
-      color: #000 !important;
+      background: var(--sentinel-blue) !important;
+      color: #fff !important;
       border: none;
-      box-shadow: 0 4px 15px rgba(118, 185, 0, 0.3);
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
     }
 
     .btn-outline-sm {
       background: transparent;
-      border: 1px solid var(--steel);
-      color: #fff !important;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--steel) !important;
     }
 
     .btn-accept:hover { 
-      transform: translateY(-2px); 
-      box-shadow: 0 8px 25px rgba(118, 185, 0, 0.5); 
+      transform: translateY(-1px); 
+      background: #2563eb !important;
     }
     
     .btn-outline-sm:hover { 
-      border-color: #fff;
+      border-color: rgba(255, 255, 255, 0.3);
       background: rgba(255, 255, 255, 0.05);
     }
 

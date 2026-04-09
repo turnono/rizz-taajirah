@@ -1,5 +1,6 @@
 {
   "hosting": {
+    "site": "taajirah",
     "public": "dist/rizz-taajirah/browser",
     "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
     "rewrites": [

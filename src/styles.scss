@@ -3,18 +3,18 @@
 /* ── Typography & Base Styles ────────────────────────── */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap');
 
-/* ── Custom Palette (NVIDIA Green & Cyber Silver) ─────── */
+/* ── Custom Palette (Sentinel Blue, Slate & Deep Graphite) ─────── */
 $primary-palette: (
   0: #000000,
-  10: #0d1e00,
-  20: #1a3700,
-  30: #295100,
-  40: #3a6b00,
-  50: #4c8700,
-  60: #62a200,
-  70: #76b900, // NVIDIA Green
-  80: #93d533,
-  90: #aff251,
+  10: #0f172a, // Deep Graphite
+  20: #1e293b, // Sentinel Slate
+  30: #334155,
+  40: #475569,
+  50: #64748b,
+  60: #94a3b8,
+  70: #3b82f6, // Sentinel Blue
+  80: #60a5fa,
+  90: #93c5fd,
   100: #ffffff
 );
 
@@ -36,6 +36,8 @@ $secondary-palette: (
 $theme: mat.define-theme((
   color: (
     theme-type: dark,
+    primary: mat.$azure-palette,
+    tertiary: mat.$blue-palette,
   ),
   typography: (
     brand-family: 'Inter, sans-serif',
@@ -45,11 +47,15 @@ $theme: mat.define-theme((
 
 // Applying custom colors via CSS variables for branding
 :root {
-  --bg-deep: #0a0a0a;
-  --bg-surface: #121212;
-  --steel: #90a4ae;
-  --nvidia: #76b900;
+  --bg-deep: #0a0c10;
+  --bg-surface: #111827;
+  --steel: #94a3b8;
+  --sentinel-blue: #3b82f6;
+  --sentinel-slate: #1e293b;
+  --nvidia: #76b900; // Demoted to tiny accent
   --font-mono: 'JetBrains Mono', monospace;
+  --vault-border: rgba(59, 130, 246, 0.15);
+  --vault-glass: rgba(15, 23, 42, 0.7);
 }
 
 @include mat.core();
@@ -64,9 +70,20 @@ body {
   height: 100%;
   margin: 0;
   background-color: var(--bg-deep);
-  color: #f8fafc;
+  color: #f1f5f9;
   font-family: 'Inter', sans-serif;
   -webkit-font-smoothing: antialiased;
+  line-height: 1.6;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+}
+
+p {
+  margin-top: 0;
+  margin-bottom: 1rem;
 }
 
 /* ── Custom Theme Overrides ────────────────────────── */
@@ -75,9 +92,10 @@ body {
 .mat-mdc-flat-button.mat-primary,
 .mat-flat-button.mat-primary, 
 .mat-raised-button.mat-primary {
-  background-color: var(--nvidia) !important;
-  color: #000 !important;
-  font-weight: 800 !important;
+  background-color: var(--sentinel-blue) !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.5px;
 }
 
 /* Specific fix for the Hero/CTA button text visibility */
@@ -86,60 +104,79 @@ body {
   &.mat-mdc-raised-button,
   &.mat-mdc-flat-button {
     .mdc-button__label {
-      color: #000 !important;
-      font-weight: 800 !important;
+      color: #ffffff !important;
+      font-weight: 700 !important;
     }
   }
 }
 
 .mat-mdc-selection-list {
   background: rgba(0,0,0,0.3);
-  border-radius: 8px;
+  border-radius: 12px;
   .mdc-list-item__primary-text {
-    color: #e2e8f0 !important; // Higher contrast for text
+    color: #f1f5f9 !important;
     font-size: 1.1rem !important;
-  }
-  .mdc-checkbox {
-    --mdc-checkbox-disabled-selected-icon-color: var(--nvidia);
   }
 }
 
 .mono {
   font-family: var(--font-mono);
+  letter-spacing: 0.05em;
 }
 
-.mono { font-family: var(--font-mono); }
-
-/* Custom Utilities for Premium Look */
+/* Custom Utilities for Enterprise Calm Look */
 .vault-gradient-text {
-  background: linear-gradient(135deg, #ffffff 0%, var(--nvidia) 100%);
+  background: linear-gradient(135deg, #ffffff 0%, #60a5fa 100%);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .glass {
-  background: rgba(18, 18, 18, 0.7);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: var(--vault-glass);
+  backdrop-filter: blur(24px);
+  border: 1px solid var(--vault-border);
+}
+
+.vault-glass-card {
+  @extend .glass;
+  border-radius: 1.5rem !important;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  &:hover {
+    transform: translateY(-8px);
+    border-color: rgba(59, 130, 246, 0.4);
+    box-shadow: 0 10px 30px -10px rgba(59, 130, 246, 0.2);
+  }
 }
 
 /* Scrollbar Styling */
-::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar { width: 5px; }
 ::-webkit-scrollbar-track { background: var(--bg-deep); }
 ::-webkit-scrollbar-thumb { 
-  background: #333; 
+  background: #2d3748; 
   border-radius: 10px; 
 }
-::-webkit-scrollbar-thumb:hover { background: var(--nvidia); }
+::-webkit-scrollbar-thumb:hover { background: var(--sentinel-blue); }
 
-/* Section Spacing */
-section {
-  padding: 5rem 0;
-  @media (max-width: 768px) {
-    padding: 2.5rem 0;
+/* Section Spacing & Container */
+.container {
+  max-width: 1400px; // Expanded for more enterprise presence
+  margin: 0 auto;
+  padding: 0 4rem; // Increased horizontal padding
+  width: 100%;
+
+  @media (max-width: 1024px) {
+    padding: 0 2rem;
   }
 }
+
+section {
+  padding: 10rem 0; // More breathing room between sections
+  @media (max-width: 768px) {
+    padding: 6rem 0;
+  }
+}
+
 
 /* ── Mobile Optimization & Responsive Utilities ───── */
 @media (max-width: 768px) {
@@ -148,8 +185,8 @@ section {
   h3 { font-size: 1.4rem !important; }
   
   .container {
-    padding-left: 1.5rem !important;
-    padding-right: 1.5rem !important;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
   }
 
   .glass {

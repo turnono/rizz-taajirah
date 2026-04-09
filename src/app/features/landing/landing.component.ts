@@ -1,5 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
-import { CommonModule, NgOptimizedImage } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatGridListModule } from '@angular/material/grid-list';
@@ -14,7 +14,6 @@ import { DiscoveryDialogComponent } from '../discovery/discovery-dialog.componen
   standalone: true,
   imports: [
     CommonModule,
-    NgOptimizedImage,
     MatButtonModule,
     MatCardModule,
     MatGridListModule,
@@ -27,566 +26,298 @@ import { DiscoveryDialogComponent } from '../discovery/discovery-dialog.componen
     <div class="landing-page">
       <!-- ════ HERO SECTION ════ -->
       <section id="strategy" class="hero-section">
-        <div class="container">
-          <h1 class="hero-headline vault-gradient-text">
-            Stop Paying for AI.<br>
-            Start Owning Your Infrastructure.
+        <div class="container fade-in-up">
+          <h1 class="hero-headline omnilens-gradient-text">
+            Documentary Maker<br>for your Data.
           </h1>
           <p class="hero-subheadline">
-            Hire a Senior Architect with 8 years of engineering experience to deploy a 
-            <strong>Local AI Sandbox</strong> on your hardware. 100% Private. 100% POPIA-Safe.
+            OmniLens AI is a <strong>Cinematic Knowledge Engine</strong> that transforms static, information-dense visuals—infographics, posters, and documents—into high-engagement narrated video stories.
           </p>
-          <div class="hero-cta" style="margin: -15px;">
+          <div class="hero-cta">
             <button mat-flat-button color="primary" class="cta-btn" (click)="openDiscovery()">
-              Book Your On-Site Strategy & Deployment (R2,500)
+              Join the OmniLens Beta
+            </button>
+            <button mat-stroked-button class="secondary-cta" (click)="openDiscovery()">
+              See the Story Engine
             </button>
           </div>
         </div>
       </section>
 
-      <!-- ════ SOVEREIGN LAPTOP SUPERCHARGE (VIDEO) ════ -->
-      <section id="supercharge" class="video-section">
+      <!-- ════ THE CINEMATIC STAGE (VIDEO DEMO) ════ -->
+      <section id="cinema" class="cinema-section bg-deep">
         <div class="container">
-          <mat-card class="video-card glass">
-            <div class="video-wrapper">
+          <div class="section-header fade-in-up">
+            <h2 class="section-title mono">The Cinematic Stage</h2>
+            <p class="section-subtitle text-steel">Watch the engine transform visuals in real-time.</p>
+          </div>
+          
+          <div class="video-container glass-stage fade-in-up">
+            <!-- TikTok Embed -->
+            <div class="tiktok-wrapper">
               <iframe 
-                src="https://www.youtube.com/embed/u9vgqyXlhyE" 
-                title="The Sovereign Laptop Supercharge" 
-                frameborder="0" 
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                src="https://www.tiktok.com/embed/v2/7626041081494326549" 
+                style="width: 100%; height: 700px; border: none;"
+                allow="autoplay; encrypted-media"
                 allowfullscreen>
               </iframe>
             </div>
-            <mat-card-header>
-              <mat-card-title class="mono">The Sovereign Laptop Supercharge</mat-card-title>
-              <mat-card-subtitle>Escaping the Cloud AI Trap with Local Intelligence</mat-card-subtitle>
-            </mat-card-header>
-            <mat-card-content>
-              <p>
-                Watch how we transform standard hardware into a high-performance, private AI workstation. 
-                No data logging. No subscription traps. Just pure, sovereign architecture.
-              </p>
-            </mat-card-content>
-          </mat-card>
+          </div>
         </div>
       </section>
 
-      <!-- ════ THE ARCHITECT SECTION (VERTICAL 9:16 LAYOUT) ════ -->
-      <section id="architect" class="architect-section">
-        <div class="container architect-grid">
-          @defer (on viewport) {
-            <div class="architect-visual">
-              <mat-card class="image-card">
-                <img ngSrc="assets/images/founder.jpg" width="720" height="1280" alt="The Senior Architect" priority>
-              </mat-card>
+      <!-- ════ CORE PILLARS ════ -->
+      <section id="pillars" class="pillars-section">
+        <div class="container">
+          <div class="section-header fade-in-up">
+            <h2 class="section-title mono">Built for Visual Intelligence</h2>
+            <p class="section-subtitle text-steel">The 5 Pillars of the OmniLens Engine.</p>
+          </div>
+          
+          <div class="pillars-grid">
+            <div class="pillar-card glass-card">
+              <div class="pillar-icon">👁️</div>
+              <h3 class="mono">Visual Intelligence</h3>
+              <p>Powered by Gemini 2.0 Flash for Intent Recognition and Spatial Grounding with pixel-perfect precision.</p>
             </div>
             
-            <div class="architect-content">
-              <mat-card class="info-card glass">
-                <mat-card-header>
-                  <mat-card-title class="nvidia-text">8 Years Senior Engineering Experience</mat-card-title>
-                  <mat-card-subtitle class="mono">Daily AI Implementation & Strategy</mat-card-subtitle>
-                </mat-card-header>
-                <mat-card-content>
-                  <p class="quote">
-                    "I architect AI for production-grade reliability. My R2,500 session is a specialized 
-                    strategy window focused on your specific business bottlenecks."
-                  </p>
-                  <div class="stats-row">
-                    <div class="stat">
-                      <span class="label">Expertise</span>
-                      <span class="value">Local LLM Architecture</span>
-                    </div>
-                    <div class="stat">
-                      <span class="label">Sovereignty</span>
-                      <span class="value">100% POPIA Hardening</span>
-                    </div>
-                  </div>
-                </mat-card-content>
-                <mat-card-actions>
-                  <button mat-flat-button color="primary" (click)="openDiscovery()">
-                    START DISCOVERY
-                  </button>
-                </mat-card-actions>
-              </mat-card>
+            <div class="pillar-card glass-card">
+              <div class="pillar-icon">🧠</div>
+              <h3 class="mono">The AI Producer</h3>
+              <p>Narrative synthesis that adapts to context—from analytical experts to warm, celebratory hosts.</p>
             </div>
-          } @placeholder {
-            <div class="loader-placeholder">LOADING ARCHITECT PROFILE...</div>
-          }
+            
+            <div class="pillar-card glass-card">
+              <div class="pillar-icon">🎭</div>
+              <h3 class="mono">Cinematic Stage</h3>
+              <p>LERP-based transitions, physics-based atmospheres (smoke, digital rain), and interactive overlays.</p>
+            </div>
+            
+            <div class="pillar-card glass-card">
+              <div class="pillar-icon">🗺️</div>
+              <h3 class="mono">Adaptive Learning</h3>
+              <p>Post-video "Deep Dives" that generate new insights from the same original image on the fly.</p>
+            </div>
+
+            <div class="pillar-card glass-card">
+              <div class="pillar-icon">🎬</div>
+              <h3 class="mono">Production Export</h3>
+              <p>Native media recording pipeline for 30fps .webm or .mp4 social-ready distributions.</p>
+            </div>
+          </div>
         </div>
       </section>
 
-      <!-- ════ THE SOVEREIGN CONDUIT (ARCHITECTURE) ════ -->
-      <section id="architecture" class="conduit-section">
+      <!-- ════ THE FLOW ════ -->
+      <section id="flow" class="flow-section bg-surface">
         <div class="container">
-          <h2 class="section-title mono">THE SOVEREIGN CONDUIT</h2>
-          <p class="section-subtitle">Bridging the gap between AI hype and real-world utility.</p>
-          
-          <div class="architecture-graphics">
-             @defer (on viewport) {
-               <app-sovereign-diagram></app-sovereign-diagram>
-             } @placeholder {
-               <div class="loader-placeholder">LOADING ARCHITECTURE DIAGRAM...</div>
-             }
+          <div class="section-header fade-in-up">
+            <h2 class="section-title mono">Turn "Looking" into "Watching"</h2>
+            <p class="section-subtitle text-steel">The 4-step workflow to viral knowledge.</p>
           </div>
-
-          <div class="conduit-grid">
-            <mat-card class="conduit-card glass" *ngFor="let card of conduitCards">
-              <mat-card-header>
-                <div mat-card-avatar class="conduit-icon">{{ card.icon }}</div>
-                <mat-card-title>{{ card.title }}</mat-card-title>
-              </mat-card-header>
-              <mat-card-content>
-                <p>{{ card.description }}</p>
-              </mat-card-content>
-            </mat-card>
+          
+          <div class="flow-steps">
+            <div class="step-item">
+              <span class="step-num mono">01</span>
+              <h4>Upload</h4>
+              <p>Drop in any infographic, poster, or research paper.</p>
+            </div>
+            <div class="step-item">
+              <span class="step-num mono">02</span>
+              <h4>Analyze</h4>
+              <p>Gemini maps the spatial hierarchy and writes the narrative script.</p>
+            </div>
+            <div class="step-item">
+              <span class="step-num mono">03</span>
+              <h4>Present</h4>
+              <p>The Cinematic Stage begins its tour with smooth glides and effects.</p>
+            </div>
+            <div class="step-item">
+              <span class="step-num mono">04</span>
+              <h4>Record</h4>
+              <p>Capture the output at 30fps and download your social-ready video.</p>
+            </div>
           </div>
         </div>
       </section>
 
-      <!-- ════ PRICING SECTION (BULLETPROOF) ════ -->
-      <section id="pricing" class="pricing-section">
-        <div class="pricing-card-sovereign">
-        <h3 class="pricing-title mono">STRATEGY SESSION</h3>
-        <div class="pricing-price-box">
-          <div class="price mono">R2,500</div>
-          <div class="price-label mono">PER SESSION</div>
-        </div>
-        
-        <div class="pricing-feature-list">
-          <div class="feature-row">
-            <span class="check-mark">✓</span>
-            <span>60-Minute Local AI Audit</span>
-          </div>
-          <div class="feature-row">
-            <span class="check-mark">✓</span>
-            <span>Hardware Optimization Plan</span>
-          </div>
-          <div class="feature-row">
-            <span class="check-mark">✓</span>
-            <span>Data Privacy Guardrail Design</span>
-          </div>
-          <div class="feature-row">
-            <span class="check-mark">✓</span>
-            <span>Custom LLM Deployment Map</span>
+      <!-- ════ FINAL CALL ════ -->
+      <section id="cta-final" class="final-cta-section">
+        <div class="container">
+          <h2 class="section-title mono">The Future of Content is Visual.</h2>
+          <p class="section-subtitle text-steel">Be the first to control the engine.</p>
+          
+          <div class="hero-cta" style="margin-top: 4rem;">
+            <button mat-flat-button color="primary" class="cta-btn" (click)="openDiscovery()">
+              Secure Early Access
+            </button>
+            <button mat-stroked-button class="secondary-cta" (click)="openDiscovery()">
+              View Built-in-Public Log
+            </button>
           </div>
         </div>
-
-        <button class="sovereign-action-btn mono" (click)="openDiscovery()">BOOK YOUR SESSION</button>
-      </div>
       </section>
     </div>
   `,
   styles: [`
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 2rem;
+    :host { 
+      display: block; 
+      overflow-x: hidden; 
+      background-color: #0a0a1a;
+      color: #fff;
+    }
+
+    .landing-page {
+      background: radial-gradient(circle at 50% 0%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
+                  radial-gradient(circle at 100% 50%, rgba(139, 92, 246, 0.1) 0%, transparent 40%);
     }
 
     .hero-section {
-      text-align: center;
-      padding: 10rem 0 6rem;
+      min-height: 90vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding-top: 4rem;
+    }
+
+    .omnilens-gradient-text {
+      background: linear-gradient(135deg, #fff 0%, #94a3b8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 4px 12px rgba(255,255,255,0.1));
     }
 
     .hero-headline {
-      font-size: clamp(2.5rem, 8vw, 5rem);
-      margin-bottom: 2rem;
-      line-height: 1.1;
+      font-size: 5rem;
+      font-weight: 800;
+      line-height: 1.05;
+      margin-bottom: 2.5rem;
+      letter-spacing: -0.02em;
+      @media (max-width: 768px) { font-size: 3rem; }
     }
 
     .hero-subheadline {
       font-size: 1.5rem;
-      color: var(--steel);
-      max-width: 800px;
-      margin: 0 auto 3rem;
+      max-width: 850px;
+      margin: 0 auto 4rem;
+      color: #94a3b8;
       line-height: 1.6;
+      font-weight: 300;
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 1.5rem;
+      justify-content: center;
+      @media (max-width: 768px) { flex-direction: column; align-items: center; }
     }
 
     .cta-btn {
-      padding: 1.5rem 3rem;
-      font-size: 1.1rem;
-      font-weight: 800;
-      border-radius: 4rem;
+      background: #fff !important;
+      color: #000 !important;
+      padding: 0 2.5rem !important;
+      height: 56px !important;
+      font-weight: 700 !important;
+      border-radius: 12px !important;
+      transition: all 0.3s ease !important;
     }
 
-    .video-wrapper {
-      position: relative;
-      padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
-      height: 0;
-      overflow: hidden;
-      border-radius: 1.5rem 1.5rem 0 0;
+    .cta-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(255,255,255,0.2);
     }
 
-    .video-wrapper iframe {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      border: none;
+    .secondary-cta {
+      border-color: rgba(255, 255, 255, 0.2) !important;
+      color: #fff !important;
+      padding: 0 2.5rem !important;
+      height: 56px !important;
+      border-radius: 12px !important;
+      backdrop-filter: blur(8px);
     }
 
-    .video-card {
-      max-width: 900px;
+    .section-header { margin-bottom: 5rem; text-align: center; }
+    .section-title { font-size: 3rem; margin-bottom: 1rem; color: #fff; font-weight: 700; }
+    .section-subtitle { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.4em; color: #64748b; }
+
+    /* Cinematic Stage / Video */
+    .cinema-section { padding: 8rem 0; }
+    .glass-stage {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 32px;
+      padding: 2rem;
+      backdrop-filter: blur(24px);
+      box-shadow: 0 24px 64px rgba(0,0,0,0.4);
+      max-width: 800px;
       margin: 0 auto;
-      border-radius: 1.5rem !important;
-      overflow: hidden;
-      border: 1px solid rgba(118, 185, 0, 0.2) !important;
     }
 
-    .video-card mat-card-title {
-      padding-top: 1.5rem;
-      font-weight: 800;
-      color: var(--nvidia);
-    }
-
-    .video-section {
-      padding: 2rem 0;
-    }
-
-    .architect-section {
-      background: radial-gradient(circle at 10% 50%, rgba(118, 185, 0, 0.05) 0%, transparent 50%);
-    }
-
-    .architect-grid {
-      display: grid;
-      grid-template-columns: 1fr 1.2fr;
-      gap: 4rem;
-      align-items: center;
-    }
-
-    .image-card {
-      border-radius: 28px !important;
-      overflow: hidden;
-      border: 1px solid rgba(118, 185, 0, 0.2) !important;
-      box-shadow: 0 30px 60px rgba(0,0,0,0.6);
-      
-      img {
-        display: block;
-        width: 100%;
-        height: auto;
-        aspect-ratio: 9/16;
-        object-fit: cover;
-      }
-    }
-
-    .info-card {
-      padding: 2.5rem !important;
-      border-radius: 28px !important;
-      border: 1px solid rgba(255, 255, 255, 0.05) !important;
-
-      mat-card-title {
-        font-size: 2.5rem;
-        line-height: 1.1;
-        margin-bottom: 1rem;
-        font-weight: 800;
-      }
-
-      mat-card-subtitle {
-        font-size: 1.1rem;
-        color: var(--steel);
-        margin-bottom: 2rem;
-      }
-
-      .quote {
-        font-size: 1.25rem;
-        line-height: 1.7;
-        font-style: italic;
-        color: rgba(255,255,255,0.9);
-        margin-bottom: 3rem;
-      }
-
-      .stats-row {
-        display: flex;
-        gap: 3rem;
-        margin-bottom: 3rem;
-
-        .stat {
-          display: flex;
-          flex-direction: column;
-          gap: 0.5rem;
-
-          .label {
-            color: var(--steel);
-            text-transform: uppercase;
-            font-size: 0.75rem;
-            letter-spacing: 2px;
-          }
-
-          .value {
-            color: var(--nvidia);
-            font-weight: 700;
-            font-size: 1.1rem;
-          }
-        }
-      }
-    }
-
-    @media (max-width: 900px) {
-      .architect-grid {
-        grid-template-columns: 1fr;
-        gap: 2rem;
-      }
-      .image-card img {
-        height: 500px;
-      }
-      .info-card mat-card-title {
-        font-size: 2rem;
-      }
-    }
-
-    .conduit-section {
-      text-align: center;
-    }
-
-    .section-title {
-      font-size: 2.5rem;
-      margin-bottom: 1rem;
-      letter-spacing: 0.1em;
-    }
-
-    .section-subtitle {
-      color: var(--steel);
-      font-size: 1.2rem;
-      margin-bottom: 4rem;
-    }
-
-    .conduit-grid {
+    /* Pillars Grid */
+    .pillars-section { padding: 8rem 0; }
+    .pillars-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
       gap: 2rem;
-      margin-top: 4rem;
     }
 
-    .conduit-card {
-      padding: 2rem;
-      border-radius: 1.5rem !important;
-      text-align: left;
-    }
-
-    .conduit-icon {
-      font-size: 2rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    /* ── Pricing Section (Final Bulletproof Fix) ── */
-    .pricing-section {
-      padding: 0 2rem;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: radial-gradient(circle at center, rgba(118, 185, 0, 0.08) 0%, transparent 70%);
-    }
-
-    .pricing-card-sovereign {
-      background: #0A0A0A;
-      border: 1px solid rgba(118, 185, 0, 0.5);
-      border-radius: 40px;
-      padding: 5rem 3.5rem;
-      width: 100%;
-      max-width: 650px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      box-shadow: 0 50px 120px rgba(0,0,0,0.95);
-      position: relative;
-    }
-
-    .pricing-card-sovereign::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 3px;
-      background: linear-gradient(90deg, transparent, #76B900, transparent);
-    }
-
-    .pricing-title {
-      font-size: 2.8rem;
-      font-weight: 800;
-      color: #fff;
-      margin: 0 0 2.5rem 0;
-      line-height: 1.1;
-      letter-spacing: -1px;
-    }
-
-    .pricing-price-box {
-      margin-bottom: 4rem;
-    }
-
-    .pricing-price-box .price {
-      font-size: 5rem;
-      font-weight: 900;
-      color: #76B900;
-      line-height: 1;
-      margin-bottom: 0.5rem;
-      text-shadow: 0 0 30px rgba(118, 185, 0, 0.4);
-    }
-
-    .pricing-price-box .price-label {
-      font-size: 1rem;
-      font-weight: 600;
-      color: var(--steel);
-      letter-spacing: 3px;
-      text-transform: uppercase;
-    }
-
-    .pricing-feature-list {
-      width: 100%;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+    .pillar-card {
+      padding: 3rem;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.05);
       border-radius: 24px;
-      padding: 2rem;
-      margin-bottom: 4rem;
+      transition: all 0.4s cubic-bezier(0.2, 0, 0.2, 1);
+      backdrop-filter: blur(12px);
     }
 
-    .feature-row {
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-      gap: 1.5rem;
-      padding: 1rem 0;
-      color: #fff;
-      font-size: 1.2rem;
-      font-weight: 500;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    .pillar-card:hover {
+      background: rgba(255, 255, 255, 0.05);
+      transform: translateY(-8px);
+      border-color: rgba(255, 255, 255, 0.2);
     }
 
-    .feature-row:last-child {
-      border-bottom: none;
+    .pillar-icon { font-size: 2.5rem; margin-bottom: 1.5rem; }
+    .pillar-card h3 { font-size: 1.25rem; margin-bottom: 1rem; color: #fff; }
+    .pillar-card p { color: #94a3b8; line-height: 1.7; font-size: 1rem; }
+
+    /* Flow Section */
+    .flow-section { padding: 8rem 0; background: rgba(0,0,0,0.2); }
+    .flow-steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 3rem;
     }
 
-    .feature-row .check-mark {
-      color: #76B900;
-      font-size: 1.5rem;
-      font-weight: 900;
+    .step-item {
+      text-align: center;
+      .step-num {
+        font-size: 0.8rem;
+        color: #3b82f6;
+        display: block;
+        margin-bottom: 1rem;
+      }
+      h4 { font-size: 1.5rem; margin-bottom: 1rem; color: #fff; }
+      p { color: #64748b; font-size: 0.95rem; line-height: 1.6; }
     }
 
-    .sovereign-action-btn {
-      width: 100%;
-      max-width: 480px;
-      height: 80px;
-      background-color: #76B900 !important;
-      color: #000 !important;
-      border: none;
-      border-radius: 40px;
-      font-size: 1.4rem;
-      font-weight: 900;
-      letter-spacing: 2px;
-      cursor: pointer;
-      text-transform: uppercase;
-      box-shadow: 0 15px 40px rgba(118, 185, 0, 0.4);
-      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    /* Final CTA */
+    .final-cta-section { padding: 10rem 0; text-align: center; }
+
+    .fade-in-up {
+      animation: fadeInUp 1.2s cubic-bezier(0.2, 0, 0.2, 1) forwards;
     }
 
-    .sovereign-action-btn:hover {
-      transform: translateY(-6px) scale(1.03);
-      box-shadow: 0 25px 60px rgba(118, 185, 0, 0.6);
-      background-color: #89D910 !important;
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
-    .sovereign-action-btn:active {
-      transform: translateY(0) scale(0.97);
-    }
-
-    .loader-placeholder {
-      height: 600px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: var(--bg-surface);
-      border-radius: 28px;
-      color: var(--steel);
-      font-family: var(--font-mono);
-    }
-
-    @media (max-width: 768px) {
-      .hero-section {
-        padding: 6rem 1rem 4rem;
-      }
-      .hero-headline { 
-        font-size: 2.5rem; 
-        margin-bottom: 1.5rem;
-      }
-      .hero-subheadline {
-        font-size: 1.1rem;
-        margin-bottom: 2.5rem;
-      }
-      .architect-grid {
-        grid-template-columns: 1fr;
-        gap: 3rem;
-      }
-      .image-card img {
-        aspect-ratio: 16/9;
-        height: 300px;
-      }
-      .info-card {
-        padding: 1.5rem !important;
-        mat-card-title { font-size: 1.8rem; }
-        .stats-row { 
-          flex-direction: column; 
-          gap: 1.5rem; 
-        }
-      }
-      .pricing-section {
-        padding: 4rem 1rem;
-      }
-      .pricing-card-sovereign {
-        padding: 3rem 1.5rem;
-        border-radius: 24px;
-      }
-      .pricing-title {
-        font-size: 1.8rem;
-        margin-bottom: 1.5rem;
-      }
-      .pricing-price-box .price {
-        font-size: 3.5rem;
-      }
-      .pricing-feature-list {
-        padding: 1rem;
-        margin-bottom: 2rem;
-      }
-      .feature-row {
-        font-size: 1rem;
-        gap: 1rem;
-      }
-      .sovereign-action-btn {
-        height: 64px;
-        font-size: 1.1rem;
-      }
-    }
+    .bg-deep { background: #050510; }
+    .bg-surface { background: #0a0a1a; }
   `]
 })
 export class LandingComponent {
   private dialog = inject(MatDialog);
-
-  conduitCards = [
-    {
-      icon: '🧠',
-      title: '1M Token Context',
-      description: 'Audit years of complex records instantly with massive reasoning windows.'
-    },
-    {
-      icon: '🛡️',
-      title: 'Local Sandbox',
-      description: "Your data is 'caged' via OpenShell on local silicon. Zero external exposure."
-    },
-    {
-      icon: '💡',
-      title: 'Expert Advisory',
-      description: 'Senior strategic guidance to solve your most expensive manual bottlenecks.'
-    }
-  ];
-
-  serviceList = [
-    'Workflow Audit (30-min deep-dive)',
-    'NemoClaw Environment Launch (Hardened)',
-    'The "First Task" Completion',
-    'Enterprise Privacy Briefing (POPIA)'
-  ];
 
   openDiscovery() {
     this.dialog.open(DiscoveryDialogComponent, {
@@ -595,3 +326,4 @@ export class LandingComponent {
     });
   }
 }
+

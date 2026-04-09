@@ -1,0 +1,3 @@
+[    1007ms] [ERROR] Failed to load resource: the server responded with a status of 403 () @ https://grainy-gradients.vercel.app/noise.svg:0
+[    1162ms] [WARNING] Unrecognized feature: 'web-share'. @ https://taajirah.web.app/chunk-RI7JQKYO.js:0
+[    9237ms] [WARNING] [GroupMarkerNotSet(crbug.com/242999)!:A0501800EC120000]Automatic fallback to software WebGL has been deprecated. Please use the --enable-unsafe-swiftshader (about:flags#enable-unsafe-swiftshader) flag to opt in to lower security guarantees for trusted content. @ https://www.youtube.com/embed/u9vgqyXlhyE:0

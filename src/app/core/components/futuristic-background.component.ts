@@ -47,16 +47,16 @@ import { CommonModule } from '@angular/common';
       width: 100%;
       height: 100%;
       background-image: 
-        linear-gradient(rgba(16, 185, 129, 0.05) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(16, 185, 129, 0.05) 1px, transparent 1px);
-      background-size: 60px 60px;
+        linear-gradient(rgba(59, 130, 246, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(59, 130, 246, 0.03) 1px, transparent 1px);
+      background-size: 80px 80px;
     }
 
     .glow-layer {
       position: absolute;
       width: 100%;
       height: 100%;
-      background: radial-gradient(circle at 50% 40%, rgba(16, 185, 129, 0.1) 0%, transparent 70%);
+      background: radial-gradient(circle at 50% 30%, rgba(59, 130, 246, 0.08) 0%, transparent 70%);
     }
 
     .scanlines {
@@ -65,7 +65,7 @@ import { CommonModule } from '@angular/common';
       height: 100%;
       background: linear-gradient(
         to bottom,
-        rgba(16, 185, 129, 0.02) 50%,
+        rgba(59, 130, 246, 0.01) 50%,
         transparent 50%
       );
       background-size: 100% 4px;
@@ -77,7 +77,7 @@ import { CommonModule } from '@angular/common';
       width: 100%;
       height: 100%;
       background: url('https://grainy-gradients.vercel.app/noise.svg');
-      opacity: 0.1;
+      opacity: 0.05;
       z-index: 2;
     }
 
@@ -89,9 +89,9 @@ import { CommonModule } from '@angular/common';
 
     .particle {
       position: absolute;
-      color: var(--vault-accent);
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.7rem;
+      color: var(--sentinel-blue);
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
       user-select: none;
       animation: float 25s linear infinite;
     }

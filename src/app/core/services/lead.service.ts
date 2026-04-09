@@ -7,6 +7,7 @@ export interface Lead {
   painPoint: string;
   hardware: string;
   phone: string;
+  consent: boolean;
   createdAt?: any;
 }
 

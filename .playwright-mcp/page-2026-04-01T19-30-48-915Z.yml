@@ -1,0 +1,209 @@
+- generic [ref=e2]:
+  - generic:
+    - generic:
+      - generic:
+        - generic: ∞
+        - generic: Ω
+        - generic: "1"
+        - generic: "1"
+        - generic: ∫
+        - generic: ∆
+        - generic: π
+        - generic: ∞
+        - generic: ∆
+        - generic: π
+        - generic: "0"
+        - generic: ∞
+        - generic: λ
+        - generic: Ω
+        - generic: "1"
+        - generic: Σ
+        - generic: ∞
+        - generic: ∆
+        - generic: Ω
+        - generic: λ
+        - generic: "0"
+        - generic: "0"
+        - generic: ∞
+        - generic: "1"
+        - generic: Ω
+        - generic: Ω
+        - generic: λ
+        - generic: ∫
+        - generic: ∆
+        - generic: ∫
+  - generic [ref=e5]:
+    - link "Taajirah Systems TAAJIRAH SYSTEMS" [ref=e6] [cursor=pointer]:
+      - /url: /
+      - img "Taajirah Systems" [ref=e7]
+      - generic [ref=e8]: TAAJIRAH SYSTEMS
+    - button [ref=e10] [cursor=pointer]:
+      - img [ref=e11]: menu
+    - button [ref=e15]:
+      - img [ref=e16]: fact_check
+  - main [ref=e19]:
+    - generic [ref=e21]:
+      - generic [ref=e23]:
+        - heading "Govern AI Spend with Absolute Integrity." [level=1] [ref=e24]:
+          - text: Govern AI Spend with
+          - text: Absolute Integrity.
+        - paragraph [ref=e25]: Sentinel gives organizations the budget controls, holds, approvals, and audit trails needed to govern AI agents in production.
+        - generic [ref=e26]:
+          - button "Request Discovery" [ref=e27]:
+            - generic [ref=e28]: Request Discovery
+          - button "Request a Sentinel Pilot" [ref=e31]:
+            - generic [ref=e32]: Request a Sentinel Pilot
+      - generic [ref=e36]:
+        - generic [ref=e37]:
+          - heading "Unpredictable Spend. Hidden Risk." [level=2] [ref=e38]
+          - paragraph [ref=e39]: The risks of unmanaged autonomous agents in production.
+        - generic [ref=e40]:
+          - generic [ref=e41]:
+            - generic [ref=e42]: Autonomous Scaling Risk
+            - paragraph [ref=e43]: Workflows can trigger recursive, high-cost execution loops without early detection or hard stop-gaps.
+          - generic [ref=e44]:
+            - generic [ref=e45]: Critical Variance
+            - paragraph [ref=e46]: Unmonitored "runaway" API consumption creates unbridgeable gaps between internal cost estimates and final billing.
+          - generic [ref=e47]:
+            - generic [ref=e48]: Unauthorized Actions
+            - paragraph [ref=e49]: High-impact operations initiated by agents without a validated, pre-authorized budget hold or human-in-the-loop.
+          - generic [ref=e50]:
+            - generic [ref=e51]: Audit Blind Spots
+            - paragraph [ref=e52]: Critical intervention and oversight often arrive only after budget ceilings have been breached and data lost.
+          - generic [ref=e53]:
+            - generic [ref=e54]: Delayed Reporting
+            - paragraph [ref=e55]: Post-hoc usage reporting is too delayed to prevent real-time financial exposure and operational loss.
+      - generic [ref=e57]:
+        - generic [ref=e58]:
+          - heading "How Sentinel Governs Agent Spend" [level=2] [ref=e59]
+          - paragraph [ref=e60]: Sentinel enforces oversight at the runtime level.
+        - generic [ref=e61]:
+          - generic [ref=e62]:
+            - generic [ref=e65]: Triple-Layer Truth
+            - paragraph [ref=e67]: Every transaction verified across an append-only ledger, a governance database, and a reconciled cache.
+          - generic [ref=e68]:
+            - generic [ref=e71]: Pre-Execution Holds
+            - paragraph [ref=e73]: Reserve budget exactly as estimated *before* the agent starts its task. No task starts without an auditable hold.
+          - generic [ref=e74]:
+            - generic [ref=e77]: Automated Risk Gates
+            - paragraph [ref=e79]: High-risk tasks and "material variances" trigger human-in-the-loop approval before processing continues.
+          - generic [ref=e80]:
+            - generic [ref=e83]: Audited Override
+            - paragraph [ref=e85]: Resolve exceptions with administrative overrides, fully recorded in a cryptographically signed audit trail.
+      - generic [ref=e87]:
+        - generic [ref=e88]:
+          - heading "Audit Integrity through Triple-Layer Truth." [level=2] [ref=e89]
+          - paragraph [ref=e90]: Sentinel ensures absolute financial traceability through a hardened governance architecture.
+        - generic [ref=e92]: LOADING ARCHITECTURE DIAGRAM...
+        - generic [ref=e93]:
+          - generic [ref=e94]:
+            - generic [ref=e95]: Append-Only Ledger
+            - paragraph [ref=e96]: The definitive immutable record of every economic event and administrative oversight action.
+          - generic [ref=e97]:
+            - generic [ref=e98]: Active Hold Layer
+            - paragraph [ref=e99]: The current state authority representing all reserved funds and authorized pending operations.
+          - generic [ref=e100]:
+            - generic [ref=e101]: Derived Balance View
+            - paragraph [ref=e102]: Real-time enforcement layer calculating available budgets and tracking spend reconciliation metrics.
+      - generic [ref=e104]:
+        - generic [ref=e105]:
+          - heading "Proof of Governance (Pilot v1)" [level=2] [ref=e106]
+          - paragraph [ref=e107]: Concrete auditable proof from agentic operations.
+        - generic [ref=e108]:
+          - generic [ref=e109]:
+            - generic [ref=e112]: 1. Budget Reserved
+            - paragraph [ref=e114]: Reserve exactly what you estimate. No task starts without an auditable hold recorded in the Active Hold layer.
+          - generic [ref=e115]:
+            - generic [ref=e118]: 2. Shortfall Clamped
+            - paragraph [ref=e120]:
+              - text: Sentinel detected a
+              - strong [ref=e121]: critical shortfall variance
+              - text: (370 JUL) and automatically clamped the task, preventing a 12x budget breach.
+          - generic [ref=e122]:
+            - generic [ref=e125]: 3. Operator Override
+            - paragraph [ref=e127]: Authorize resolution with a persistent audit trail. Release funds or settle at the budget ceiling with full administrator attribution.
+          - generic [ref=e128]:
+            - generic [ref=e131]: 4. Full Reconciliation
+            - paragraph [ref=e133]: Automated zero-sum audit across Org, Project, and Agent levels. Spend matched to the cent with triple-layer verification.
+      - generic [ref=e135]:
+        - generic [ref=e136]:
+          - heading "Secure Foundations" [level=2] [ref=e137]
+          - paragraph [ref=e138]: The underlying architecture for local AI deployment.
+        - generic [ref=e139]:
+          - paragraph [ref=e140]: Sentinel resides within a local-first AI stack. Our hardened deployment foundation and secure local deployment architecture ensure that your governance logs, telemetry, and oversight records remain exclusively under your control.
+          - iframe [ref=e143]:
+            - generic [active] [ref=f1e1]:
+              - generic "YouTube Video Player" [ref=f1e3]
+              - generic [ref=f1e5]:
+                - generic:
+                  - generic:
+                    - button "Play video" [ref=f1e10] [cursor=pointer]
+                    - button "Hide player controls" [ref=f1e12] [cursor=pointer]
+                    - generic [ref=f1e14]:
+                      - generic [ref=f1e19]:
+                        - generic [ref=f1e20]:
+                          - link "The Sovereign Laptop Supercharge Escaping the Cloud AI Trap" [ref=f1e21] [cursor=pointer]:
+                            - /url: https://www.youtube.com/watch?v=u9vgqyXlhyE
+                          - link "Taajirah Systems" [ref=f1e22] [cursor=pointer]:
+                            - /url: /channel/UCEWHZPduLn3uc2PMPrVc4rg
+                            - generic [ref=f1e23]: Taajirah Systems
+                        - generic [ref=f1e24]:
+                          - button [ref=f1e25] [cursor=pointer]
+                          - generic [ref=f1e27]:
+                            - generic: Taajirah Systems
+                            - generic: 1 subscriber
+                      - generic [ref=f1e28]:
+                        - button "Share" [ref=f1e31] [cursor=pointer]:
+                          - generic [ref=f1e35]:
+                            - img
+                        - link "Watch on YouTube" [ref=f1e42] [cursor=pointer]:
+                          - /url: https://www.youtube.com/watch?v=u9vgqyXlhyE
+                          - generic [ref=f1e45]:
+                            - text: Watch on
+                            - img [ref=f1e47]:
+                              - generic [ref=f1e49]:
+                                - img
+      - generic [ref=e145]:
+        - heading "Internal Accounting & Reconciliation" [level=2] [ref=e146]
+        - paragraph [ref=e147]: JOULE is Sentinel’s internal accounting unit for cross-provider reconciliation, metering and governed spend attribution.
+        - generic [ref=e148]: INTERNAL AUDIT UNIT
+        - generic [ref=e149]:
+          - button "Request Discovery" [ref=e150]:
+            - generic [ref=e151]: Request Discovery
+          - button "See the Pilot Architecture" [ref=e154]:
+            - generic [ref=e155]: See the Pilot Architecture
+  - contentinfo [ref=e159]:
+    - generic [ref=e160]:
+      - generic [ref=e161]:
+        - generic [ref=e162]:
+          - generic [ref=e163]:
+            - img "Taajirah Systems" [ref=e164]
+            - generic [ref=e165]: TAAJIRAH SYSTEMS
+          - paragraph [ref=e166]: Governance & Oversight for the Agentic Era.
+          - paragraph [ref=e167]: Operating from Johannesburg, South Africa.
+          - paragraph [ref=e168]: Independent Sentinel Implementation Partner.
+        - generic [ref=e169]:
+          - heading "SYSTEM" [level=4] [ref=e170]
+          - generic [ref=e171]:
+            - link "STRATEGY" [ref=e172] [cursor=pointer]:
+              - /url: "#strategy"
+            - link "SOLUTION" [ref=e173] [cursor=pointer]:
+              - /url: "#solution"
+            - link "TRUTH" [ref=e174] [cursor=pointer]:
+              - /url: "#truth"
+        - generic [ref=e175]:
+          - heading "LEGAL" [level=4] [ref=e176]
+          - generic [ref=e177]:
+            - link "TERMS" [ref=e178] [cursor=pointer]:
+              - /url: /terms
+            - link "PRIVACY" [ref=e179] [cursor=pointer]:
+              - /url: /privacy
+      - paragraph [ref=e181]: © 2026 TAAJIRAH SYSTEMS. ALL RIGHTS RESERVED.
+  - generic [ref=e183]:
+    - paragraph [ref=e185]:
+      - text: WE USE ESSENTIAL COOKIES TO ENSURE POPIA-COMPLIANT PERFORMANCE.
+      - link "LEARN MORE" [ref=e186] [cursor=pointer]:
+        - /url: /privacy
+    - generic [ref=e187]:
+      - button "ESSENTIAL ONLY" [ref=e188] [cursor=pointer]
+      - button "I ACCEPT" [ref=e189] [cursor=pointer]
