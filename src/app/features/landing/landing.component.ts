@@ -130,6 +130,32 @@ import { DiscoveryDialogComponent } from '../discovery/discovery-dialog.componen
         </div>
       </section>
 
+      <!-- ════ RESEARCH ARCHIVE (PORTFOLIO) ════ -->
+      <section id="archive" class="archive-section bg-deep">
+        <div class="container">
+          <div class="section-header fade-in-up">
+            <h2 class="section-title mono">Research Archive</h2>
+            <p class="section-subtitle">Established Foundations & Sovereign Nodes.</p>
+          </div>
+
+          <div class="archive-grid">
+            <div class="archive-item glass-premium fade-in-up">
+              <div class="archive-status active">STABLE_NODE</div>
+              <h3 class="mono">SENTINEL_AI</h3>
+              <p class="archive-tag">Sovereign Governance</p>
+              <p>Autonomic heartbeat monitoring and self-healing infrastructure. Engineered for high-integrity governance across decentralized agentic swarms.</p>
+            </div>
+
+            <div class="archive-item glass-premium fade-in-up">
+              <div class="archive-status legacy">COLD_STORAGE</div>
+              <h3 class="mono">VAULT_PROTOCOL</h3>
+              <p class="archive-tag">Secure Persistence</p>
+              <p>Heavy-steel persistence layer for agentic asset protection. Multi-signature encryption seeds for manifested reality state-management.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <!-- ════ CINEMATIC DEMO ════ -->
       <section id="cinema" class="cinema-section bg-deep">
         <div class="container">
@@ -213,6 +239,8 @@ import { DiscoveryDialogComponent } from '../discovery/discovery-dialog.componen
     .engine { background: rgba(59, 130, 246, 0.1); color: #3b82f6; }
     .producer { background: rgba(139, 92, 246, 0.1); color: #8b5cf6; }
     .physics { background: rgba(245, 158, 11, 0.1); color: #f59e0b; }
+    .sentinel { background: rgba(39, 201, 63, 0.1); color: #27c93f; }
+    .vault { background: rgba(148, 163, 184, 0.1); color: #94a3b8; }
 
     .hero-section {
       min-height: 85vh;
@@ -318,6 +346,40 @@ import { DiscoveryDialogComponent } from '../discovery/discovery-dialog.componen
       margin: 0 auto;
     }
 
+    /* Research Archive */
+    .archive-section { padding: 10rem 0; }
+    .archive-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 2rem;
+      @media (max-width: 768px) { grid-template-columns: 1fr; }
+    }
+
+    .archive-item {
+      padding: 3rem;
+      border-radius: 24px;
+      position: relative;
+      overflow: hidden;
+      
+      h3 { font-size: 1.8rem; margin-bottom: 0.5rem; color: #fff; }
+      .archive-tag { color: #3b82f6; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1.5rem; }
+      p { color: #64748b; line-height: 1.6; font-size: 0.95rem; }
+    }
+
+    .archive-status {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 4px;
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+    }
+
+    .active { background: rgba(39, 201, 63, 0.1); color: #27c93f; border: 1px solid rgba(39, 201, 63, 0.2); }
+    .legacy { background: rgba(148, 163, 184, 0.1); color: #94a3b8; border: 1px solid rgba(148, 163, 184, 0.2); }
+
     /* Final CTA Box */
     .final-cta-section { padding: 10rem 0; }
     .final-cta-box {
@@ -352,7 +414,9 @@ export class LandingComponent implements OnInit {
     { type: 'physics', tag: 'LABS', message: 'Heartbeat: Agentic Architecture Stable.' },
     { type: 'engine', tag: 'LABS', message: 'Analyzing Spatial Grounding Foundation...' },
     { type: 'producer', tag: 'LABS', message: 'Orchestrating Studio Event Stream...' },
-    { type: 'physics', tag: 'LABS', message: 'Manifesting Reality via Semantic Physics...' }
+    { type: 'physics', tag: 'LABS', message: 'Manifesting Reality via Semantic Physics...' },
+    { type: 'engine', tag: 'SENTINEL', message: 'Autonomic Healing Monitor: [ACTIVE]' },
+    { type: 'producer', tag: 'VAULT', message: 'Protocol Steel: Persistence Synchronized.' }
   ];
 
   ngOnInit() {
