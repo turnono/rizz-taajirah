@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -31,7 +31,7 @@ import { DiscoveryDialogComponent } from '../discovery/discovery-dialog.componen
             <span class="dot red"></span>
             <span class="dot yellow"></span>
             <span class="dot green"></span>
-            <span class="terminal-title">OMNILENS_ENGINE_LIVE</span>
+            <span class="terminal-title">TAAJIRAH_SYSTEMS_LABS</span>
           </div>
           <div class="terminal-body">
             <div class="log-stream">
@@ -49,20 +49,20 @@ import { DiscoveryDialogComponent } from '../discovery/discovery-dialog.componen
       <section id="hero" class="hero-section">
         <div class="container fade-in-up">
           <div class="glitch-wrapper">
-            <h1 class="hero-headline omnilens-gradient-text glitch-text" data-text="Documentary Maker for your Data.">
-              Documentary Maker<br>for your Data.
+            <h1 class="hero-headline omnilens-gradient-text glitch-text" data-text="Manifesting Visual Intelligence.">
+              Manifesting Visual Intelligence.
             </h1>
           </div>
           <p class="hero-subheadline">
-            The professional <strong>AI-Driven Production Suite</strong> that breathes narrative life into static visuals. Experience the next evolution of knowledge engagement.
+            Taajirah Systems is the <strong>Agentic Research & Engineering Laboratory</strong> dedicated to breathing narrative life into complex data and visual knowledge.
           </p>
           <div class="hero-cta">
             <button mat-flat-button color="primary" class="cta-btn" (click)="launchApp()">
-              LAUNCH ENGINE
+              LAUNCH FLAGSHIP
               <mat-icon>bolt</mat-icon>
             </button>
             <button mat-stroked-button class="secondary-cta" (click)="launchApp()">
-              VIEW CAPABILITIES
+              EXPLORE THE VAULT
             </button>
           </div>
         </div>
@@ -72,50 +72,60 @@ import { DiscoveryDialogComponent } from '../discovery/discovery-dialog.componen
       <section id="features" class="bento-section">
         <div class="container">
           <div class="section-header fade-in-up">
-            <h2 class="section-title mono glitch-text" data-text="ENGINE_INTELLIGENCE">ENGINE_INTELLIGENCE</h2>
-            <p class="section-subtitle">Deep grounding and narrative synchronization.</p>
+            <h2 class="section-title mono glitch-text" data-text="AGENTIC_FOUNDATIONS">AGENTIC_FOUNDATIONS</h2>
+            <p class="section-subtitle">The architectural core of Taajirah Systems.</p>
           </div>
           
           <div class="bento-grid">
             <div class="bento-item wide glass-premium fade-in-up">
               <div class="bento-content">
-                <div class="pillar-icon">👁️</div>
-                <h3 class="mono">Spatial Grounding</h3>
-                <p>Gemini 2.0 Flash provides "Visual Evidence" for every claim, identifying the exact text or graphic element referenced in real-time.</p>
+                <div class="pillar-icon">🏛️</div>
+                <h3 class="mono">Semantic Physics</h3>
+                <p>Developing structural seeds that allow data to manifest its own reality through emergent particle behaviors and cinematic transitions.</p>
               </div>
             </div>
 
             <div class="bento-item tall glass-premium fade-in-up">
               <div class="bento-content">
-                <div class="pillar-icon">🌋</div>
-                <h3 class="mono">Physics Moods</h3>
-                <p>Dynamic atmospheric effects like digital rain, sparkles, and cinematic smoke that adapt to your story's emotional context.</p>
+                <div class="pillar-icon">🧬</div>
+                <h3 class="mono">Agentic Workflow</h3>
+                <p>Orchestrating multi-agent pipelines where specialized AI Directors, Producers, and Gauges collaborate in real-time.</p>
               </div>
             </div>
 
             <div class="bento-item glass-premium fade-in-up">
               <div class="bento-content">
-                <div class="pillar-icon">📝</div>
-                <h3 class="mono">Scripting</h3>
-                <p>Narration scripts that align perfectly with the spatial hierarchy.</p>
+                <div class="pillar-icon">👁️</div>
+                <h3 class="mono">Visual Intelligence</h3>
+                <p>Advanced spatial grounding for precise visual evidence.</p>
               </div>
             </div>
 
             <div class="bento-item glass-premium fade-in-up">
               <div class="bento-content">
-                <div class="pillar-icon">🚀</div>
-                <h3 class="mono">Zoneless</h3>
-                <p>Latency-free reactivity with Angular 21.</p>
+                <div class="pillar-icon">⚡</div>
+                <h3 class="mono">Swift Reactivity</h3>
+                <p>Engineered for zoneless, zero-latency interaction.</p>
               </div>
             </div>
 
             <div class="bento-item wide glass-premium fade-in-up">
               <div class="bento-content">
-                <div class="pillar-icon">🛡️</div>
+                <div class="pillar-icon">🛠️</div>
                 <h3 class="mono">Technical Resilience</h3>
-                <p>Robust <code>withRetry</code> mechanisms handle API rate limits automatically, ensuring your production suite never sleeps.</p>
+                <p>Robust <code>withRetry</code> architectures that guarantee stability across high-throughput agentic operations.</p>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ════ FLAGSHIP PROJECT ════ -->
+      <section id="flagship" class="flagship-section">
+        <div class="container">
+          <div class="section-header fade-in-up">
+            <h2 class="section-title mono">Flagship Release: OmniLens</h2>
+            <p class="section-subtitle">Our premier cinematic knowledge engine.</p>
           </div>
         </div>
       </section>
@@ -337,12 +347,12 @@ export class LandingComponent implements OnInit {
 
   logs: any[] = [];
   private logTemplates = [
-    { type: 'engine', tag: 'ENGINE', message: 'Analyzing spatial grounding...' },
-    { type: 'producer', tag: 'PRODUCER', message: 'Synthesizing narrative script...' },
-    { type: 'physics', tag: 'PHYSICS', message: 'Injecting atmosphere: DIGITAL_RAIN' },
-    { type: 'engine', tag: 'ENGINE', message: 'Mapping intent recognize: INFOGRAPHIC' },
-    { type: 'producer', tag: 'PRODUCER', message: 'Synchronizing Story Timeline...' },
-    { type: 'physics', tag: 'PHYSICS', message: 'Atmosphere priority: CINEMATIC_SMOKE' }
+    { type: 'engine', tag: 'LABS', message: 'Optimizing Kinetic Typography Renderer...' },
+    { type: 'producer', tag: 'LABS', message: 'Deploying OmniLens v2.0 Production Node...' },
+    { type: 'physics', tag: 'LABS', message: 'Heartbeat: Agentic Architecture Stable.' },
+    { type: 'engine', tag: 'LABS', message: 'Analyzing Spatial Grounding Foundation...' },
+    { type: 'producer', tag: 'LABS', message: 'Orchestrating Studio Event Stream...' },
+    { type: 'physics', tag: 'LABS', message: 'Manifesting Reality via Semantic Physics...' }
   ];
 
   ngOnInit() {

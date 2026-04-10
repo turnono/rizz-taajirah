@@ -30,10 +30,10 @@ import { DiscoveryDialogComponent } from '../../features/discovery/discovery-dia
 
         <!-- Desktop Navigation -->
         <nav class="nav-links mono hide-mobile">
-          <a mat-button href="#cinema" class="nav-link">ENGINE</a>
-          <a mat-button href="#pillars" class="nav-link">PILLARS</a>
-          <a mat-button href="#flow" class="nav-link">FLOW</a>
-          <a mat-button href="#cta-final" class="nav-link">BETA</a>
+          <a mat-button href="#hero" class="nav-link">STUDIO</a>
+          <a mat-button href="#flagship" class="nav-link">PROJECTS</a>
+          <a mat-button href="#features" class="nav-link">FOUNDATIONS</a>
+          <a mat-button href="#cinema" class="nav-link">LABS</a>
         </nav>
 
         <!-- Mobile Navigation (Burger) -->
@@ -42,15 +42,15 @@ import { DiscoveryDialogComponent } from '../../features/discovery/discovery-dia
             <mat-icon>menu</mat-icon>
           </button>
           <mat-menu #menu="matMenu" class="mobile-menu-panel">
-            <a mat-menu-item href="#cinema" class="mono">ENGINE</a>
-            <a mat-menu-item href="#pillars" class="mono">PILLARS</a>
-            <a mat-menu-item href="#flow" class="mono">FLOW</a>
-            <a mat-menu-item href="#cta-final" class="mono">BETA</a>
+            <a mat-menu-item href="#hero" class="mono">STUDIO</a>
+            <a mat-menu-item href="#flagship" class="mono">PROJECTS</a>
+            <a mat-menu-item href="#features" class="mono">FOUNDATIONS</a>
+            <a mat-menu-item href="#cinema" class="mono">LABS</a>
           </mat-menu>
         </div>
  
         <span class="spacer"></span>
-
+ 
         <div class="actions">
           <button mat-raised-button color="primary" (click)="launchApp()" class="mono cta-btn">
             <span class="hide-mobile">LAUNCH APP</span>
