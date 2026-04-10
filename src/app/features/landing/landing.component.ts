@@ -31,14 +31,15 @@ import { DiscoveryDialogComponent } from '../discovery/discovery-dialog.componen
             Documentary Maker<br>for your Data.
           </h1>
           <p class="hero-subheadline">
-            OmniLens AI is a <strong>Cinematic Knowledge Engine</strong> that transforms static, information-dense visuals—infographics, posters, and documents—into high-engagement narrated video stories.
+            OmniLens is the professional <strong>AI-Driven Video Production Suite</strong> that transforms static visuals—infographics, posters, and research—into cinematic narrated guided tours.
           </p>
           <div class="hero-cta">
-            <button mat-flat-button color="primary" class="cta-btn" (click)="openDiscovery()">
-              Join the OmniLens Beta
+            <button mat-flat-button color="primary" class="cta-btn" (click)="launchApp()">
+              Launch OmniLens
+              <mat-icon>rocket_launch</mat-icon>
             </button>
-            <button mat-stroked-button class="secondary-cta" (click)="openDiscovery()">
-              See the Story Engine
+            <button mat-stroked-button class="secondary-cta" (click)="launchApp()">
+              Explore the Engine
             </button>
           </div>
         </div>
@@ -53,7 +54,6 @@ import { DiscoveryDialogComponent } from '../discovery/discovery-dialog.componen
           </div>
           
           <div class="video-container glass-stage fade-in-up">
-            <!-- TikTok Embed -->
             <div class="tiktok-wrapper">
               <iframe 
                 src="https://www.tiktok.com/embed/v2/7626041081494326549" 
@@ -70,72 +70,53 @@ import { DiscoveryDialogComponent } from '../discovery/discovery-dialog.componen
       <section id="pillars" class="pillars-section">
         <div class="container">
           <div class="section-header fade-in-up">
-            <h2 class="section-title mono">Built for Visual Intelligence</h2>
-            <p class="section-subtitle text-steel">The 5 Pillars of the OmniLens Engine.</p>
+            <h2 class="section-title mono">Visual Intelligence 2.0</h2>
+            <p class="section-subtitle text-steel">Deep grounding and narrative synchronization.</p>
           </div>
           
           <div class="pillars-grid">
             <div class="pillar-card glass-card">
               <div class="pillar-icon">👁️</div>
-              <h3 class="mono">Visual Intelligence</h3>
-              <p>Powered by Gemini 2.0 Flash for Intent Recognition and Spatial Grounding with pixel-perfect precision.</p>
+              <h3 class="mono">Spatial Grounding</h3>
+              <p>Gemini 2.0 Flash provides "Visual Evidence" for every claim, identifying the exact text or graphic element referenced.</p>
             </div>
             
             <div class="pillar-card glass-card">
-              <div class="pillar-icon">🧠</div>
-              <h3 class="mono">The AI Producer</h3>
-              <p>Narrative synthesis that adapts to context—from analytical experts to warm, celebratory hosts.</p>
+              <div class="pillar-icon">📝</div>
+              <h3 class="mono">Synchronized Scripting</h3>
+              <p>Generate professional narration scripts that align perfectly with the spatial hierarchy of your content.</p>
             </div>
             
             <div class="pillar-card glass-card">
               <div class="pillar-icon">🎭</div>
-              <h3 class="mono">Cinematic Stage</h3>
-              <p>LERP-based transitions, physics-based atmospheres (smoke, digital rain), and interactive overlays.</p>
+              <h3 class="mono">Physics-Based Moods</h3>
+              <p>Dynamic atmospheric effects (digital rain, smoke, sparkles) that adapt to the "Physics Context" of your story.</p>
             </div>
             
             <div class="pillar-card glass-card">
-              <div class="pillar-icon">🗺️</div>
-              <h3 class="mono">Adaptive Learning</h3>
-              <p>Post-video "Deep Dives" that generate new insights from the same original image on the fly.</p>
-            </div>
-
-            <div class="pillar-card glass-card">
-              <div class="pillar-icon">🎬</div>
-              <h3 class="mono">Production Export</h3>
-              <p>Native media recording pipeline for 30fps .webm or .mp4 social-ready distributions.</p>
+              <div class="pillar-icon">🚀</div>
+              <h3 class="mono">Zoneless Performance</h3>
+              <p>Built on Angular 21 with a zoneless architecture and Signals for ultra-fast, reactive UI responsiveness.</p>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- ════ THE FLOW ════ -->
-      <section id="flow" class="flow-section bg-surface">
+      <!-- ════ ADVANCED CAPABILITIES ════ -->
+      <section id="capabilities" class="capabilities-section bg-surface">
         <div class="container">
-          <div class="section-header fade-in-up">
-            <h2 class="section-title mono">Turn "Looking" into "Watching"</h2>
-            <p class="section-subtitle text-steel">The 4-step workflow to viral knowledge.</p>
-          </div>
-          
-          <div class="flow-steps">
-            <div class="step-item">
-              <span class="step-num mono">01</span>
-              <h4>Upload</h4>
-              <p>Drop in any infographic, poster, or research paper.</p>
+          <div class="capabilities-grid">
+            <div class="capability-item glass-card">
+              <h4 class="mono">PROFESSIONAL BRANDING</h4>
+              <p>Upload your own logo and branding settings. OmniLens saves them to your Firestore profile and applies them to every project, including the final Credits Scene.</p>
             </div>
-            <div class="step-item">
-              <span class="step-num mono">02</span>
-              <h4>Analyze</h4>
-              <p>Gemini maps the spatial hierarchy and writes the narrative script.</p>
+            <div class="capability-item glass-card">
+              <h4 class="mono">ABSOLUTE CONTROL</h4>
+              <p>Navigate with precision using the new Interactive Scrubber, segment-based jumping, and 2-second seeking via keyboard shortcuts.</p>
             </div>
-            <div class="step-item">
-              <span class="step-num mono">03</span>
-              <h4>Present</h4>
-              <p>The Cinematic Stage begins its tour with smooth glides and effects.</p>
-            </div>
-            <div class="step-item">
-              <span class="step-num mono">04</span>
-              <h4>Record</h4>
-              <p>Capture the output at 30fps and download your social-ready video.</p>
+            <div class="capability-item glass-card">
+              <h4 class="mono">TECHNICAL RESILIENCE</h4>
+              <p>Our robust <code>withRetry</code> mechanism handles Gemini API rate limits automatically, ensuring your production suite never sleeps.</p>
             </div>
           </div>
         </div>
@@ -144,15 +125,16 @@ import { DiscoveryDialogComponent } from '../discovery/discovery-dialog.componen
       <!-- ════ FINAL CALL ════ -->
       <section id="cta-final" class="final-cta-section">
         <div class="container">
-          <h2 class="section-title mono">The Future of Content is Visual.</h2>
-          <p class="section-subtitle text-steel">Be the first to control the engine.</p>
+          <h2 class="section-title mono">Experience the AI Director.</h2>
+          <p class="section-subtitle text-steel">Your data has a story. Tell it with OmniLens.</p>
           
           <div class="hero-cta" style="margin-top: 4rem;">
-            <button mat-flat-button color="primary" class="cta-btn" (click)="openDiscovery()">
-              Secure Early Access
+            <button mat-flat-button color="primary" class="cta-btn" (click)="launchApp()">
+              Launch App
+              <mat-icon>open_in_new</mat-icon>
             </button>
             <button mat-stroked-button class="secondary-cta" (click)="openDiscovery()">
-              View Built-in-Public Log
+              Request a Pilot
             </button>
           </div>
         </div>
@@ -220,6 +202,9 @@ import { DiscoveryDialogComponent } from '../discovery/discovery-dialog.componen
       font-weight: 700 !important;
       border-radius: 12px !important;
       transition: all 0.3s ease !important;
+      display: flex !important;
+      align-items: center !important;
+      gap: 0.75rem !important;
     }
 
     .cta-btn:hover {
@@ -240,7 +225,6 @@ import { DiscoveryDialogComponent } from '../discovery/discovery-dialog.componen
     .section-title { font-size: 3rem; margin-bottom: 1rem; color: #fff; font-weight: 700; }
     .section-subtitle { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.4em; color: #64748b; }
 
-    /* Cinematic Stage / Video */
     .cinema-section { padding: 8rem 0; }
     .glass-stage {
       background: rgba(255, 255, 255, 0.03);
@@ -253,11 +237,10 @@ import { DiscoveryDialogComponent } from '../discovery/discovery-dialog.componen
       margin: 0 auto;
     }
 
-    /* Pillars Grid */
     .pillars-section { padding: 8rem 0; }
     .pillars-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: 2rem;
     }
 
@@ -280,27 +263,20 @@ import { DiscoveryDialogComponent } from '../discovery/discovery-dialog.componen
     .pillar-card h3 { font-size: 1.25rem; margin-bottom: 1rem; color: #fff; }
     .pillar-card p { color: #94a3b8; line-height: 1.7; font-size: 1rem; }
 
-    /* Flow Section */
-    .flow-section { padding: 8rem 0; background: rgba(0,0,0,0.2); }
-    .flow-steps {
+    .capabilities-section { padding: 8rem 0; }
+    .capabilities-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 3rem;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
     }
 
-    .step-item {
-      text-align: center;
-      .step-num {
-        font-size: 0.8rem;
-        color: #3b82f6;
-        display: block;
-        margin-bottom: 1rem;
-      }
-      h4 { font-size: 1.5rem; margin-bottom: 1rem; color: #fff; }
-      p { color: #64748b; font-size: 0.95rem; line-height: 1.6; }
+    .capability-item {
+      padding: 3rem;
+      text-align: left;
+      h4 { font-size: 1rem; margin-bottom: 1.5rem; color: #3b82f6; letter-spacing: 0.1em; }
+      p { color: #94a3b8; font-size: 1rem; line-height: 1.8; }
     }
 
-    /* Final CTA */
     .final-cta-section { padding: 10rem 0; text-align: center; }
 
     .fade-in-up {
@@ -318,6 +294,10 @@ import { DiscoveryDialogComponent } from '../discovery/discovery-dialog.componen
 })
 export class LandingComponent {
   private dialog = inject(MatDialog);
+
+  launchApp() {
+    window.open('https://tjr-omnilens.web.app', '_blank');
+  }
 
   openDiscovery() {
     this.dialog.open(DiscoveryDialogComponent, {

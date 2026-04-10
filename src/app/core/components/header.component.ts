@@ -52,9 +52,9 @@ import { DiscoveryDialogComponent } from '../../features/discovery/discovery-dia
         <span class="spacer"></span>
 
         <div class="actions">
-          <button mat-raised-button color="primary" (click)="openDiscovery()" class="mono cta-btn">
-            <span class="hide-mobile">JOIN THE BETA</span>
-            <mat-icon class="show-mobile">bolt</mat-icon>
+          <button mat-raised-button color="primary" (click)="launchApp()" class="mono cta-btn">
+            <span class="hide-mobile">LAUNCH APP</span>
+            <mat-icon class="show-mobile">rocket_launch</mat-icon>
           </button>
         </div>
       </mat-toolbar>
@@ -170,6 +170,10 @@ import { DiscoveryDialogComponent } from '../../features/discovery/discovery-dia
 })
 export class HeaderComponent {
   private dialog = inject(MatDialog);
+
+  launchApp() {
+    window.open('https://tjr-omnilens.web.app', '_blank');
+  }
 
   openDiscovery() {
     this.dialog.open(DiscoveryDialogComponent, {
