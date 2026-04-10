@@ -14,20 +14,21 @@ import { CommonModule } from '@angular/common';
               <img src="assets/branding/taajirah-logo.png" alt="Taajirah Systems" class="logo">
               <span class="brand-name mono">TAAJIRAH SYSTEMS</span>
             </div>
-            <p class="slogan mono">The Cinematic Knowledge Engine.</p>
+            <p class="slogan mono">Manifesting Agentic Intelligence.</p>
             <p class="region mono">Operating from Johannesburg, South Africa.</p>
-            <p class="partner-note mono">The Future of Visual Content.</p>
+            <p class="partner-note mono">The Future of Agent-Native Content.</p>
           </div>
-
+ 
           <div class="footer-col links-col">
-            <h4 class="mono">ENGINE</h4>
+            <h4 class="mono">STUDIO</h4>
             <div class="footer-links">
-              <a href="#cinema" class="mono">CINEMA STAGE</a>
-              <a href="#pillars" class="mono">PILLARS</a>
-              <a href="#flow" class="mono">WORKFLOW</a>
+              <a href="#hero" class="mono">MISSION</a>
+              <a href="#flagship" class="mono">PROJECTS</a>
+              <a href="#archive" class="mono">ARCHIVE</a>
+              <a href="#features" class="mono">FOUNDATIONS</a>
             </div>
           </div>
-
+ 
           <div class="footer-col links-col">
             <h4 class="mono">LEGAL</h4>
             <div class="footer-links">

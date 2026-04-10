@@ -360,6 +360,18 @@ import { DiscoveryDialogComponent } from '../discovery/discovery-dialog.componen
       border-radius: 24px;
       position: relative;
       overflow: hidden;
+      box-shadow: inset 0 0 20px rgba(59, 130, 246, 0.05);
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(circle at 0% 0%, rgba(59, 130, 246, 0.1) 0%, transparent 50%);
+        pointer-events: none;
+      }
       
       h3 { font-size: 1.8rem; margin-bottom: 0.5rem; color: #fff; }
       .archive-tag { color: #3b82f6; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1.5rem; }
@@ -433,7 +445,7 @@ export class LandingComponent implements OnInit {
       this.logs.unshift({ ...template, time: timeStr });
       if (this.logs.length > 8) this.logs.pop();
       index++;
-    }, 2500);
+    }, 3200);
   }
 
   launchApp() {
